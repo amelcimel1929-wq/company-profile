@@ -1,0 +1,143 @@
+/* Custom Stylesheet Pastel Pink */
+
+body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+
+/* 1. Judul Halaman (seperti "flash sale", "produk", dll) */
+
+.container-fluid h1,
+.h3.mb-0 {
+    color: #6d4150 !important;
+    /* Warna marun/cokelat keunguan sesuai gambar */
+    font-weight: 600 !important;
+    text-transform: lowercase;
+    /* Membuat huruf kecil semua seperti di gambar */
+}
+
+
+/* 2. Style Tabel & Garis Pembatas (Border) */
+
+.table-pink-custom {
+    border: 1px solid #e0b0c0 !important;
+    border-collapse: collapse !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-pink-custom th,
+.table-pink-custom td {
+    border: 1px solid #f3c2d0 !important;
+    vertical-align: middle !important;
+    padding: 12px 15px !important;
+    color: #583340 !important;
+}
+
+.table-pink-custom thead th {
+    background-color: #f7d6e0 !important;
+    color: #6d4150 !important;
+    border-bottom: 2px solid #e0b0c0 !important;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.table-pink-custom tbody tr:nth-of-type(even) {
+    background-color: #fff9fb !important;
+}
+
+
+/* 3. Tombol Add (Pink Tua) */
+
+.btn-pink-add {
+    background-color: #c9527d !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 6px 16px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 5px rgba(201, 82, 125, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-pink-add:hover {
+    background-color: #b03e68 !important;
+    color: #ffffff !important;
+}
+
+
+/* 4. Tombol Update (Pink Soft) */
+
+.btn-pink-update {
+    background-color: #e88ab4 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 5px 12px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-pink-update:hover {
+    background-color: #d674a0 !important;
+    color: #ffffff !important;
+}
+
+
+/* 5. Tombol Delete (Red Coral Soft) */
+
+.btn-pink-delete {
+    background-color: #e87a82 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 5px 12px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-pink-delete:hover {
+    background-color: #d6656d !important;
+    color: #ffffff !important;
+}
+
+
+/* 6. Tombol Submit & Reset Form (Pink Tua) */
+
+button[type="submit"],
+button[type="reset"],
+.btn-primary {
+    background-color: #c9527d !important;
+    border-color: #c9527d !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    padding: 8px 20px !important;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover,
+.btn-primary:hover {
+    background-color: #b03e68 !important;
+    border-color: #b03e68 !important;
+    color: #ffffff !important;
+}
+
+.icon-instagram {
+    font-size: 24px;
+    color: #e1306c;
+    transition: opacity 0.2s;
+}
+
+.icon-instagram:hover {
+    opacity: 0.7;
+}

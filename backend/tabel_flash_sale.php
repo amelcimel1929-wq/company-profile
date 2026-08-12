@@ -1,19 +1,12 @@
-<!-- ini adalah langkah ketiga setelah dari file action_insert_bestseller.php -->
-<!-- disini adalah langkah untuk menampilkan data dr database ke tampilan versi web  -->
- <!-- pertama tama panggil koneksi database -->
 <?php
-
 include "connection.php";
-// kedua buat perintah sql/query ke database untuk menampilkan data
-$select_flash_sale = mysqli_query(
-    $koneksi,
-    "SELECT * FROM flash_sale ORDER BY id_flash_sale DESC"
-);
-// ketiga, buat perulangan di dalam <tbody> di bawah ini
-
+$select_flash_sale = mysqli_query($koneksi, "SELECT * FROM flash_sale ORDER BY id_flash_sale DESC");
 ?>
 
-<?php include "components/header.php" ?>
+<?php include "components/header.php"; ?>
+
+<!-- PEMANGGILAN CSS KUSTOM -->
+<link href="css/custom-style.css" rel="stylesheet">
 
 <body id="page-top">
 
@@ -21,8 +14,7 @@ $select_flash_sale = mysqli_query(
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php include "components/sidebar.php" ?>
-        <!-- End of Sidebar -->
+        <?php include "components/sidebar.php"; ?>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -31,94 +23,72 @@ $select_flash_sale = mysqli_query(
             <div id="content">
 
                 <!-- Topbar -->
-                <?php include "components/topbar.php" ?>
-                <!-- End of Topbar -->
+                <?php include "components/topbar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-
-                        <h1 class="h3 mb-0 text-gray-800">
-                            flash sale
-                        </h1>
-
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">flash sale</h1>
                     </div>
-                    <!--ke empat, tambahkan tombol tambah untuk mengarahkan ke file form_flash_sale.php-->
-                    <a href="form_flash_sale.php" class="btn btn-info mb-2">
-                        Add
+
+                    <!-- Tombol Add -->
+                    <a href="form_flash_sale.php" class="btn btn-pink-add mb-3">
+                        <i class="fas fa-plus fa-sm"></i> Add
                     </a>
 
-
                     <!-- Content Start -->
-
-                    <table class="table table-striped table-bordered">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>nama_produk</th>
-                                <th>jenis</th>
-                                <th>Harga_awal</th>
-                                <th>Harga_akhir</th>
-                                <th>foto</th>
-                                <th>Action</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                             <?php while ($tampil = mysqli_fetch_object($select_flash_sale)) : ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-pink-custom">
+                            <thead>
                                 <tr>
-                                     <td><?php echo $tampil->nama_produk; ?></td>
-                                     <td><?php echo $tampil->jenis; ?></td>
-                                     <td><?php echo $tampil->harga_awal; ?></td>
-                                     <td><?php echo $tampil->harga_akhir; ?></td>
-                                     <td>
-                                         <img src="foto/<?php echo $tampil->foto; ?>" alt="" width="100">
-                                     </td>
-                                    <td>
-                                        <a href="delete_flash_sale.php?id_flash_sale=<?php echo $tampil->id_flash_sale; ?>"
-                                             class="btn btn-danger btn-sm"
-                                             onclick="return confirm('Confirm to delete?')">
-                                             DELETE
-                                        </a>
-                                        <a href="update_form_flash_sale.php?id_flash_sale=<?php echo $tampil->id_flash_sale; ?>"
-                                          class="btn btn-success btn-sm">
-                                          UPDATE
-                                        </a>
-                                    </td>
+                                    <th scope="col">nama_produk</th>
+                                    <th scope="col">jenis</th>
+                                    <th scope="col">Harga_awal</th>
+                                    <th scope="col">Harga_akhir</th>
+                                    <th scope="col">foto</th>
+                                    <th scope="col">Action</th>
                                 </tr>
-                             <?php endwhile; ?>
-                        </tbody>
-
-                    </table>
-
+                            </thead>
+                            <tbody>
+                                <?php while ($tampil = mysqli_fetch_object($select_flash_sale)) : ?>
+                                    <tr>
+                                        <td><?php echo $tampil->nama_produk; ?></td>
+                                        <td><?php echo $tampil->jenis; ?></td>
+                                        <td><?php echo $tampil->harga_awal; ?></td>
+                                        <td><?php echo $tampil->harga_akhir; ?></td>
+                                        <td>
+                                            <img src="foto/<?php echo $tampil->foto; ?>" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
+                                        </td>
+                                        <td>
+                                            <a href="delete_flash_sale.php?id_flash_sale=<?php echo $tampil->id_flash_sale; ?>" class="btn btn-pink-delete" onclick="return confirm('Confirm to delete?')">
+                                                DELETE <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                            <a href="update_form_flash_sale.php?id_flash_sale=<?php echo $tampil->id_flash_sale; ?>" class="btn btn-pink-update">
+                                                UPDATE <i class="fas fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <!-- Content End -->
 
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
-            <!-- End of Main Content -->
 
             <!-- Footer -->
-
-            <?php include "components/footer.php" ?>
-
-            <!-- End of Footer -->
+            <?php include "components/footer.php"; ?>
 
         </div>
-        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-
-    <?php include "partials/bottom.php" ?>
+    <!-- Scroll to Top Button -->
+    <?php include "partials/bottom.php"; ?>
 
 </body>
-
 </html>

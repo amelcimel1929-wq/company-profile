@@ -1,18 +1,20 @@
 <?php
 include "connection.php";
-$select_kategori = mysqli_query($koneksi, "SELECT*FROM kategori ORDER BY id_kategori DESC");
+$select_kategori = mysqli_query($koneksi, "SELECT * FROM kategori ORDER BY id_kategori DESC");
 ?>
-<?php include "components/header.php" ?>
+
+<?php include "components/header.php"; ?>
+
+<!-- PEMANGGILAN CSS KUSTOM -->
+<link href="css/custom-style.css" rel="stylesheet">
 
 <body id="page-top">
-
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php include "components/sidebar.php" ?>
-        <!-- End of Sidebar -->
+        <?php include "components/sidebar.php"; ?>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -21,79 +23,72 @@ $select_kategori = mysqli_query($koneksi, "SELECT*FROM kategori ORDER BY id_kate
             <div id="content">
 
                 <!-- Topbar -->
-                <?php include "components/topbar.php" ?>
-                <!-- End of Topbar -->
+                <?php include "components/topbar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">kategori</h1>
-                       <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">kategori</h1>
                     </div>
 
-                    <a href="form_kategori.php" class="btn btn-info mb-2">Add</a>
+                    <!-- Tombol Add -->
+                    <a href="form_kategori.php" class="btn btn-pink-add mb-3">
+                        <i class="fas fa-plus fa-sm"></i> Add
+                    </a>
 
-                    <!-- content start -->
-
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            
-                            <th scope="col">Model Baju</th>
-                            <th scope="col">kategori</th>
-                            <th scope="col">foto</th>
-                            <th scope="col">harga</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                     while ($tampil = mysqli_fetch_object
-                        ($select_kategori)):
-                        ?>
-                        <tr>
-                            <th scope="row"><?php echo
-                            $tampil->nama_model_baju; ?></th>
-                            <td><?php echo $tampil->jenis_kategori; ?></td>
-                            <td>
-                                <img src="foto/<?php echo $tampil->foto; ?>" alt="" width="100">
-                            </td>
-                            <td><?php echo $tampil->harga; ?></td>
-                            <td><?php echo $tampil->status; ?></td>
-                            <td>
-                                <a href="delete_kategori.php?
-                                id_kategori=<?php echo
-                                $tampil->id_kategori;?>"
-                                class="btn btn-danger"
-                                onclick="return confirm('confirm to delete?')">DELETE</a>
-                                <a href="update_form_kategori.php?id_kategori=<?php echo $tampil->id_kategori; ?>" class="btn btn-success">UPDATE</a>
-                            </td>
-                        </tr>
-<?php endwhile ?>
-                    </tbody> 
-                </table>
-
-                    <!-- content end -->
-
+                    <!-- Content Start -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-pink-custom">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Model Baju</th>
+                                    <th scope="col">kategori</th>
+                                    <th scope="col">foto</th>
+                                    <th scope="col">harga</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($tampil = mysqli_fetch_object($select_kategori)) : ?>
+                                    <tr>
+                                        <td><?php echo $tampil->nama_model_baju; ?></td>
+                                        <td><?php echo $tampil->jenis_kategori; ?></td>
+                                        <td>
+                                            <img src="foto/<?php echo $tampil->foto; ?>" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
+                                        </td>
+                                        <td><?php echo $tampil->harga; ?></td>
+                                        <td><?php echo $tampil->status; ?></td>
+                                        <td>
+                                            <a href="delete_kategori.php?id_kategori=<?php echo $tampil->id_kategori; ?>" class="btn btn-pink-delete" onclick="return confirm('Confirm to delete?')">
+                                                DELETE <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                            <a href="update_form_kategori.php?id_kategori=<?php echo $tampil->id_kategori; ?>" class="btn btn-pink-update">
+                                                UPDATE <i class="fas fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- /.container-fluid -->
+                    <!-- Content End -->
+
+                </div>
 
             </div>
-            <!-- End of Main Content -->
 
             <!-- Footer -->
-            <?php include "components/footer.php" ?>
-            <!-- End of Footer -->
+            <?php include "components/footer.php"; ?>
 
         </div>
-        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <?php include "partials/bottom.php" ?>
+    <!-- Scroll to Top Button -->
+    <?php include "partials/bottom.php"; ?>
+
+</body>
+</html>

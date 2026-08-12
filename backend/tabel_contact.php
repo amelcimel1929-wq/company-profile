@@ -1,18 +1,20 @@
 <?php
 include "connection.php";
-$select_contact = mysqli_query($koneksi, "SELECT*FROM contact ORDER BY id_contact DESC");
+$select_contact = mysqli_query($koneksi, "SELECT * FROM contact ORDER BY id_contact DESC");
 ?>
-<?php include "components/header.php" ?>
+
+<?php include "components/header.php"; ?>
+
+<!-- PEMANGGILAN CSS KUSTOM -->
+<link href="css/custom-style.css" rel="stylesheet">
 
 <body id="page-top">
-
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php include "components/sidebar.php" ?>
-        <!-- End of Sidebar -->
+        <?php include "components/sidebar.php"; ?>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -21,72 +23,70 @@ $select_contact = mysqli_query($koneksi, "SELECT*FROM contact ORDER BY id_contac
             <div id="content">
 
                 <!-- Topbar -->
-                <?php include "components/topbar.php" ?>
-                <!-- End of Topbar -->
+                <?php include "components/topbar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Contact</h1>
-                       <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">Contact</h1>
                     </div>
 
-                    <a href="form_contact.php" class="btn btn-info mb-2">Add</a>
+                    <!-- Tombol Add -->
+                    <a href="form_contact.php" class="btn btn-pink-add mb-3">
+                        <i class="fas fa-plus fa-sm"></i> Add
+                    </a>
 
-                    <!-- content start -->
-
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">No Telepon</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Instagram</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                     while ($tampil = mysqli_fetch_object
-                        ($select_contact)):
-                        ?>
-                        <tr>
-                            <th scope="row"><?php echo
-                            $tampil->no_telepon; ?></th>
-                            <td><?php echo $tampil->email; ?></td>
-                            <td><?php echo $tampil->instagram; ?></td>
-                            <td>
-                                <a href="delete_contact.php?
-                                id_contact=<?php echo
-                                $tampil->id_contact;?>"
-                                class="btn btn-danger"
-                                onclick="return confirm('confirm to delete?')">DELETE</a>
-                                <a href="update_form_contact.php?id_contact=<?php echo $tampil->id_contact; ?>" class="btn btn-success">UPDATE</a>
-                            </td>
-                        </tr>
-<?php endwhile ?>
-                    </tbody> 
-                </table>
-
-                    <!-- content end -->
-
+                    <!-- Content Start -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-pink-custom">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No Telepon</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Instagram</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($tampil = mysqli_fetch_object($select_contact)) : ?>
+                                    <tr>
+                                        <td><?php echo $tampil->no_telepon; ?></td>
+                                        <td><?php echo $tampil->email; ?></td>
+                                      <td>
+    <a href="<?php echo $tampil->instagram; ?>" target="_blank">
+        <i class="fab fa-instagram icon-instagram"></i>
+    </a>
+</td>
+                                        <td>
+                                            <a href="delete_contact.php?id_contact=<?php echo $tampil->id_contact; ?>" class="btn btn-pink-delete" onclick="return confirm('Confirm to delete?')">
+                                                DELETE <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                            <a href="update_form_contact.php?id_contact=<?php echo $tampil->id_contact; ?>" class="btn btn-pink-update">
+                                                UPDATE <i class="fas fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- /.container-fluid -->
+                    <!-- Content End -->
+
+                </div>
 
             </div>
-            <!-- End of Main Content -->
 
             <!-- Footer -->
-            <?php include "components/footer.php" ?>
-            <!-- End of Footer -->
+            <?php include "components/footer.php"; ?>
 
         </div>
-        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <?php include "partials/bottom.php" ?>
+    <!-- Scroll to Top Button -->
+    <?php include "partials/bottom.php"; ?>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ body {
 /* 2. Style Tabel & Garis Pembatas (Border) */
 
 .table-pink-custom {
-    border: 1px solid #e0b0c0 !important;
+    border: 1px solid #e09ab1 !important;
     border-collapse: collapse !important;
     border-radius: 8px;
     overflow: hidden;
@@ -28,7 +28,7 @@ body {
 
 .table-pink-custom th,
 .table-pink-custom td {
-    border: 1px solid #f3c2d0 !important;
+    border: 1px solid #f09ab2 !important;
     vertical-align: middle !important;
     padding: 12px 15px !important;
     color: #583340 !important;
@@ -140,4 +140,79 @@ button[type="reset"]:hover,
 
 .icon-instagram:hover {
     opacity: 0.7;
+}
+
+
+/* Background Halaman Login Pink Pastel */
+
+body.bg-pink-gradient {
+    background-color: #fce8f0 !important;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+
+/* Card Form Login */
+
+.card-login-pink {
+    background-color: #ffffff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 25px rgba(201, 82, 125, 0.12) !important;
+    border: 1px solid #f8c8dc !important;
+}
+
+
+/* Judul Login */
+
+.text-pink-title {
+    color: #6d4150 !important;
+    font-weight: 700 !important;
+}
+
+
+/* Input Form */
+
+.form-control-user-pink {
+    border-radius: 10px !important;
+    padding: 12px 18px !important;
+    border: 1px solid #ebd0d9 !important;
+    color: #583340 !important;
+    height: auto !important;
+}
+
+.form-control-user-pink:focus {
+    border-color: #c9527d !important;
+    box-shadow: 0 0 0 0.2rem rgba(201, 82, 125, 0.2) !important;
+}
+
+
+/* Tombol Login Pink Tua */
+
+.btn-login-pink {
+    background-color: #c9527d !important;
+    border-color: #c9527d !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 12px 20px !important;
+    transition: all 0.3s ease;
+}
+
+.btn-login-pink:hover {
+    background-color: #b03e68 !important;
+    border-color: #b03e68 !important;
+    color: #ffffff !important;
+}
+
+
+/* Link Bawah */
+
+.link-pink {
+    color: #c9527d !important;
+    font-weight: 500;
+}
+
+.link-pink:hover {
+    color: #b03e68 !important;
+    text-decoration: underline !important;
 }

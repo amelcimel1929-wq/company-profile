@@ -18,14 +18,14 @@
 
         /* 1. Warna Background Sidebar Pink Pastel Soft */
         .bg-gradient-primary {
-            background-color: #fbebf0 !important;
+            background-color: #f5cfdb !important;
             background-image: none !important;
             border-right: 1px solid #f3d5df !important;
         }
 
         /* 2. Warna Teks Brand / Logo & Penambahan Jarak ke Bawah */
         .sidebar .sidebar-brand {
-            color: #7d5260 !important;
+            color: #69293f !important;
             font-weight: 600 !important;
             padding-top: 2.5rem !important;    /* Menambah jarak atas */
             padding-bottom: 2.5rem !important; /* Menambah jarak bawah */
@@ -34,13 +34,13 @@
 
         /* 3. Warna Teks Sub-Heading (INTERFACE) */
         .sidebar .sidebar-heading {
-            color: #b08290 !important;
+            color: #822e4a !important;
             font-weight: 600;
         }
 
         /* 4. Warna Teks Menu & Ikon */
         .sidebar-dark .nav-item .nav-link {
-            color: #7d5260 !important;
+            color: #761435 !important;
             font-weight: 400;
             transition: all 0.2s ease-in-out;
         }
@@ -52,8 +52,8 @@
         /* 5. Efek Hover & Menu Aktif */
         .sidebar-dark .nav-item:hover .nav-link,
         .sidebar-dark .nav-item.active .nav-link {
-            color: #583340 !important;
-            background-color: #f7d6e0 !important;
+            color: #7d3b52 !important;
+            background-color: #fadfe7 !important;
             border-radius: 8px;
             font-weight: 600;
         }
@@ -172,6 +172,13 @@
                 <span>Contact</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="tabel_login.php">
+                <i class="fas fa-user"></i>
+                <span>login</span>
+            </a>
+        </li>
+
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">

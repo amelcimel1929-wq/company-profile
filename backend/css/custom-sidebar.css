@@ -1,0 +1,16 @@
+.icon-circle-pink {
+    background: linear-gradient(135deg, #f9c9dd, #ec6ea5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(236, 110, 165, 0.4);
+}
+
+.dress-icon {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+}

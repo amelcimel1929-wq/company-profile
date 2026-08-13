@@ -34,41 +34,42 @@ $kategori = mysqli_fetch_object($select_id);
 
                     <!-- content start -->
 
-            <form action= "action_update_kategori.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id_kategori" value="<?php echo $kategori->id_kategori; ?>">
-                <div class="mb-3">
-                    <label for="nama_model_baju" class="form-label">Nama Model Baju</label>
-                    <input type="text" class="form-control" id="nama_model_baju"
-                    name="nama_model_baju" value="<?php echo
-                    $kategori->nama_model_baju?>">
-                </div>
-                  <div class="mb-3">
-                    <label for="jenis_kategori" class="form-label">Jenis Kategori</label>
-                    <input type="text" class="form-control" id="jenis_kategori"
-                    name="jenis_kategori" value="<?php echo
-                    $kategori->jenis_kategori?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Foto</label><br>
-                    <img src="foto/<?php echo $kategori->foto; ?>" width="150"><br><br>
-                    <label for="img" class="form-label">Ganti foto (boleh kosong)</label>
-                    <input type="file" class="form-control" id="img" name="img">
-                </div>
-                  <div class="mb-3">
-                    <label for="harga" class="form-label">Harga</label>
-                    <input type="text" class="form-control" id="harga"
-                    name="harga" value="<?php echo
-                    $kategori->harga?>">
-                </div>
-                <div class="mb-3">
-    <label for="status" class="form-label">Status</label>
-    <select class="form-control" id="status" name="status">
-        <option value="tersedia" <?php if ($kategori->status == 'tersedia') echo 'selected'; ?>>Tersedia</option>
-        <option value="habis" <?php if ($kategori->status == 'habis') echo 'selected'; ?>>Habis</option>
-    </select>
-</div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+<form action= "action_update_kategori.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id_kategori" value="<?php echo $kategori->id_kategori; ?>">
+    <input type="hidden" name="foto_lama" value="<?php echo $kategori->foto; ?>">
+    <div class="mb-3">
+        <label for="nama_model_baju" class="form-label">Nama Model Baju</label>
+        <input type="text" class="form-control" id="nama_model_baju"
+        name="nama_model_baju" value="<?php echo
+        $kategori->nama_model_baju?>">
+    </div>
+      <div class="mb-3">
+        <label for="jenis_kategori" class="form-label">Jenis Kategori</label>
+        <input type="text" class="form-control" id="jenis_kategori"
+        name="jenis_kategori" value="<?php echo
+        $kategori->jenis_kategori?>">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Foto</label><br>
+        <img src="foto/<?php echo $kategori->foto; ?>" width="150"><br><br>
+        <label for="img" class="form-label">Ganti foto (boleh kosong)</label>
+        <input type="file" class="form-control" id="img" name="img">
+    </div>
+      <div class="mb-3">
+        <label for="harga" class="form-label">Harga</label>
+        <input type="text" class="form-control" id="harga"
+        name="harga" value="<?php echo
+        $kategori->harga?>">
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-control" id="status" name="status">
+            <option value="tersedia" <?php if ($kategori->status == 'tersedia') echo 'selected'; ?>>Tersedia</option>
+            <option value="habis" <?php if ($kategori->status == 'habis') echo 'selected'; ?>>Habis</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
                     <!-- content end -->
 

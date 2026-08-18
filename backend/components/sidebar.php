@@ -116,8 +116,12 @@
                 <span>Profile</span>
             </a>
         </li>
-
-        <!-- Nav Item - Produk -->
+           <li class="nav-item">
+            <a class="nav-link" href="tabel_orders.php">
+                <i class="fas fa-envelope"></i>
+                <span>Detail Order</span>
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="tabel_produk.php">
                 <i class="fas fa-box-open"></i>
@@ -130,22 +134,6 @@
             <a class="nav-link" href="tabel_flash_sale.php">
                 <i class="fas fa-bolt"></i>
                 <span>flash sale</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Kategori -->
-        <li class="nav-item">
-            <a class="nav-link" href="tabel_kategori.php">
-                <i class="fas fa-tags"></i>
-                <span>kategori</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Best Seller -->
-        <li class="nav-item">
-            <a class="nav-link" href="tabel_bestseller.php">
-                <i class="fas fa-star"></i>
-                <span>Best Seller</span>
             </a>
         </li>
 
@@ -166,12 +154,7 @@
         </li>
 
         <!-- Nav Item - Contact -->
-        <li class="nav-item">
-            <a class="nav-link" href="tabel_contact.php">
-                <i class="fas fa-envelope"></i>
-                <span>Contact</span>
-            </a>
-        </li>
+      
         <li class="nav-item">
             <a class="nav-link" href="tabel_login.php">
                 <i class="fas fa-user"></i>

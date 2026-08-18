@@ -1,14 +1,32 @@
 <?php
 include "connection.php";
 
-$vnama_produk = $_POST['nama_produk'];
-$vfoto        = $_FILES['img']['name'];  
+$id_category  = $_POST['id_category'];
+$name_product = $_POST['name_product'];
+$description  = $_POST['description'];
+$price        = $_POST['price'];
+$stock        = $_POST['stock'];
 
-move_uploaded_file($_FILES['img']['tmp_name'], "foto/" . $vfoto);  
+// Ambil nama file dari form input name="image"
+$filename     = $_FILES['image']['name'];
+$tmp_name     = $_FILES['image']['tmp_name'];
 
-$sql_insert = mysqli_query($koneksi, "INSERT INTO produk
-(foto, nama_produk)
-VALUES('$vfoto','$vnama_produk')");
+// Beri nama acak berbasis waktu agar nama file tidak bentrok
+$new_filename = time() . '_' . $filename;
+$folder       = "foto/" . $new_filename;
 
-header("location:tabel_produk.php");
+// Upload gambar ke folder "foto"
+if (move_uploaded_file($tmp_name, $folder)) {
+    // Simpan $new_filename ke kolom Image
+    $insert = mysqli_query($koneksi, "INSERT INTO products (id_category, name_product, description, price, stock, Image) 
+              VALUES ('$id_category', '$name_product', '$description', '$price', '$stock', '$new_filename')");
+
+    if ($insert) {
+        header("Location: tabel_produk.php");
+    } else {
+        echo "Gagal query database: " . mysqli_error($koneksi);
+    }
+} else {
+    echo "Gagal mengunggah gambar ke folder foto/";
+}
 ?>

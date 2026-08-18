@@ -1,66 +1,87 @@
 <?php
 include "connection.php";
-$select_produk = mysqli_query($koneksi, "SELECT * FROM produk ORDER BY id_produk DESC");
+
+$id_category = isset($_GET['id_category']) ? $_GET['id_category'] : '';
+
+if ($id_category != '') {
+    $query = "SELECT products.*, categories.name_kategori 
+              FROM products 
+              JOIN categories ON products.id_category = categories.id_category 
+              WHERE products.id_category = '$id_category' 
+              ORDER BY products.id_product DESC";
+} else {
+    $query = "SELECT products.*, categories.name_kategori 
+              FROM products 
+              JOIN categories ON products.id_category = categories.id_category 
+              ORDER BY products.id_product DESC";
+}
+
+$select_products = mysqli_query($koneksi, $query);
 ?>
 
 <?php include "components/header.php"; ?>
-
-<!-- PEMANGGILAN CSS KUSTOM -->
 <link href="css/custom-style.css" rel="stylesheet">
 
 <body id="page-top">
-
-    <!-- Page Wrapper -->
     <div id="wrapper">
-
-        <!-- Sidebar -->
         <?php include "components/sidebar.php"; ?>
 
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
-
-                <!-- Topbar -->
                 <?php include "components/topbar.php"; ?>
 
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-3">
-                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">produk</h1>
+                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">Produk</h1>
                     </div>
 
-                    <!-- Tombol Add -->
+                    <!-- Filter Kategori (Kemeja / Dress) -->
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                        <a href="tabel_produk.php" class="btn btn-outline-secondary btn-sm <?php echo $id_category == '' ? 'active' : ''; ?>">Semua</a>
+                        <?php 
+                        $categories_btn = mysqli_query($koneksi, "SELECT * FROM categories");
+                        while($cat = mysqli_fetch_object($categories_btn)): 
+                        ?>
+                            <a href="tabel_produk.php?id_category=<?php echo $cat->id_category; ?>" 
+                               class="btn btn-outline-danger btn-sm <?php echo $id_category == $cat->id_category ? 'active' : ''; ?>">
+                                <?php echo $cat->name_kategori; ?>
+                            </a>
+                        <?php endwhile; ?>
+                    </div>
+
                     <a href="form_produk.php" class="btn btn-pink-add mb-3">
-                        <i class="fas fa-plus fa-sm"></i> Add
+                        <i class="fas fa-plus fa-sm"></i> Add Produk
                     </a>
 
-                    <!-- Content Start -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-pink-custom">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nama Produk</th>
-                                    <th scope="col">Foto</th>
-                                    <th scope="col">Action</th>
+                                    <th>Nama Product</th>
+                                    <th>Kategori</th>
+                                    <th>Deskripsi</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
+                                    <th>Image</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($tampil = mysqli_fetch_object($select_produk)) : ?>
+                                <?php while ($tampil = mysqli_fetch_object($select_products)) : ?>
                                     <tr>
-                                        <td><?php echo $tampil->nama_produk; ?></td>
+                                        <td><?php echo $tampil->name_product; ?></td>
+                                        <td><span class="badge badge-info"><?php echo $tampil->name_kategori; ?></span></td>
+                                        <td><?php echo $tampil->description; ?></td>
+                                        <td>Rp <?php echo number_format($tampil->price, 0, ',', '.'); ?></td>
+                                        <td><?php echo $tampil->stock; ?></td>
+    <td>
+    <img src="foto/<?php echo $tampil->image; ?>" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
+</td>
                                         <td>
-                                            <!-- Lebar 120px, tinggi otomatis -->
-<img src="foto/<?php echo $tampil->foto; ?>" alt="" style="width: 120px; height: auto; border-radius: 6px;">
-                                        </td>
-                                        <td>
-                                            <a href="delete_produk.php?id_produk=<?php echo $tampil->id_produk; ?>" class="btn btn-pink-delete" onclick="return confirm('Confirm to delete?')">
+                                            <a href="delete_produk.php?id_product=<?php echo $tampil->id_product; ?>" class="btn btn-pink-delete" onclick="return confirm('Confirm to delete?')">
                                                 DELETE <i class="fas fa-trash-alt"></i>
                                             </a>
-                                            <a href="update_form_produk.php?id_produk=<?php echo $tampil->id_produk; ?>" class="btn btn-pink-update">
+                                            <a href="update_form_produk.php?id_product=<?php echo $tampil->id_product; ?>" class="btn btn-pink-update">
                                                 UPDATE <i class="fas fa-pen"></i>
                                             </a>
                                         </td>
@@ -69,21 +90,11 @@ $select_produk = mysqli_query($koneksi, "SELECT * FROM produk ORDER BY id_produk
                             </tbody>
                         </table>
                     </div>
-                    <!-- Content End -->
-
                 </div>
-
             </div>
-
-            <!-- Footer -->
             <?php include "components/footer.php"; ?>
-
         </div>
-
     </div>
-
-    <!-- Scroll to Top Button -->
     <?php include "partials/bottom.php"; ?>
-
 </body>
 </html>

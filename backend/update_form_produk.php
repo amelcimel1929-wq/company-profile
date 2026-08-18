@@ -1,73 +1,85 @@
-<?php include "connection.php";
-$id_produk = $_GET['id_produk'];
-$select_id = mysqli_query($koneksi, "SELECT*FROM produk WHERE id_produk='$id_produk'");
-$produk = mysqli_fetch_object($select_id);
+<?php
+include "connection.php";
+
+// Proteksi jika id_product tidak dikirim via URL
+if (!isset($_GET['id_product']) || empty($_GET['id_product'])) {
+    header("Location: tabel_produk.php");
+    exit();
+}
+
+$id_product = $_GET['id_product'];
+$get_data   = mysqli_query($koneksi, "SELECT * FROM products WHERE id_product = '$id_product'");
+$data       = mysqli_fetch_object($get_data);
+
+// Proteksi jika data ID tidak ada di database
+if (!$data) {
+    header("Location: tabel_produk.php");
+    exit();
+}
+
+$categories = mysqli_query($koneksi, "SELECT * FROM categories");
 ?>
-<?php include "components/header.php" ?>
+<?php include "components/header.php"; ?>
+<link href="css/custom-style.css" rel="stylesheet">
+
 <body id="page-top">
-
-
-    <!-- Page Wrapper -->
     <div id="wrapper">
+        <?php include "components/sidebar.php"; ?>
 
-        <!-- Sidebar -->
-        <?php include "components/sidebar.php" ?>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
+                <?php include "components/topbar.php"; ?>
 
-                <!-- Topbar -->
-                <?php include "components/topbar.php" ?>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Produk</h1>
+                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">Edit Produk</h1>
                     </div>
 
-                    <!-- content start -->
+                    <form action="action_update_produk.php" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id_product" value="<?php echo $data->id_product; ?>">
+                        
+                        <div class="mb-3">
+                            <label for="id_category" class="form-label">Kategori</label>
+                            <select class="form-control" id="id_category" name="id_category" required>
+                                <?php while($cat = mysqli_fetch_object($categories)): ?>
+                                    <option value="<?php echo $cat->id_category; ?>" <?php echo ($cat->id_category == $data->id_category) ? 'selected' : ''; ?>>
+                                        <?php echo $cat->name_kategori; ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name_product" class="form-label">Nama Produk</label>
+                            <input type="text" class="form-control" id="name_product" name="name_product" value="<?php echo $data->name_product; ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required><?php echo $data->description; ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Harga</label>
+                            <input type="number" class="form-control" id="price" name="price" value="<?php echo $data->price; ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stok</label>
+                            <input type="number" class="form-control" id="stock" name="stock" value="<?php echo $data->stock; ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Foto Produk (Biarkan kosong jika tidak diganti)</label><br>
+                            <?php if (!empty($data->image)): ?>
+                                <img src="foto/<?php echo $data->image; ?>" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px;" class="mb-2"><br>
+                            <?php endif; ?>
+                            <input type="file" class="form-control" id="image" name="image">
+                        </div>
 
-            <form action= "action_update_produk.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id_produk" value="<?php echo $produk->id_produk; ?>">
-                <div class="mb-3">
-                    <label for="nama_produk" class="form-label">Nama Produk</label>
-                    <input type="text" class="form-control" id="nama_produk"
-                    name="nama_produk" value="<?php echo
-                    $produk->nama_produk?>">
+                        <button type="submit" class="btn btn-pink-update">Update</button>
+                        <a href="tabel_produk.php" class="btn btn-secondary">Batal</a>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Foto</label><br>
-                    <img src="foto/<?php echo $produk->foto; ?>" width="150"><br><br>
-                    <label for="img" class="form-label">Ganti foto (boleh kosong)</label>
-                    <input type="file" class="form-control" id="img" name="img">
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-
-                    <!-- content end -->
-
-                    </div>
-                    <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <?php include "components/footer.php" ?>
-            <!-- End of Footer -->
-
+            <?php include "components/footer.php"; ?>
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <?php include "partials/bottom.php" ?>
+    <?php include "partials/bottom.php"; ?>
+</body>
+</html>

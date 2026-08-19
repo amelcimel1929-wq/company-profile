@@ -41,11 +41,11 @@
     <main class="main" id="top">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container">
-                <a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block" src="assets/img/gallery/logo.png" alt="logo" /><span class="text-1000 fs-0 fw-bold ms-2">Majestic</span></a>
+                <a class="navbar-brand d-inline-flex" href="index.php"><img class="d-inline-block" src="assets/img/gallery/logo.png" alt="logo" /><span class="text-1000 fs-0 fw-bold ms-2">Home</span></a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="#categoryWomen">Women</a></li>
+                        <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="#categoryWomen">kategori</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="#header">Men</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="#collection">Collection</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="#outlet">Outlet</a></li>
@@ -79,10 +79,11 @@
                 </div>
             </div>
         </nav>
-        <section class="py-11 bg-light-gradient border-bottom border-white border-5">
+                                     <!--PROFILE LATAR BELAKANG-->
+        <!--<section class="py-11 bg-light-gradient border-bottom border-white border-5">
             <div class="bg-holder overlay overlay-light" style="background-image:url(assets/img/gallery/header-bg.png);background-size:cover;">
             </div>
-            <!--/.bg-holder-->
+          
 
             <div class="container">
                 <div class="row flex-center">
@@ -94,12 +95,46 @@
                     </div>
                 </div>
             </div>
+        </section>-->
+        <?php
+             // 1. Panggil koneksi ke database dari folder backend
+            include "../../backend/connection.php";
+
+            // 2. Ambil data terbaru dari tabel profile
+            $query_profile = mysqli_query($koneksi, "SELECT * FROM profile ORDER BY id_profile DESC LIMIT 1");
+            $profile = mysqli_fetch_object($query_profile);
+
+            // 3. Tentukan lokasi foto background (menggunakan foto default jika di database kosong)
+            $bg_image = "assets/img/gallery/header-bg.png"; // Default background
+            if (!empty($profile) && !empty($profile->foto)) {
+                 // Jalur foto disesuaikan dengan folder penyimpanan foto kamu di backend
+                 $bg_image = "../../backend/foto/" . $profile->foto; 
+                }
+        ?>
+
+        <!-- SECTION HEADER / PROFILE FRONTEND -->
+        <section class="py-11 bg-light-gradient border-bottom border-white border-5">
+            <div class="bg-holder overlay overlay-light" style="background-image:url(<?php echo $bg_image; ?>);background-size:cover;"></div>
+                     <!--/.bg-holder-->
+                    <div class="container">
+                        <div class="row flex-center">
+                            <div class="col-12 mb-10">
+                                <div class="d-flex align-items-center flex-column">
+                                        <h1 class="fw-normal">Old pieces, new vibes.</h1>
+                                        <h1 class="fs-4 fs-lg-8 fs-md-6 fw-bold">
+                                            <?php echo (!empty($profile) && !empty($profile->about)) ? $profile->about : 'Exclusively designed for you'; ?>
+                                        </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         </section>
 
 
         <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0" id="header" style="margin-top: -23rem !important;">
+            <!--buat for her dan for him-->
+        <!--<section class="py-0" id="header" style="margin-top: -23rem !important;">
 
             <div class="container">
                 <div class="row g-0">
@@ -115,18 +150,145 @@
                     </div>
                 </div>
             </div>
-            <!-- end of .container-->
+         
 
+        </section>-->
+        <!--<section>
+
+            <div class="container">
+                <div class="row h-100 g-0">
+                    <div class="col-md-6">
+                        <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
+                            <h4 class="text-800">Exclusive collection 2021</h4>
+                            <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Be exclusive</h1>
+                            <p class="mb-5 fs-1">The best everyday option in a Super Saver range within a reasonable price. It is our responsibility to keep you 100 percent stylish. Be smart &amp; , trendy with us.</p>
+                            <div class="d-grid gap-2 d-md-block"><a class="btn btn-lg btn-dark" href="#" role="button">Explore</a></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/outfit.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Outfit
+                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                      </svg></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row h-100 g-2 py-1">
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
+                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                      </svg></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
+                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                      </svg></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
+                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                      </svg></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>-->
+       <?php
+            // 1. Panggil file koneksi database
+            include '../../backend/connection.php';
+
+                // 2. Query ke tabel about (mengambil data dari database company-profile)
+                $query_about = mysqli_query($koneksi, "SELECT * FROM about LIMIT 1");
+                $data_about  = mysqli_fetch_assoc($query_about);
+
+                // 3. Ambil data dari tabel about
+                $nama_brand = $data_about['nama_brand'] ?? '';
+                $deskripsi  = $data_about['deskripsi'] ?? '';
+
+                // Menggabungkan folder "foto/" dengan nama file foto dari tabel about
+                $foto_about = '../../backend/foto/' . ($data_about['foto'] ?? '');
+        ?>
+
+            <section>
+                <div class="container">
+                    <div class="row h-100 g-0">
+                        <div class="col-md-6">
+                            <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
+                                <!-- Field nama_brand -->
+                                <h4 class="text-800"><?= htmlspecialchars($nama_brand); ?></h4>
+                                <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Be exclusive</h1>
+                                <!-- Field deskripsi -->
+                                <p class="mb-5 fs-1"><?= htmlspecialchars($deskripsi); ?></p>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-span h-100 text-white">
+                                <!-- Field foto -->
+                                <img class="card-img h-100" src="<?= htmlspecialchars($foto_about); ?>" alt="Foto About" />
+                                <div class="card-img-overlay bg-dark-gradient">
+                                    <div class="d-flex align-items-end justify-content-center h-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <!--<div class="row h-100 g-2 py-1">
+            <div class="col-md-4">
+                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
+                    <div class="card-img-overlay bg-dark-gradient">
+                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
+                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                            </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
+                    <div class="card-img-overlay bg-dark-gradient">
+                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
+                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                            </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
+                    <div class="card-img-overlay bg-dark-gradient">
+                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
+                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                            </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        </div>
         </section>
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
-
-
-
-
-        <!-- ============================================-->
+             <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0">
+        <!--<section class="py-0">
 
             <div class="container">
                 <div class="row h-100">
@@ -322,81 +484,82 @@
                     <div class="col-12 d-flex justify-content-center mt-5"> <a class="btn btn-lg btn-dark" href="#!">View All </a></div>
                 </div>
             </div>
-            <!-- end of .container-->
+    
 
-        </section>
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
+        </section>-->
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="10000">
+                <div class="row h-100 align-items-center g-2">
 
+                    <?php
+                        include "../../backend/connection.php";
 
-
-
-        <!-- ============================================-->
-        <!-- <section> begin ============================-->
-        <section>
-
-            <div class="container">
-                <div class="row h-100 g-0">
-                    <div class="col-md-6">
-                        <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
-                            <h4 class="text-800">Exclusive collection 2021</h4>
-                            <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Be exclusive</h1>
-                            <p class="mb-5 fs-1">The best everyday option in a Super Saver range within a reasonable price. It is our responsibility to keep you 100 percent stylish. Be smart &amp; , trendy with us.</p>
-                            <div class="d-grid gap-2 d-md-block"><a class="btn btn-lg btn-dark" href="#" role="button">Explore</a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/outfit.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Outfit
-                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                      </svg></a></div>
+                        $query_flash_sale = mysqli_query(
+                        $koneksi, "SELECT * FROM flash_sale");
+                        if (!$query_flash_sale) {
+                            die("Query gagal: " . mysqli_error($koneksi));
+                        }
+                   ?>
+                    <section class="py-0">
+                        <div class="container">
+                            <div class="row h-100">
+                                <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
+                                    <h5 class="fw-bold fs-3 fs-lg-5 lh-sm">
+                                        Flash Sale
+                                    </h5>
+                                </div>
+                                <div class="col-12">
+                                    <div class="carousel slide"
+                                        id="carouselFlashSale"
+                                        data-bs-touch="false"
+                                        data-bs-interval="false">
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <div class="row h-100 align-items-center g-2">
+                                                    <?php while ($flash = mysqli_fetch_object($query_flash_sale)) { ?>
+                                                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0 h-100">
+                                                            <div class="card card-span h-100 text-white">
+                                                                <img
+                                                                    class="img-fluid h-100"
+                                                                    src="../../backend/foto/<?php echo $flash->foto; ?>"
+                                                                    alt="<?php echo $flash->nama_produk; ?>"
+                                                                >
+                                                                <div class="card-img-overlay ps-0"></div>
+                                                                <div class="card-body ps-0 bg-200">
+                                                                    <h5 class="fw-bold text-1000 text-truncate">
+                                                                        <?php echo $flash->nama_produk; ?>
+                                                                    </h5>
+                                                                    <div class="fw-bold">
+                                                                        <span class="text-600 me-2 text-decoration-line-through">
+                                                                            Rp <?php echo number_format($flash->harga_awal, 0, ',', '.'); ?>
+                                                                        </span>
+                                                                        <span class="text-primary">
+                                                                            Rp <?php echo number_format($flash->harga_akhir, 0, ',', '.'); ?>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <a class="stretched-link" href="#"></a>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row h-100 g-2 py-1">
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
-                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                      </svg></a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
-                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                      </svg></a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
-                      <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                      </svg></a></div>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
                 </div>
             </div>
-            <!-- end of .container-->
-
-        </section>
+        </div>
+        
+        
         <!-- <section> close ============================-->
         <!-- ============================================-->
 
 
-        <section class="py-0">
+        <!--<section class="py-0">
             <div class="container">
                 <div class="row h-100">
                     <div class="col-lg-7 mx-auto text-center mb-6">
@@ -590,7 +753,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>-->
         <section id="categoryWomen">
             <div class="container">
                 <div class="row h-100">

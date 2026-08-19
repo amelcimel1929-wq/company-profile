@@ -57,9 +57,8 @@ $select_orders = mysqli_query($koneksi, $query);
                                             <span class="badge <?php echo $badge_class; ?> p-2"><?php echo $order->status; ?></span>
                                         </td>
                                         <td>
-                                            <a href="detail_order.php?id_order=<?php echo $order->id_order; ?>" class="btn btn-pink-update btn-sm">
-                                                <i class="fas fa-eye"></i> Detail
-                                            </a>
+                                          <a href="detail_orders.php?id_order=<?php echo $order->id_order; ?>" class="btn btn-pink-update btn-sm">
+                                            <i class="fas fa-eye"></i> Detail   
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>

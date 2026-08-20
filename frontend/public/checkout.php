@@ -2,72 +2,61 @@
 session_start();
 require "../../backend/connection.php";
 
-// 1. Validasi parameter id_product
-if (!isset($_GET['id_product']) || empty($_GET['id_product'])) {
-    die("Produk tidak ditemukan.");
+$idProduct = isset($_GET['id_product']) ? (int) $_GET['id_product'] : 0;
+if ($idProduct <= 0) {
+    header('Location: produk.php');
+    exit;
 }
 
-$id_product = $_GET['id_product'];
-
-// 2. Gunakan Prepared Statement untuk keamanan SQL Injection
 $stmt = mysqli_prepare($koneksi, "SELECT * FROM products WHERE id_product = ?");
-mysqli_stmt_bind_param($stmt, "s", $id_product); // gunakan "i" jika id_product bertipe INT/Angka
+mysqli_stmt_bind_param($stmt, "i", $idProduct);
 mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$produk = mysqli_fetch_assoc($result);
-
-if (!$produk) {
-    die("Produk tidak ditemukan.");
+$product = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+mysqli_stmt_close($stmt);
+if (!$product) {
+    exit('Produk tidak ditemukan.');
 }
 ?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Checkout - <?= htmlspecialchars($produk['name_product']) ?></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detail Pesanan - <?= htmlspecialchars($product['name_product']) ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-
-<section class="py-5">
-    <div class="container">
-        <div class="row">
+<body class="bg-light">
+<main class="container py-5">
+    <a href="produk.php" class="btn btn-link text-dark px-0 mb-3">&larr; Kembali ke produk</a>
+    <div class="card border-0 shadow-sm overflow-hidden">
+        <div class="row g-0">
             <div class="col-md-5">
-                <img src="../../foto/<?= htmlspecialchars($produk['image']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($produk['name_product']) ?>">
+                <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" class="w-100 h-100" style="min-height: 360px; object-fit: cover;" alt="<?= htmlspecialchars($product['name_product']) ?>">
             </div>
             <div class="col-md-7">
-                <h3><?= htmlspecialchars($produk['name_product']) ?></h3>
-                <p class="text-muted"><?= htmlspecialchars($produk['description']) ?></p>
-                <h4 class="text-primary">Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?></h4>
+                <div class="card-body p-4 p-lg-5">
+                    <p class="text-uppercase small text-muted mb-2">Detail pesanan</p>
+                    <h1 class="h2"><?= htmlspecialchars($product['name_product']) ?></h1>
+                    <p class="text-muted"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
+                    <p class="fs-4 fw-bold">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></p>
+                    <p class="small text-muted">Stok tersedia: <?= (int) $product['stock'] ?></p>
 
-                <!-- PATH ACTION DISESUAIKAN DENGAN STRUKTUR "../../backend/" -->
-                <form action="../../backend/action_insert_order.php" method="POST">
-                    <input type="hidden" name="id_product" value="<?= htmlspecialchars($produk['id_product']) ?>">
-                    <input type="hidden" name="price" value="<?= htmlspecialchars($produk['price']) ?>">
-
-                    <div class="mb-3">
-                        <label class="form-label">Ukuran</label>
-                        <select name="size" class="form-select" required>
-                            <option value="">-- Pilih Ukuran --</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Jumlah</label>
-                        <input type="number" name="quantity" class="form-control"
-                               value="1" min="1" max="<?= (int)$produk['stock'] ?>" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark btn-lg">Lanjut ke Pembayaran</button>
-                </form>
+                    <?php if ((int) $product['stock'] > 0): ?>
+                        <form action="../../backend/action_insert_order.php" method="post" class="mt-4">
+                            <input type="hidden" name="id_product" value="<?= (int) $product['id_product'] ?>">
+                            <div class="mb-3" style="max-width: 180px;">
+                                <label for="quantity" class="form-label">Jumlah</label>
+                                <input id="quantity" type="number" name="quantity" class="form-control" value="1" min="1" max="<?= (int) $product['stock'] ?>" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark btn-lg">Lanjut ke Pembayaran</button>
+                        </form>
+                    <?php else: ?>
+                        <div class="alert alert-secondary mb-0">Produk ini sedang habis.</div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-</section>
-
+</main>
 </body>
 </html>

@@ -1,113 +1,75 @@
-<section id="categoryWomen">
-    <div class="container">
-        <div class="row h-100">
-            <div class="col-lg-7 mx-auto text-center mb-6">
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Shop By Category</h5>
-            </div>
-            <div class="col-12">
-                <?php
-                require "backend/connection.php";
-                $query_kategori = mysqli_query($koneksi, "SELECT * FROM categories");
-                ?>
+<?php
+session_start();
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit;
+}
+require "../../backend/connection.php";
 
-                <!-- Tab Kategori -->
-                <ul class="nav nav-pills justify-content-center mb-5" id="pills-tab-kategori" role="tablist">
-                    <?php $i = 0; while ($kat = mysqli_fetch_assoc($query_kategori)): ?>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link <?= $i == 0 ? 'active' : '' ?>"
-                                    id="pills-kat<?= $kat['id_category'] ?>-tab"
-                                    data-bs-toggle="pill"
-                                    data-bs-target="#pills-kat<?= $kat['id_category'] ?>"
-                                    type="button" role="tab">
-                                <?= htmlspecialchars($kat['name_kategori']) ?>
-                            </button>
-                        </li>
-                    <?php $i++; endwhile; ?>
-                </ul>
+$selectedCategory = isset($_GET['id_category']) ? (int) $_GET['id_category'] : 0;
+$categories = mysqli_query($koneksi, "SELECT id_category, name_kategori FROM categories ORDER BY name_kategori ASC");
 
-                <!-- Isi Tab -->
-                <div class="tab-content" id="pills-tabContentKategori">
-                    <?php
-                    $query_kategori2 = mysqli_query($koneksi, "SELECT * FROM categories");
-                    $i = 0;
-                    while ($kat = mysqli_fetch_assoc($query_kategori2)):
-                        $id_kat = $kat['id_category'];
-                    ?>
-                        <div class="tab-pane fade <?= $i == 0 ? 'show active' : '' ?>"
-                             id="pills-kat<?= $id_kat ?>" role="tabpanel">
-
-                            <div class="carousel slide" id="carouselKat<?= $id_kat ?>" data-bs-touch="false" data-bs-interval="false">
-                                <div class="carousel-inner">
-                                    <?php
-                                    $query_produk = mysqli_query($koneksi,
-                                        "SELECT * FROM products WHERE id_category = '$id_kat' ORDER BY id_product DESC"
-                                    );
-
-                                    $per_slide = 4;
-                                    $index = 0;
-
-                                    while ($produk = mysqli_fetch_assoc($query_produk)):
-                                        if ($index % $per_slide == 0) {
-                                            if ($index != 0) {
-                                                echo '</div></div>';
-                                            }
-                                            $active = ($index == 0) ? 'active' : '';
-                                            echo '<div class="carousel-item ' . $active . '">';
-                                            echo '<div class="row h-100 align-items-center g-2">';
-                                        }
-                                    ?>
-                                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0 h-100">
-                                            <div class="card card-span h-100 text-white">
-                                                <img class="img-fluid h-100"
-                                                     src="foto/<?= htmlspecialchars($produk['image']) ?>"
-                                                     alt="<?= htmlspecialchars($produk['name_product']) ?>" />
-                                                <div class="card-img-overlay ps-0"></div>
-                                                <div class="card-body ps-0 bg-200">
-                                                    <h5 class="fw-bold text-1000 text-truncate">
-                                                        <?= htmlspecialchars($produk['name_product']) ?>
-                                                    </h5>
-                                                    <div class="fw-bold">
-                                                        <span class="text-primary">
-                                                            Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <a class="stretched-link" href="checkout.php?id_product=<?= $produk['id_product'] ?>"></a>
-                                            </div>
-                                        </div>
-                                    <?php
-                                        $index++;
-                                    endwhile;
-
-                                    if ($index > 0) {
-                                        echo '</div></div>';
-                                    } else {
-                                        echo '<p class="text-center py-4">Belum ada produk di kategori ini.</p>';
-                                    }
-                                    ?>
-
-                                    <?php if ($index > 0): ?>
-                                    <div class="row">
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselKat<?= $id_kat ?>" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselKat<?= $id_kat ?>" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
-                                    </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-
-                            <div class="col-12 d-flex justify-content-center mt-5">
-                                <a class="btn btn-lg btn-dark" href="produk.php?id_category=<?= $id_kat ?>">View All</a>
-                            </div>
-                        </div>
-                    <?php $i++; endwhile; ?>
-                </div>
-            </div>
+if ($selectedCategory > 0) {
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? ORDER BY p.id_product DESC");
+    mysqli_stmt_bind_param($stmt, "i", $selectedCategory);
+} else {
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category ORDER BY p.id_product DESC");
+}
+mysqli_stmt_execute($stmt);
+$products = mysqli_stmt_get_result($stmt);
+?>
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Produk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<main class="container py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1">Koleksi Produk</h1>
+            <p class="text-muted mb-0">Pilih kategori Dress atau Kemeja, lalu pesan produk pilihanmu.</p>
         </div>
+        <a class="btn btn-outline-dark" href="index.php">Kembali ke Beranda</a>
     </div>
-</section>
+
+    <nav class="nav nav-pills flex-wrap gap-2 mb-4" aria-label="Kategori produk">
+        <a class="nav-link <?= $selectedCategory === 0 ? 'active' : 'text-dark bg-white border' ?>" href="produk.php">Semua</a>
+        <?php while ($category = mysqli_fetch_assoc($categories)): ?>
+            <a class="nav-link <?= $selectedCategory === (int) $category['id_category'] ? 'active' : 'text-dark bg-white border' ?>"
+               href="produk.php?id_category=<?= (int) $category['id_category'] ?>">
+                <?= htmlspecialchars($category['name_kategori']) ?>
+            </a>
+        <?php endwhile; ?>
+    </nav>
+
+    <div class="row g-4">
+        <?php if (mysqli_num_rows($products) === 0): ?>
+            <div class="col-12"><div class="alert alert-info">Belum ada produk pada kategori ini.</div></div>
+        <?php endif; ?>
+        <?php while ($product = mysqli_fetch_assoc($products)): ?>
+            <div class="col-sm-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" class="card-img-top" style="height: 340px; object-fit: cover;" alt="<?= htmlspecialchars($product['name_product']) ?>">
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge text-bg-secondary align-self-start mb-2"><?= htmlspecialchars($product['name_kategori']) ?></span>
+                        <h2 class="h5"><?= htmlspecialchars($product['name_product']) ?></h2>
+                        <p class="text-muted small flex-grow-1"><?= htmlspecialchars($product['description']) ?></p>
+                        <p class="fw-bold mb-1">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></p>
+                        <p class="small text-muted">Stok: <?= (int) $product['stock'] ?></p>
+                        <?php if ((int) $product['stock'] > 0): ?>
+                            <a class="btn btn-dark w-100" href="checkout.php?id_product=<?= (int) $product['id_product'] ?>">Pesan Sekarang</a>
+                        <?php else: ?>
+                            <button class="btn btn-secondary w-100" disabled>Stok Habis</button>
+                        <?php endif; ?>
+                    </div>
+                </article>
+            </div>
+        <?php endwhile; ?>
+    </div>
+</main>
+</body>
+</html>

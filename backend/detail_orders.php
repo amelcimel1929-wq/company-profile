@@ -67,8 +67,10 @@ $query_details = mysqli_query($koneksi, "SELECT order_details.*, products.name_p
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold" style="color: #7d5260;">Pembayaran (QRIS)</h5>
                                     <p class="mb-1"><strong>Status Bayar:</strong> 
-                                        <?php if ($order->payment_status == 'Lunas'): ?>
+                                        <?php if ($order->payment_status == 'lunas'): ?>
                                             <span class="badge badge-success">Lunas</span>
+                                        <?php elseif (!empty($order->proof_image)): ?>
+                                            <span class="badge badge-info">Menunggu Verifikasi</span>
                                         <?php else: ?>
                                             <span class="badge badge-warning">Belum Bayar / Menunggu Verifikasi</span>
                                         <?php endif; ?>
@@ -109,7 +111,7 @@ $query_details = mysqli_query($koneksi, "SELECT order_details.*, products.name_p
                                             <select name="status" class="form-control" required>
                                                 <option value="Menunggu" <?php echo ($order->status == 'Menunggu') ? 'selected' : ''; ?>>Menunggu</option>
                                                 <option value="Diproses" <?php echo ($order->status == 'Diproses') ? 'selected' : ''; ?>>Diproses</option>
-                                                <option value="Siap Diambil" <?php echo ($order->status == 'Siap Diambil') ? 'selected' : ''; ?>>Siap Diambil</option>
+                                                <option value="Siap diambil" <?php echo ($order->status == 'Siap diambil') ? 'selected' : ''; ?>>Siap diambil</option>
                                                 <option value="Sudah Diambil" <?php echo ($order->status == 'Sudah Diambil') ? 'selected' : ''; ?>>Sudah Diambil</option>
                                                 <option value="Dibatalkan" <?php echo ($order->status == 'Dibatalkan') ? 'selected' : ''; ?>>Dibatalkan</option>
                                             </select>

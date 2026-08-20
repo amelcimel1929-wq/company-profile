@@ -50,7 +50,7 @@ $select_orders = mysqli_query($koneksi, $query);
                                             $badge_class = 'badge-secondary';
                                             if ($order->status == 'Menunggu') $badge_class = 'badge-warning';
                                             elseif ($order->status == 'Diproses') $badge_class = 'badge-info';
-                                            elseif ($order->status == 'Siap Diambil') $badge_class = 'badge-primary';
+                                            elseif ($order->status == 'Siap diambil') $badge_class = 'badge-primary';
                                             elseif ($order->status == 'Sudah Diambil') $badge_class = 'badge-success';
                                             elseif ($order->status == 'Dibatalkan') $badge_class = 'badge-danger';
                                             ?>

@@ -66,6 +66,203 @@ if (!isset($_SESSION['id_user'])) {
         .img-container:hover .img-overlay {
             opacity: 1;
         }
+        /* Section Category Style */
+    #categoryWomen {
+        background-color: #faf5f7;
+    }
+
+    .category-title-line {
+        width: 50px;
+        height: 2px;
+        background-color: #d87093;
+        margin: 8px auto 0;
+    }
+
+    /* Style Tab Pills Filter Kategori */
+    #pills-tab-kategori .nav-link {
+        color: #4a4a4a;
+        background-color: #ffffff;
+        border: 1px solid #f0c4d4;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    #pills-tab-kategori .nav-link.active, 
+    #pills-tab-kategori .nav-link:hover {
+        background-color: #d87093 !important;
+        color: #ffffff !important;
+        border-color: #d87093 !important;
+        box-shadow: 0 4px 10px rgba(216, 112, 147, 0.2);
+    }
+
+    /* Style Card Produk Shopee */
+    .shopee-card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #f3dbe3;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        overflow: hidden;
+    }
+
+    .shopee-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        border-color: #e8b8ca;
+    }
+
+    /* Container Gambar & Overlay Detail */
+    .img-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .img-overlay-detail {
+        position: absolute;
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 3;
+    }
+
+    .img-container:hover .img-overlay-detail {
+        opacity: 1;
+    }
+
+    .btn-detail-hover {
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    /* Tipografi Card & Price */
+    .product-title {
+        font-size: 0.88rem;
+        color: #333333;
+        line-height: 1.3;
+        height: 2.3em;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-price {
+        color: #c2597d;
+    }
+
+    /* Tombol Pesan Soft Pink */
+    .btn-soft-pink {
+        background-color: #d87093;
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-soft-pink:hover {
+        background-color: #c2597d;
+        color: #ffffff;
+    }
+
+    /* Tombol Lihat Semua */
+    .btn-view-all {
+        background-color: #ffffff;
+        color: #c2597d;
+        border: 1.5px solid #d87093;
+        border-radius: 20px;
+        font-size: 0.88rem;
+    }
+    
+
+
+    
+    
+   
+    /* Section Owner Wrapper */
+    .owner-box-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0; /* Corner Lancip */
+        border: 1px solid #f3dbe3;
+        box-shadow: 0 8px 25px rgba(216, 112, 147, 0.12);
+        max-width: 1100px; /* Di-presisikan agar tidak terlalu melar/gepeng */
+        margin: 0 auto;
+    }
+
+    /* Background Foto cinta.jpeg (Di dalam kotak) */
+    .owner-bg-cinta {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: url('../../backend/foto/cinta.jpeg');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.5; /* Latar belakang kelihatan jelas */
+        z-index: 1;
+    }
+
+    /* Container Foto Owner agar Foto Proporsional */
+    .owner-img-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
+        overflow: hidden;
+    }
+
+    .owner-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Mencegah foto gepeng/tertarik */
+        object-position: center top; /* Fokus ke area wajah */
+    }
+
+    /* Overlay Instagram saat Hover Foto Owner */
+    .owner-ig-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 3;
+    }
+
+    .owner-img-container:hover .owner-ig-overlay {
+        opacity: 1;
+    }
+
+    .btn-ig-hover {
+        background-color: #ffffff;
+        color: #d87093;
+        font-weight: 600;
+        padding: 10px 22px;
+        border-radius: 0; /* Lancip */
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-ig-hover:hover {
+        background-color: #d87093;
+        color: #ffffff;
+        transform: scale(1.05);
+    }
+
+
     </style>
 
 </head>
@@ -3206,12 +3403,18 @@ if (!isset($_SESSION['id_user'])) {
                 </div>
             </div>
         </section>-->
-        <section id="categoryWomen">
+<section id="categoryWomen" class="py-5">
     <div class="container">
-        <div class="row h-100">
-            <div class="col-lg-7 mx-auto text-center mb-6">
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Shop By Category</h5>
+        
+        <!-- Judul Section -->
+        <div class="row">
+            <div class="col-lg-7 mx-auto text-center mb-4">
+                <h3 class="fw-bold" style="font-family: 'Playfair Display', serif; color: #2b2b2b;">Shop By Category</h3>
+                <div class="category-title-line"></div>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-12">
                 <?php
                 require "../../backend/connection.php";
@@ -3219,21 +3422,22 @@ if (!isset($_SESSION['id_user'])) {
                 ?>
 
                 <!-- Tab Kategori -->
-                <ul class="nav nav-pills justify-content-center mb-5" id="pills-tab-kategori" role="tablist">
+                <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="pills-tab-kategori" role="tablist">
                     <?php $i = 0; while ($kat = mysqli_fetch_assoc($query_kategori)): ?>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link <?= $i == 0 ? 'active' : '' ?>"
+                            <button class="nav-link px-4 py-2 fw-bold <?= $i == 0 ? 'active' : '' ?>"
                                     id="pills-kat<?= $kat['id_category'] ?>-tab"
                                     data-bs-toggle="pill"
                                     data-bs-target="#pills-kat<?= $kat['id_category'] ?>"
-                                    type="button" role="tab">
+                                    type="button" 
+                                    role="tab">
                                 <?= htmlspecialchars($kat['name_kategori']) ?>
                             </button>
                         </li>
                     <?php $i++; endwhile; ?>
                 </ul>
 
-                <!-- Isi Tab -->
+                <!-- Content Tab Produk -->
                 <div class="tab-content" id="pills-tabContentKategori">
                     <?php
                     $query_kategori2 = mysqli_query($koneksi, "SELECT * FROM categories ORDER BY FIELD(LOWER(name_kategori), 'kemeja', 'dress'), name_kategori");
@@ -3242,87 +3446,87 @@ if (!isset($_SESSION['id_user'])) {
                         $id_kat = $kat['id_category'];
                     ?>
                         <div class="tab-pane fade <?= $i == 0 ? 'show active' : '' ?>"
-                             id="pills-kat<?= $id_kat ?>" role="tabpanel">
+                             id="pills-kat<?= $id_kat ?>" 
+                             role="tabpanel">
 
-                            <div class="carousel slide" id="carouselKat<?= $id_kat ?>" data-bs-touch="false" data-bs-interval="false">
-                                <div class="carousel-inner">
-                                    <?php
-                                    $query_produk = mysqli_query($koneksi,
-                                        "SELECT * FROM products WHERE id_category = '$id_kat' ORDER BY id_product DESC"
-                                    );
+                            <!-- Grid Layout Produk -->
+                            <div class="row g-3">
+                                <?php
+                                $query_produk = mysqli_query($koneksi,
+                                    "SELECT * FROM products WHERE id_category = '$id_kat' ORDER BY id_product DESC"
+                                );
 
-                                    $per_slide = 4;
-                                    $index = 0;
-
+                                if (mysqli_num_rows($query_produk) > 0):
                                     while ($produk = mysqli_fetch_assoc($query_produk)):
-                                        if ($index % $per_slide == 0) {
-                                            if ($index != 0) {
-                                                echo '</div></div>';
-                                            }
-                                            $active = ($index == 0) ? 'active' : '';
-                                            echo '<div class="carousel-item ' . $active . '">';
-                                            echo '<div class="row h-100 align-items-center g-2">';
-                                        }
-                                    ?>
-                                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0 h-100">
-                                            <div class="card card-span h-100 text-white">
-                                                <img class="img-fluid h-100"
-                                                     src="../../backend/foto/<?= rawurlencode($produk['image']) ?>"
-                                                     alt="<?= htmlspecialchars($produk['name_product']) ?>" />
-                                                <div class="card-img-overlay ps-0"></div>
-                                      <div class="card-body ps-0 bg-200">
-   <div class="card-body">
-    <h5 class="fw-bold text-1000 text-truncate">
-        <?= htmlspecialchars($produk['name_product']) ?>
-    </h5>
-    <div class="fw-bold mb-2">
-        <span class="text-primary">
-            Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?>
-        </span>
-    </div>
-    
-    <!-- URL diperbaiki dengan urlencode untuk memastikan parameter ID terbaca -->
-    <a href="checkout.php?id_product=<?= urlencode($produk['id_product']) ?>" 
-       class="btn btn-dark btn-sm w-100 position-relative" 
-       style="z-index: 2;">
-        Pesan Sekarang
-    </a>
-</div>
-                                                <a class="stretched-link" href="checkout.php?id_product=<?= $produk['id_product'] ?>"></a>
+                                ?>
+                                        <div class="col-6 col-md-4 col-lg-3 d-flex align-items-stretch">
+                                            <div class="shopee-card w-100 d-flex flex-column">
+                                                
+                                                <!-- Container Gambar dengan Hover "Lihat Detail" -->
+                                                <div class="img-container ratio ratio-1x1 bg-light">
+                                                    <img src="../../backend/foto/<?= rawurlencode($produk['image']) ?>"
+                                                         class="card-img-top object-fit-cover"
+                                                         alt="<?= htmlspecialchars($produk['name_product']) ?>"
+                                                         loading="lazy" />
+                                                    
+                                                    <!-- Hover Overlay 'Lihat Detail' -->
+                                                    <a href="checkout.php?id_product=<?= urlencode($produk['id_product']) ?>" 
+                                                       class="img-overlay-detail text-decoration-none">
+                                                        <span class="btn btn-sm btn-light fw-bold px-3 py-2 text-dark shadow-sm btn-detail-hover">
+                                                            Lihat Detail
+                                                        </span>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Body Produk -->
+                                                <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between bg-white">
+                                                    <div>
+                                                        <!-- Nama Produk -->
+                                                        <h6 class="fw-bold mb-2 product-title">
+                                                            <?= htmlspecialchars($produk['name_product']) ?>
+                                                        </h6>
+
+                                                        <!-- Harga Produk -->
+                                                        <div class="d-flex align-items-baseline mb-3">
+                                                            <span class="fw-bold fs-6 product-price">
+                                                                Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Tombol Beli -->
+                                                    <div>
+                                                        <a href="checkout.php?id_product=<?= urlencode($produk['id_product']) ?>" 
+                                                           class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none">
+                                                            Pesan Sekarang
+                                                        </a>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
-                                    <?php
-                                        $index++;
+                                <?php 
                                     endwhile;
-
-                                    if ($index > 0) {
-                                        echo '</div></div>';
-                                    } else {
-                                        echo '<p class="text-center py-4">Belum ada produk di kategori ini.</p>';
-                                    }
-                                    ?>
-
-                                    <?php if ($index > 0): ?>
-                                    <div class="row">
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselKat<?= $id_kat ?>" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselKat<?= $id_kat ?>" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
+                                else:
+                                ?>
+                                    <div class="col-12 text-center py-5">
+                                        <p class="text-muted fs-6">Belum ada produk di kategori ini.</p>
                                     </div>
-                                    <?php endif; ?>
-                                </div>
+                                <?php endif; ?>
                             </div>
 
-                            <div class="col-12 d-flex justify-content-center mt-5">
-                                <a class="btn btn-lg btn-dark" href="produk.php?id_category=<?= $id_kat ?>">View All</a>
+                            <!-- Tombol View All -->
+                            <div class="col-12 d-flex justify-content-center mt-4">
+                                <a class="btn btn-view-all px-4 py-2 fw-bold" 
+                                   href="produk.php?id_category=<?= $id_kat ?>">
+                                    Lihat Semua <?= htmlspecialchars($kat['name_kategori']) ?>
+                                </a>
                             </div>
+
                         </div>
                     <?php $i++; endwhile; ?>
                 </div>
+
             </div>
         </div>
     </div>
@@ -3363,28 +3567,55 @@ if (!isset($_SESSION['id_user'])) {
         ?>
 <section class="py-5">
     <div class="container">
-        <div class="row g-0 align-items-stretch">
+        
+        <!-- SATU KOTAK UTAMA (Lancip, Lebar Pas & Tidak Gepeng) -->
+        <div class="owner-box-wrapper">
             
-            <!-- Kolom Teks (Kiri) -->
-            <div class="col-md-6 d-flex flex-column justify-content-center p-4 p-lg-5" style="background-color: #f3f4f6;">
-                <h6 class="fw-bold text-uppercase mb-2" style="color: #4b5563; font-size: 0.9rem;">Preloved byMeii</h6>
-                <h1 class="fw-bold mb-3" style="color: #111827; font-size: 2.2rem;">Be exclusive</h1>
+            <!-- Latar Belakang Foto cinta.jpeg -->
+            <div class="owner-bg-cinta"></div>
+
+            <!-- Isi Dalam Kotak (Teks Kiri + Foto Owner Kanan) -->
+            <div class="row g-0 align-items-stretch position-relative" style="z-index: 2;">
                 
-                <div class="lh-base" style="color: #374151; font-size: 0.95rem; text-align: justify;">
-                    <?php echo !empty($data_owner['deskripsi']) ? nl2br(htmlspecialchars($data_owner['deskripsi'])) : 'Deskripsi belum diisi.'; ?>
+                <!-- Kolom Teks (Kiri) -->
+                <div class="col-md-6 d-flex flex-column justify-content-center p-4 p-lg-5" 
+                     style="background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(2px);">
+                    <h6 class="fw-bold text-uppercase mb-2" style="color: #d87093; font-size: 0.9rem; letter-spacing: 1px;">
+                        Preloved byMeii
+                    </h6>
+                    <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">
+                        Be exclusive
+                    </h1>
+                    
+                    <div class="lh-base" style="color: #2b2b2b; font-size: 0.95rem; text-align: justify; font-weight: 500;">
+                        <?php echo !empty($data_owner['deskripsi']) ? nl2br(htmlspecialchars($data_owner['deskripsi'])) : 'Deskripsi belum diisi.'; ?>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Kolom Foto (Kanan) -->
-            <div class="col-md-6">
-                <div class="h-100 w-100 overflow-hidden" style="max-height: 520px;">
-                    <img class="w-100 h-100 object-fit-cover" 
-                         src="<?php echo !empty($data_owner['foto']) ? '../../backend/foto/' . htmlspecialchars($data_owner['foto']) : 'assets/img/gallery/sharp-dress.png'; ?>" 
-                         alt="Owner Image" />
+                <!-- Kolom Foto Owner (Kanan - Di dalam Kotak Utama) -->
+                <div class="col-md-6">
+                    <div class="owner-img-container">
+                        
+                        <!-- Foto Owner -->
+                        <img src="<?php echo !empty($data_owner['foto']) ? '../../backend/foto/' . htmlspecialchars($data_owner['foto']) : 'assets/img/gallery/sharp-dress.png'; ?>" 
+                             alt="Owner Image" />
+                        
+                        <!-- Overlay Link IG Saat Hover Foto -->
+                        <div class="owner-ig-overlay">
+                            <a href="https://instagram.com/username_ig" target="_blank" class="btn-ig-hover">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                  <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04 8.492.175 9.074.372 9.58.2.51.457.942.923 1.417.445.445.922.723 1.417.923.507.197 1.09.332 1.94.372 8.492.04 8.765.048 10.938.048 2.17 0 2.443-.008 3.298-.048.851-.04 1.434-.175 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.723-.923.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.17 0 8 0zm0 1.44c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.843-.038 1.096-.047 3.232-.047zm0 2.457a4.103 4.103 0 1 0 0 8.206 4.103 4.103 0 0 0 0-8.206zm0 6.766a2.663 2.663 0 1 1 0-5.326 2.663 2.663 0 0 1 0 5.326zm5.23-7.23a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92z"/>
+                                </svg>
+                                Visit Instagram
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
+
     </div>
 </section>
         <!-- <section> close ============================-->

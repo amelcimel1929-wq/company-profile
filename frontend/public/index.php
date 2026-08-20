@@ -36,6 +36,37 @@ if (!isset($_SESSION['id_user'])) {
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="assets/css/theme.css" rel="stylesheet" />
+    <style>
+        html { scroll-behavior: smooth; }
+        section[id] { scroll-margin-top: 92px; }
+        .navbar .nav-link.is-active { color: #d94f76 !important; font-weight: 700 !important; border-bottom: 2px solid #d94f76; }
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+       .img-container {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer; /* Mengubah kursor jadi telunjuk */
+        }
+
+        .img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(232, 62, 140, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .img-container:hover .img-overlay {
+            opacity: 1;
+        }
+    </style>
 
 </head>
 
@@ -48,40 +79,61 @@ if (!isset($_SESSION['id_user'])) {
     <main class="main" id="top">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container">
-                <a class="navbar-brand d-inline-flex" href="index.php"><img class="d-inline-block" src="assets/img/gallery/logo.png" alt="logo" /><span class="text-1000 fs-0 fw-bold ms-2">Home</span></a>
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <!-- Navbar Brand -->
+                <a class="navbar-brand d-inline-flex align-items-center" href="#home" style="text-decoration: none;">
+                    <!-- Icon Belanja Warna Pink -->
+                    <i class="fa-solid fa-bag-shopping fs-3 me-2" style="color: #e83e8c;"></i>
+                    
+                    <!-- Teks Brand Estetik -->
+                    <span class="fw-bold tracking-wide" style="
+                        font-family: 'Playfair Display', 'Poppins', serif; 
+                        font-size: 1.25rem; 
+                        color: #2b2b2b;
+                        letter-spacing: 0.5px;">
+                        Preloved by<span style="color: #e83e8c; font-style: italic;">Meii</span><span style="color: #e83e8c; font-size: 1rem; margin-left: 2px;">♡</span>
+                    </span>
+                </a>                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="#categoryWomen">kategori</a></li>
-                        <li class="nav-item px-2"><a class="nav-link fw-medium" href="#header">Men</a></li>
-                        <li class="nav-item px-2"><a class="nav-link fw-medium" href="#collection">Collection</a></li>
-                        <li class="nav-item px-2"><a class="nav-link fw-medium" href="#outlet">Outlet</a></li>
-                    </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                                <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#home" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Home</a>
+                                </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#about" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">About</a>
+                                </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#flash-sale" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Flash Sale</a>
+                                </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#categoryWomen" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
+                                </li>
+                            </ul>
                     <form class="d-flex">
                         <a class="text-1000" href="#!">
-                            <svg class="feather feather-phone me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg></a>
-                        <a class="text-1000" href="#!">
-                            <svg class="feather feather-shopping-cart me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg></a>
-                        <a class="text-1000" href="#!">
-                            <svg class="feather feather-search me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg></a>
-                        <a class="text-1000" href="status_pesanan.php" title="Status pesanan">
-                            <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg></a>
-                        <a class="text-1000" href="logout.php" title="Logout">
-                            <svg class="feather feather-heart me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg></a>
+                                        <svg class="feather feather-phone me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg></a>
+                                    <a class="text-1000" href="#!">
+                                        <svg class="feather feather-shopping-cart me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg></a>
+                                    <a class="text-1000" href="#!">
+                                        <svg class="feather feather-search me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg></a>
+                                    <a class="text-1000" href="status_pesanan.php" title="Status pesanan">
+                                        <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                            </svg></a>
+                                    <a class="text-1000" href="logout.php" title="Logout">
+                                        <svg class="feather feather-heart me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </a>
                     </form>
                 </div>
             </div>
@@ -120,21 +172,42 @@ if (!isset($_SESSION['id_user'])) {
         ?>
 
         <!-- SECTION HEADER / PROFILE FRONTEND -->
-        <section class="py-11 bg-light-gradient border-bottom border-white border-5">
+        <section id="home" class="py-11 bg-light-gradient border-bottom border-white border-5">
             <div class="bg-holder overlay overlay-light" style="background-image:url(<?php echo $bg_image; ?>);background-size:cover;"></div>
-                     <!--/.bg-holder-->
-                    <div class="container">
-                        <div class="row flex-center">
-                            <div class="col-12 mb-10">
-                                <div class="d-flex align-items-center flex-column">
-                                        <h1 class="fw-normal">Old pieces, new vibes.</h1>
-                                        <h1 class="fs-4 fs-lg-8 fs-md-6 fw-bold">
-                                            <?php echo (!empty($profile) && !empty($profile->about)) ? $profile->about : 'Exclusively designed for you'; ?>
-                                        </h1>
-                                </div>
-                            </div>
+            <!--/.bg-holder-->
+            <div class="container">
+                <div class="row flex-center">
+                    <div class="col-12 mb-10">
+                        <div class="d-flex align-items-center flex-column text-center">
+                            
+                            <!-- Sub-heading -->
+                            <h1 class="fw-normal" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #4a4a4a; letter-spacing: 1px;">
+                                Old pieces, new vibes.
+                            </h1>
+
+                            <!-- Heading Utama (Backend + Warna Pink pada Meii dan simbol hati) -->
+                            <h1 class="fs-4 fs-lg-8 fs-md-6 fw-bold mt-2" style="font-family: 'Playfair Display', serif; color: #2b2b2b;">
+                                <?php 
+                                if (!empty($profile) && !empty($profile->about)) {
+                                    $text = htmlspecialchars($profile->about);
+                                    
+                                    // 1. Ubah kata Meii jadi pink italic
+                                    $text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $text);
+                                    
+                                    // 2. Ubah simbol hati ♡ jadi warna pink
+                                    $text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $text);
+                                    
+                                    echo $text;
+                                } else {
+                                    echo 'Exclusively designed for <span style="color: #e83e8c; font-style: italic;">you</span>'; 
+                                }
+                                ?>
+                            </h1>
+
                         </div>
                     </div>
+                </div>
+            </div>
         </section>
 
 
@@ -233,64 +306,93 @@ if (!isset($_SESSION['id_user'])) {
                 $foto_about = '../../backend/foto/' . ($data_about['foto'] ?? '');
         ?>
 
-            <section>
-                <div class="container">
-                    <div class="row h-100 g-0">
-                        <div class="col-md-6">
-                            <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
-                                <!-- Field nama_brand -->
-                                <h4 class="text-800"><?= htmlspecialchars($nama_brand); ?></h4>
-                                <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Be exclusive</h1>
+            <section id="about">
+                <div class="container py-4">
+                    <!-- Outer Wrapper (Lebar Pas & Bingkai Pink Meii #e83e8c) -->
+                    <div class="mx-auto overflow-hidden" 
+                        style="max-width: 1100px; 
+                                border: 3px solid #e83e8c; 
+                                border-radius: 16px; 
+                                box-shadow: 0 4px 20px rgba(232, 62, 140, 0.15);">
+                        
+                        <div class="row g-0 align-items-stretch">
+                            
+                            <!-- KOLOM TEKS (Background Pink Muda Cerah & Pas) -->
+                            <div class="col-md-7 p-4 p-lg-5 d-flex flex-column justify-content-center" 
+                                style="background-color: #ffe6f0;">
+                                
+                                <!-- Field nama_brand dengan font Playfair Display & Style Estetik -->
+                                <h4 class="fw-bold mb-2" style="font-family: 'Playfair Display', serif; color: #2b2b2b; letter-spacing: 0.5px;">
+                                    <?php 
+                                    $brand_text = !empty($nama_brand) ? htmlspecialchars($nama_brand) : 'Preloved byMeii♡';
+                                    $brand_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $brand_text);
+                                    $brand_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $brand_text);
+                                    echo $brand_text;
+                                    ?>
+                                </h4>
+
+                                <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">Be exclusive</h1>
+
                                 <!-- Field deskripsi -->
-                                <p class="mb-5 fs-1"><?= htmlspecialchars($deskripsi); ?></p>
-                           </div>
+                                <div class="lh-base" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem; text-align: justify;">
+                                    <?php 
+                                    if (!empty($deskripsi)) {
+                                        $desc_text = htmlspecialchars($deskripsi);
+                                        $desc_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $desc_text);
+                                        $desc_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $desc_text);
+                                        echo nl2br($desc_text);
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+
+                            <!-- KOLOM FOTO (Presisi & Simetris) -->
+                            <div class="col-md-5">
+                                <div class="h-100 w-100">
+                                    <img class="w-100 h-100 object-fit-cover" 
+                                        src="<?= htmlspecialchars($foto_about); ?>" 
+                                        alt="Foto About" />
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="col-md-6">
-                            <div class="card card-span h-100 text-white">
-                                <!-- Field foto -->
-                                <img class="card-img h-100" src="<?= htmlspecialchars($foto_about); ?>" alt="Foto About" />
-                                <div class="card-img-overlay bg-dark-gradient">
-                                    <div class="d-flex align-items-end justify-content-center h-100">
+                    </div>
+                </div>
+                <!--<div class="row h-100 g-2 py-1">
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
+                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                                    </svg></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        <!--<div class="row h-100 g-2 py-1">
-            <div class="col-md-4">
-                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
-                    <div class="card-img-overlay bg-dark-gradient">
-                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
-                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                            </svg></a>
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
+                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                                    </svg></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
-                    <div class="card-img-overlay bg-dark-gradient">
-                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
-                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                            </svg></a>
+                    <div class="col-md-4">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
+                            <div class="card-img-overlay bg-dark-gradient">
+                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
+                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
+                                    </svg></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
-                    <div class="card-img-overlay bg-dark-gradient">
-                        <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
-                            <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                            </svg></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
+                </div>-->
         </div>
         </section>
              <!-- ============================================-->
@@ -507,56 +609,108 @@ if (!isset($_SESSION['id_user'])) {
                             die("Query gagal: " . mysqli_error($koneksi));
                         }
                    ?>
-                    <section class="py-0">
-                        <div class="container">
-                            <div class="row h-100">
-                                <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
-                                    <h5 class="fw-bold fs-3 fs-lg-5 lh-sm">
-                                        Flash Sale
-                                    </h5>
-                                </div>
-                                <div class="col-12">
-                                    <div class="carousel slide"
-                                        id="carouselFlashSale"
-                                        data-bs-touch="false"
-                                        data-bs-interval="false">
-                                        <div class="carousel-inner">
-                                            <div class="carousel-item active">
-                                                <div class="row h-100 align-items-center g-2">
-                                                    <?php while ($flash = mysqli_fetch_object($query_flash_sale)) { ?>
-                                                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0 h-100">
-                                                            <div class="card card-span h-100 text-white">
-                                                                <img
-                                                                    class="img-fluid h-100"
-                                                                    src="../../backend/foto/<?php echo $flash->foto; ?>"
-                                                                    alt="<?php echo $flash->nama_produk; ?>"
-                                                                >
-                                                                <div class="card-img-overlay ps-0"></div>
-                                                                <div class="card-body ps-0 bg-200">
-                                                                    <h5 class="fw-bold text-1000 text-truncate">
-                                                                        <?php echo $flash->nama_produk; ?>
-                                                                    </h5>
-                                                                    <div class="fw-bold">
-                                                                        <span class="text-600 me-2 text-decoration-line-through">
-                                                                            Rp <?php echo number_format($flash->harga_awal, 0, ',', '.'); ?>
-                                                                        </span>
-                                                                        <span class="text-primary">
-                                                                            Rp <?php echo number_format($flash->harga_akhir, 0, ',', '.'); ?>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <a class="stretched-link" href="#"></a>
-                                                            </div>
-                                                        </div>
-                                                    <?php } ?>
+<section id="flash-sale" class="py-5" style="background-color: #fff0f5;">
+    <div class="container">
+        <!-- Judul Section -->
+        <div class="row">
+            <div class="col-lg-7 mx-auto text-center mb-4">
+                <h3 class="fw-bold" style="font-family: 'Playfair Display', serif; color: #e83e8c; letter-spacing: 1px;">
+                    ⚡ Flash Sale
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="carousel slide" id="carouselFlashSale" data-bs-touch="false" data-bs-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row g-3 justify-content-center">
+                                
+                                <?php 
+                                $no = 1;
+                                while ($flash = mysqli_fetch_object($query_flash_sale)) { 
+                                    $modal_id = "modalFoto" . $no; // ID unik untuk tiap modal
+                                ?>
+                                    <div class="col-6 col-sm-4 col-md-3">
+                                        <div class="card h-100 border-0 shadow-sm overflow-hidden position-relative" 
+                                             style="background-color: #ffe6f0; border: 1.5px solid #f9a8d4 !important; border-radius: 12px;">
+                                            
+                                            <!-- Container Foto (Diklik membuka Modal Full Screen) -->
+                                            <div class="img-container ratio ratio-1x1 bg-white" 
+                                                 data-bs-toggle="modal" 
+                                                 data-bs-target="#<?php echo $modal_id; ?>">
+                                                
+                                                <img src="../../backend/foto/<?php echo $flash->foto; ?>" 
+                                                     class="card-img-top object-fit-cover w-100 h-100" 
+                                                     alt="<?php echo htmlspecialchars($flash->nama_produk); ?>">
+                                                
+                                                <!-- Overlay Hover -->
+                                                <div class="img-overlay text-white fw-bold">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-eye-fill mb-1" viewBox="0 0 16 16">
+                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                                    </svg>
+                                                    <span style="font-size: 0.85rem; font-family: 'Poppins', sans-serif;">Lihat Detail</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Informasi Produk -->
+                                            <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                                <h6 class="card-title text-truncate mb-2" 
+                                                    style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem;" 
+                                                    title="<?php echo htmlspecialchars($flash->nama_produk); ?>">
+                                                    <?php echo $flash->nama_produk; ?>
+                                                </h6>
+
+                                                <div>
+                                                    <div class="text-muted small text-decoration-line-through mb-1" style="font-size: 0.8rem;">
+                                                        Rp <?php echo number_format($flash->harga_awal, 0, ',', '.'); ?>
+                                                    </div>
+                                                    <div class="fw-bold" style="color: #e83e8c; font-size: 1.05rem;">
+                                                        Rp <?php echo number_format($flash->harga_akhir, 0, ',', '.'); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- MODAL POPUP (Tampil Foto Full) -->
+                                    <div class="modal fade" id="<?php echo $modal_id; ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content border-0" style="background-color: transparent;">
+                                                <div class="modal-body text-center p-0 position-relative">
+                                                    <!-- Tombol Close -->
+                                                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10;"></button>
+                                                    
+                                                    <!-- Foto Full Tanpa Terpotong -->
+                                                    <img src="../../backend/foto/<?php echo $flash->foto; ?>" 
+                                                         class="img-fluid rounded-3 shadow-lg" 
+                                                         style="max-height: 85vh; object-fit: contain;" 
+                                                         alt="<?php echo htmlspecialchars($flash->nama_produk); ?>">
+                                                    
+                                                    <div class="mt-2 text-white fw-bold fs-5" style="font-family: 'Playfair Display', serif;">
+                                                        <?php echo $flash->nama_produk; ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                <?php 
+                                    $no++;
+                                } 
+                                ?>
+
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
                 </div>
             </div>
         </div>
@@ -3081,7 +3235,7 @@ if (!isset($_SESSION['id_user'])) {
             <div class="col-12">
                 <?php
                 require "../../backend/connection.php";
-                $query_kategori = mysqli_query($koneksi, "SELECT * FROM categories");
+                $query_kategori = mysqli_query($koneksi, "SELECT * FROM categories ORDER BY FIELD(LOWER(name_kategori), 'kemeja', 'dress'), name_kategori");
                 ?>
 
                 <!-- Tab Kategori -->
@@ -3102,7 +3256,7 @@ if (!isset($_SESSION['id_user'])) {
                 <!-- Isi Tab -->
                 <div class="tab-content" id="pills-tabContentKategori">
                     <?php
-                    $query_kategori2 = mysqli_query($koneksi, "SELECT * FROM categories");
+                    $query_kategori2 = mysqli_query($koneksi, "SELECT * FROM categories ORDER BY FIELD(LOWER(name_kategori), 'kemeja', 'dress'), name_kategori");
                     $i = 0;
                     while ($kat = mysqli_fetch_assoc($query_kategori2)):
                         $id_kat = $kat['id_category'];
@@ -3194,9 +3348,72 @@ if (!isset($_SESSION['id_user'])) {
     </div>
 </section>
 
+
+
         <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0" id="collection">
+        <!--<section>
+
+            <div class="container">
+                <div class="row h-100 g-0">
+                    <div class="col-md-6">
+                        <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
+                            <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Gentle Formal Looks </h1>
+                            <p class="mb-5 fs-1">We provide the top formal apparel package to make your job look confident and comfortable. Stay connect.</p>
+                            <div class="d-grid gap-2 d-md-block"><a class="btn btn-lg btn-dark" href="#!" role="button">Explore Collection</a></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/sharp-dress.png" alt="..." />
+                            <a class="stretched-link" href="#!"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+
+        </section>-->
+        <?php
+            // Pastikan koneksi database sudah terhubung
+            require "../../backend/connection.php"; 
+
+            // Query untuk mengambil data owner terbaru
+            $query_owner = mysqli_query($koneksi, "SELECT * FROM owner ORDER BY id_owner DESC LIMIT 1");
+            $data_owner  = mysqli_fetch_assoc($query_owner);
+        ?>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-0 align-items-stretch">
+            
+            <!-- Kolom Teks (Kiri) -->
+            <div class="col-md-6 d-flex flex-column justify-content-center p-4 p-lg-5" style="background-color: #f3f4f6;">
+                <h6 class="fw-bold text-uppercase mb-2" style="color: #4b5563; font-size: 0.9rem;">Preloved byMeii</h6>
+                <h1 class="fw-bold mb-3" style="color: #111827; font-size: 2.2rem;">Be exclusive</h1>
+                
+                <div class="lh-base" style="color: #374151; font-size: 0.95rem; text-align: justify;">
+                    <?php echo !empty($data_owner['deskripsi']) ? nl2br(htmlspecialchars($data_owner['deskripsi'])) : 'Deskripsi belum diisi.'; ?>
+                </div>
+            </div>
+
+            <!-- Kolom Foto (Kanan) -->
+            <div class="col-md-6">
+                <div class="h-100 w-100 overflow-hidden" style="max-height: 520px;">
+                    <img class="w-100 h-100 object-fit-cover" 
+                         src="<?php echo !empty($data_owner['foto']) ? '../../backend/foto/' . htmlspecialchars($data_owner['foto']) : 'assets/img/gallery/sharp-dress.png'; ?>" 
+                         alt="Owner Image" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
+
+
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <!--<section class="py-0" id="collection">
 
             <div class="container">
                 <div class="row h-100 gx-2">
@@ -3224,14 +3441,14 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-            <!-- end of .container-->
+        
 
-        </section>
+        </section>-->
         <!-- <section> close ============================-->
         <!-- ============================================-->
 
 
-        <section>
+        <!--<section>
             <div class="container">
                 <div class="row h-100">
                     <div class="col-lg-7 mx-auto text-center mb-6">
@@ -3425,12 +3642,12 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-        </section>
+        </section>-->
 
 
         <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0" id="outlet">
+        <!--<section class="py-0" id="outlet">
 
             <div class="container">
                 <div class="row h-100 g-0">
@@ -3490,40 +3707,14 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-            <!-- end of .container-->
+         
 
-        </section>
+        </section>-->
         <!-- <section> close ============================-->
         <!-- ============================================-->
 
 
 
-
-        <!-- ============================================-->
-        <!-- <section> begin ============================-->
-        <section>
-
-            <div class="container">
-                <div class="row h-100 g-0">
-                    <div class="col-md-6">
-                        <div class="bg-300 p-4 h-100 d-flex flex-column justify-content-center">
-                            <h1 class="fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">Gentle Formal Looks </h1>
-                            <p class="mb-5 fs-1">We provide the top formal apparel package to make your job look confident and comfortable. Stay connect.</p>
-                            <div class="d-grid gap-2 d-md-block"><a class="btn btn-lg btn-dark" href="#!" role="button">Explore Collection</a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/sharp-dress.png" alt="..." />
-                            <a class="stretched-link" href="#!"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end of .container-->
-
-        </section>
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
 
 
 
@@ -3759,6 +3950,22 @@ if (!isset($_SESSION['id_user'])) {
     <script src="vendors/feather-icons/feather.min.js"></script>
     <script>
         feather.replace();
+    </script>
+    <script>
+        (() => {
+            const links = [...document.querySelectorAll('.js-scroll-nav')];
+            const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+            const activate = (id) => links.forEach(link => link.classList.toggle('is-active', link.getAttribute('href') === '#' + id));
+
+            const observer = new IntersectionObserver((entries) => {
+                const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+                if (visible) activate(visible.target.id);
+            }, { rootMargin: '-35% 0px -55% 0px', threshold: [0.05, 0.2, 0.5] });
+
+            sections.forEach(section => observer.observe(section));
+            links.forEach(link => link.addEventListener('click', () => activate(link.getAttribute('href').slice(1))));
+            activate((location.hash || '#home').slice(1));
+        })();
     </script>
     <script src="assets/js/theme.js"></script>
 

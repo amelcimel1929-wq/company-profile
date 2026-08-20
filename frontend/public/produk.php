@@ -7,7 +7,8 @@ if (!isset($_SESSION['id_user'])) {
 require "../../backend/connection.php";
 
 $selectedCategory = isset($_GET['id_category']) ? (int) $_GET['id_category'] : 0;
-$categories = mysqli_query($koneksi, "SELECT id_category, name_kategori FROM categories ORDER BY name_kategori ASC");
+$activePage = 'products';
+$categories = mysqli_query($koneksi, "SELECT id_category, name_kategori FROM categories ORDER BY FIELD(LOWER(name_kategori), 'kemeja', 'dress'), name_kategori");
 
 if ($selectedCategory > 0) {
     $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? ORDER BY p.id_product DESC");
@@ -27,6 +28,7 @@ $products = mysqli_stmt_get_result($stmt);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+<?php include '_navbar.php'; ?>
 <main class="container py-5">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
@@ -71,5 +73,6 @@ $products = mysqli_stmt_get_result($stmt);
         <?php endwhile; ?>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

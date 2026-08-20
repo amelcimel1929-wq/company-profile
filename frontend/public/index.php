@@ -306,94 +306,74 @@ if (!isset($_SESSION['id_user'])) {
                 $foto_about = '../../backend/foto/' . ($data_about['foto'] ?? '');
         ?>
 
-            <section id="about">
-                <div class="container py-4">
-                    <!-- Outer Wrapper (Lebar Pas & Bingkai Pink Meii #e83e8c) -->
-                    <div class="mx-auto overflow-hidden" 
-                        style="max-width: 1100px; 
-                                border: 3px solid #e83e8c; 
-                                border-radius: 16px; 
-                                box-shadow: 0 4px 20px rgba(232, 62, 140, 0.15);">
+        <section id="about" class="py-5 position-relative overflow-hidden" style="background-color: #fff0f5;">
+            
+            <!-- Layer Foto Bunga Samar/Pudar di LUAR Kotak -->
+            <div style="position: absolute; 
+                        top: 0; left: 0; right: 0; bottom: 0; 
+                        background-image: url('../../backend/foto/bungga.jpeg'); 
+                        background-size: cover; 
+                        background-position: center; 
+                        opacity: 0.2; 
+                        pointer-events: none; 
+                        z-index: 1;">
+            </div>
+
+            <!-- Container Utama -->
+            <div class="container py-4 position-relative" style="z-index: 2;">
+                
+                <!-- Outer Wrapper (Lebar Pas & Tanpa Bingkai Border) -->
+                <div class="mx-auto overflow-hidden" 
+                    style="max-width: 1100px; 
+                            border-radius: 16px; 
+                            box-shadow: 0 4px 20px rgba(232, 62, 140, 0.15);">
+                    
+                    <div class="row g-0 align-items-stretch">
                         
-                        <div class="row g-0 align-items-stretch">
+                        <!-- KOLOM TEKS (Background Pink Muda Solid Agar Tulisan Jelas) -->
+                        <div class="col-md-7 p-4 p-lg-5 d-flex flex-column justify-content-center" 
+                            style="background-color: #faf5f7;">
                             
-                            <!-- KOLOM TEKS (Background Pink Muda Cerah & Pas) -->
-                            <div class="col-md-7 p-4 p-lg-5 d-flex flex-column justify-content-center" 
-                                style="background-color: #ffe6f0;">
-                                
-                                <!-- Field nama_brand dengan font Playfair Display & Style Estetik -->
-                                <h4 class="fw-bold mb-2" style="font-family: 'Playfair Display', serif; color: #2b2b2b; letter-spacing: 0.5px;">
-                                    <?php 
-                                    $brand_text = !empty($nama_brand) ? htmlspecialchars($nama_brand) : 'Preloved byMeii♡';
-                                    $brand_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $brand_text);
-                                    $brand_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $brand_text);
-                                    echo $brand_text;
-                                    ?>
-                                </h4>
+                            <!-- Field nama_brand dengan font Playfair Display & Style Estetik -->
+                            <h4 class="fw-bold mb-2" style="font-family: 'Playfair Display', serif; color: #2b2b2b; letter-spacing: 0.5px;">
+                                <?php 
+                                $brand_text = !empty($nama_brand) ? htmlspecialchars($nama_brand) : 'Preloved byMeii♡';
+                                $brand_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $brand_text);
+                                $brand_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $brand_text);
+                                echo $brand_text;
+                                ?>
+                            </h4>
 
-                                <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">Be exclusive</h1>
+                            <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">Be exclusive</h1>
 
-                                <!-- Field deskripsi -->
-                                <div class="lh-base" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem; text-align: justify;">
-                                    <?php 
-                                    if (!empty($deskripsi)) {
-                                        $desc_text = htmlspecialchars($deskripsi);
-                                        $desc_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $desc_text);
-                                        $desc_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $desc_text);
-                                        echo nl2br($desc_text);
-                                    }
-                                    ?>
-                                </div>
+                            <!-- Field deskripsi -->
+                            <div class="lh-base" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem; text-align: justify;">
+                                <?php 
+                                if (!empty($deskripsi)) {
+                                    $desc_text = htmlspecialchars($deskripsi);
+                                    $desc_text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $desc_text);
+                                    $desc_text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $desc_text);
+                                    echo nl2br($desc_text);
+                                }
+                                ?>
                             </div>
-
-                            <!-- KOLOM FOTO (Presisi & Simetris) -->
-                            <div class="col-md-5">
-                                <div class="h-100 w-100">
-                                    <img class="w-100 h-100 object-fit-cover" 
-                                        src="<?= htmlspecialchars($foto_about); ?>" 
-                                        alt="Foto About" />
-                                </div>
-                            </div>
-
                         </div>
+
+                        <!-- KOLOM FOTO (Presisi & Simetris) -->
+                        <div class="col-md-5">
+                            <div class="h-100 w-100">
+                                <img class="w-100 h-100 object-fit-cover" 
+                                    src="<?= htmlspecialchars($foto_about); ?>" 
+                                    alt="Foto About" />
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <!--<div class="row h-100 g-2 py-1">
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/vanity-bag.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Vanity Bags
-                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                                    </svg></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/hat.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">Hats
-                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                                    </svg></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card card-span h-100 text-white"><img class="card-img h-100" src="assets/img/gallery/high-heels.png" alt="..." />
-                            <div class="card-img-overlay bg-dark-gradient">
-                                <div class="d-flex align-items-end justify-content-center h-100"><a class="btn btn-lg text-light fs-1" href="#!" role="button">High Heels
-                                    <svg class="bi bi-arrow-right-short" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"> </path>
-                                    </svg></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-        </div>
+            </div>
+
+            <!-- Section Commented Cards Tetap Aman -->
+            <!--<div class="row h-100 g-2 py-1"> ... </div>-->
         </section>
              <!-- ============================================-->
         <!-- <section> begin ============================-->

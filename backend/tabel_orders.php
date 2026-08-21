@@ -32,6 +32,7 @@ $select_orders = mysqli_query($koneksi, $query);
                                 <tr>
                                     <th>Kode Pesanan</th>
                                     <th>Nama Customer</th>
+                                    <th>No. Telepon</th> <!-- DITAMBAHKAN -->
                                     <th>Tanggal Pesan</th>
                                     <th>Total Harga</th>
                                     <th>Status</th>
@@ -43,6 +44,7 @@ $select_orders = mysqli_query($koneksi, $query);
                                     <tr>
                                         <td><strong><?php echo $order->order_code; ?></strong></td>
                                         <td><?php echo $order->customer_name; ?></td>
+                                        <td><?php echo !empty($order->no_telepon) ? htmlspecialchars($order->no_telepon) : '-'; ?></td> <!-- DITAMBAHKAN -->
                                         <td><?php echo date('d-m-Y H:i', strtotime($order->order_date)); ?></td>
                                         <td>Rp <?php echo number_format($order->total_price, 0, ',', '.'); ?></td>
                                         <td>
@@ -59,6 +61,7 @@ $select_orders = mysqli_query($koneksi, $query);
                                         <td>
                                           <a href="detail_orders.php?id_order=<?php echo $order->id_order; ?>" class="btn btn-pink-update btn-sm">
                                             <i class="fas fa-eye"></i> Detail   
+                                          </a>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>

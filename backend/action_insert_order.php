@@ -19,14 +19,15 @@ if (!isset($_SESSION['id_user'])) {
 $idUser = (int) $_SESSION['id_user'];
 $idProduct = isset($_POST['id_product']) ? (int) $_POST['id_product'] : 0;
 $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 0;
+// Ambil input nomor telepon dari POST request
+$noTelepon = isset($_POST['no_telepon']) ? trim($_POST['no_telepon']) : '';
 
-if ($idProduct <= 0 || $quantity <= 0) {
-    exit('Data pesanan tidak valid.');
+if ($idProduct <= 0 || $quantity <= 0 || empty($noTelepon)) {
+    exit('Data pesanan tidak valid atau nomor telepon belum diisi.');
 }
 
 mysqli_begin_transaction($koneksi);
 try {
-    // Harga dan stok selalu diambil dari database, bukan dari input browser.
     $productStmt = mysqli_prepare($koneksi, "SELECT price, stock FROM products WHERE id_product = ? FOR UPDATE");
     mysqli_stmt_bind_param($productStmt, 'i', $idProduct);
     mysqli_stmt_execute($productStmt);
@@ -41,12 +42,13 @@ try {
     $subtotal = $price * $quantity;
     $orderCode = 'ORD' . date('YmdHis') . random_int(10, 99);
     $orderDate = date('Y-m-d H:i:s');
-    // Nilai harus sesuai ENUM orders.status di database.
     $status = 'Menunggu';
     $size = '-';
 
-    $orderStmt = mysqli_prepare($koneksi, "INSERT INTO orders (id_user, order_code, order_date, total_price, status) VALUES (?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($orderStmt, 'issds', $idUser, $orderCode, $orderDate, $subtotal, $status);
+    // Sertakan kolom no_telepon pada query insert
+    $orderStmt = mysqli_prepare($koneksi, "INSERT INTO orders (id_user, order_code, no_telepon, order_date, total_price, status) VALUES (?, ?, ?, ?, ?, ?)");
+    // Parameter types: i (int), s (string), s (string), s (string), d (double), s (string)
+    mysqli_stmt_bind_param($orderStmt, 'isssds', $idUser, $orderCode, $noTelepon, $orderDate, $subtotal, $status);
     mysqli_stmt_execute($orderStmt);
     $idOrder = mysqli_insert_id($koneksi);
     mysqli_stmt_close($orderStmt);

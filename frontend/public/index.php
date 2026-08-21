@@ -304,9 +304,12 @@ if (!isset($_SESSION['id_user'])) {
                                 <li class="nav-item px-2">
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#categoryWomen" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
                                 </li>
+                                 <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#owner" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Owner</a>
+                                </li>
                             </ul>
                     <form class="d-flex">
-                        <a class="text-1000" href="#!">
+                        <!--<a class="text-1000" href="#!">
                                         <svg class="feather feather-phone me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                             </svg></a>
@@ -330,7 +333,7 @@ if (!isset($_SESSION['id_user'])) {
                                         <svg class="feather feather-heart me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                             </svg>
-                        </a>
+                        </a>-->
                     </form>
                 </div>
             </div>
@@ -3565,59 +3568,59 @@ if (!isset($_SESSION['id_user'])) {
             $query_owner = mysqli_query($koneksi, "SELECT * FROM owner ORDER BY id_owner DESC LIMIT 1");
             $data_owner  = mysqli_fetch_assoc($query_owner);
         ?>
-<section class="py-5">
-    <div class="container">
-        
-        <!-- SATU KOTAK UTAMA (Lancip, Lebar Pas & Tidak Gepeng) -->
-        <div class="owner-box-wrapper">
-            
-            <!-- Latar Belakang Foto cinta.jpeg -->
-            <div class="owner-bg-cinta"></div>
-
-            <!-- Isi Dalam Kotak (Teks Kiri + Foto Owner Kanan) -->
-            <div class="row g-0 align-items-stretch position-relative" style="z-index: 2;">
+       <section id="owner" class="py-5">
+            <div class="container">
                 
-                <!-- Kolom Teks (Kiri) -->
-                <div class="col-md-6 d-flex flex-column justify-content-center p-4 p-lg-5" 
-                     style="background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(2px);">
-                    <h6 class="fw-bold text-uppercase mb-2" style="color: #d87093; font-size: 0.9rem; letter-spacing: 1px;">
-                        Preloved byMeii
-                    </h6>
-                    <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">
-                        Be exclusive
-                    </h1>
+                <!-- SATU KOTAK UTAMA (Lancip, Lebar Pas & Tidak Gepeng) -->
+                <div class="owner-box-wrapper">
                     
-                    <div class="lh-base" style="color: #2b2b2b; font-size: 0.95rem; text-align: justify; font-weight: 500;">
-                        <?php echo !empty($data_owner['deskripsi']) ? nl2br(htmlspecialchars($data_owner['deskripsi'])) : 'Deskripsi belum diisi.'; ?>
-                    </div>
-                </div>
+                    <!-- Latar Belakang Foto cinta.jpeg -->
+                    <div class="owner-bg-cinta"></div>
 
-                <!-- Kolom Foto Owner (Kanan - Di dalam Kotak Utama) -->
-                <div class="col-md-6">
-                    <div class="owner-img-container">
+                    <!-- Isi Dalam Kotak (Teks Kiri + Foto Owner Kanan) -->
+                    <div class="row g-0 align-items-stretch position-relative" style="z-index: 2;">
                         
-                        <!-- Foto Owner -->
-                        <img src="<?php echo !empty($data_owner['foto']) ? '../../backend/foto/' . htmlspecialchars($data_owner['foto']) : 'assets/img/gallery/sharp-dress.png'; ?>" 
-                             alt="Owner Image" />
-                        
-                        <!-- Overlay Link IG Saat Hover Foto -->
-                        <div class="owner-ig-overlay">
-                            <a href="https://instagram.com/username_ig" target="_blank" class="btn-ig-hover">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-                                  <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04 8.492.175 9.074.372 9.58.2.51.457.942.923 1.417.445.445.922.723 1.417.923.507.197 1.09.332 1.94.372 8.492.04 8.765.048 10.938.048 2.17 0 2.443-.008 3.298-.048.851-.04 1.434-.175 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.723-.923.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.17 0 8 0zm0 1.44c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.843-.038 1.096-.047 3.232-.047zm0 2.457a4.103 4.103 0 1 0 0 8.206 4.103 4.103 0 0 0 0-8.206zm0 6.766a2.663 2.663 0 1 1 0-5.326 2.663 2.663 0 0 1 0 5.326zm5.23-7.23a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92z"/>
-                                </svg>
-                                Instagram
-                            </a>
+                        <!-- Kolom Teks (Kiri) -->
+                        <div class="col-md-6 d-flex flex-column justify-content-center p-4 p-lg-5" 
+                            style="background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(2px);">
+                            <h6 class="fw-bold text-uppercase mb-2" style="color: #d87093; font-size: 0.9rem; letter-spacing: 1px;">
+                                Preloved byMeii
+                            </h6>
+                            <h1 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 2.2rem;">
+                            ୨୧ 𝐌𝐞𝐞𝐭 𝐓𝐡𝐞 𝐎𝐰𝐧𝐞𝐫 ୨୧
+                            </h1>
+                            
+                            <div class="lh-base" style="color: #2b2b2b; font-size: 0.95rem; text-align: justify; font-weight: 500;">
+                                <?php echo !empty($data_owner['deskripsi']) ? nl2br(htmlspecialchars($data_owner['deskripsi'])) : 'Deskripsi belum diisi.'; ?>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Foto Owner (Kanan - Di dalam Kotak Utama) -->
+                        <div class="col-md-6">
+                            <div class="owner-img-container">
+                                
+                                <!-- Foto Owner -->
+                                <img src="<?php echo !empty($data_owner['foto']) ? '../../backend/foto/' . htmlspecialchars($data_owner['foto']) : 'assets/img/gallery/sharp-dress.png'; ?>" 
+                                    alt="Owner Image" />
+                                
+                                <!-- Overlay Link IG Saat Hover Foto -->
+                                <div class="owner-ig-overlay">
+                                    <a href="https://instagram.com/cntaameliaaa_" target="_blank" class="btn-ig-hover">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                        <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04 8.492.175 9.074.372 9.58.2.51.457.942.923 1.417.445.445.922.723 1.417.923.507.197 1.09.332 1.94.372 8.492.04 8.765.048 10.938.048 2.17 0 2.443-.008 3.298-.048.851-.04 1.434-.175 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.723-.923.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.17 0 8 0zm0 1.44c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.843-.038 1.096-.047 3.232-.047zm0 2.457a4.103 4.103 0 1 0 0 8.206 4.103 4.103 0 0 0 0-8.206zm0 6.766a2.663 2.663 0 1 1 0-5.326 2.663 2.663 0 0 1 0 5.326zm5.23-7.23a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92z"/>
+                                        </svg>
+                                        Instagram
+                                    </a>
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
                 </div>
 
             </div>
-        </div>
-
-    </div>
-</section>
+        </section>
         <!-- <section> close ============================-->
         <!-- ============================================-->
 
@@ -3932,7 +3935,7 @@ if (!isset($_SESSION['id_user'])) {
 
         <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0 pb-8">
+        <!--<section class="py-0 pb-8">
 
             <div class="container-fluid container-lg">
                 <div class="row h-100 g-2 justify-content-center">
@@ -3995,17 +3998,17 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-            <!-- end of .container-->
+         
 
-        </section>
+        </section>-->
         <!-- <section> close ============================-->
         <!-- ============================================-->
 
 
-        <section class="py-11">
+        <!--<section class="py-11">
             <div class="bg-holder overlay overlay-0" style="background-image:url(assets/img/gallery/cta.png);background-position:center;background-size:cover;">
             </div>
-            <!--/.bg-holder-->
+         
 
             <div class="container">
                 <div class="row">
@@ -4060,12 +4063,12 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-        </section>
+        </section>-->
 
 
         <!-- ============================================-->
         <!-- <section> begin ============================-->
-        <section class="py-0 pt-7">
+        <!--<section class="py-0 pt-7">
 
             <div class="container">
                 <div class="row">
@@ -4136,9 +4139,9 @@ if (!isset($_SESSION['id_user'])) {
                     </div>
                 </div>
             </div>
-            <!-- end of .container-->
+        
 
-        </section>
+        </section>-->
         <!-- <section> close ============================-->
         <!-- ============================================-->
 

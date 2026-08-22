@@ -37,6 +37,12 @@ $isLoggedIn = isset($_SESSION['id_user']);
     <!-- Dulu <link> Font Awesome ini nyasar KE DALAM <style> di bawah, jadi
          gak pernah kemuat -> ikon tas belanja di brand navbar gak pernah nongol. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 'Playfair Display' dipakai di mana-mana lewat inline style (hero, navbar,
+         tombol, dst) tapi gak pernah di-load -> browser jatuh ke serif bawaan OS,
+         makanya tampilannya beda-beda tiap komputer (termasuk bentuk simbol ♡). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
         section[id] { scroll-margin-top: 92px; }
@@ -370,16 +376,15 @@ $isLoggedIn = isset($_SESSION['id_user']);
              // 1. Panggil koneksi ke database dari folder backend
             include "../../backend/connection.php";
 
-            // 2. Ambil data terbaru dari tabel profile
+            // Foto hero di-hardcode ke foto profil (gaun + bunga) supaya hero selalu
+            // sama persis kayak desain acuan, gak lagi ikut naik-turun isi tabel
+            // `profile` (yang bisa kosong/ke-reset dari admin panel).
+            $bg_image = "../../backend/foto/profile.jpeg";
+
+            // Teks heading BALIK ambil dari tabel `profile` (kolom `about`) --
+            // isi kolomnya di Backend > Profile, harus persis: "Preloved byMeii♡ feels like new"
             $query_profile = mysqli_query($koneksi, "SELECT * FROM profile ORDER BY id_profile DESC LIMIT 1");
             $profile = mysqli_fetch_object($query_profile);
-
-            // 3. Tentukan lokasi foto background (menggunakan foto default jika di database kosong)
-            $bg_image = "assets/img/gallery/header-bg.png"; // Default background
-            if (!empty($profile) && !empty($profile->foto)) {
-                 // Jalur foto disesuaikan dengan folder penyimpanan foto kamu di backend
-                 $bg_image = "../../backend/foto/" . $profile->foto; 
-                }
         ?>
 
         <!-- SECTION HEADER / PROFILE FRONTEND -->
@@ -398,19 +403,22 @@ $isLoggedIn = isset($_SESSION['id_user']);
 
                             <!-- Heading Utama (Backend + Warna Pink pada Meii dan simbol hati) -->
                             <h1 class="fs-4 fs-lg-8 fs-md-6 fw-bold mt-2" style="font-family: 'Playfair Display', serif; color: #2b2b2b;">
-                                <?php 
+                                <?php
                                 if (!empty($profile) && !empty($profile->about)) {
                                     $text = htmlspecialchars($profile->about);
-                                    
+
                                     // 1. Ubah kata Meii jadi pink italic
                                     $text = str_ireplace('Meii', '<span style="color: #e83e8c; font-style: italic;">Meii</span>', $text);
-                                    
-                                    // 2. Ubah simbol hati ♡ jadi warna pink
-                                    $text = str_replace('♡', '<span style="color: #e83e8c; font-style: normal;">♡</span>', $text);
-                                    
+
+                                    // 2. Ubah simbol hati ♡ jadi ikon Font Awesome -- karakter unicode ♡ gak ada
+                                    // di font Playfair Display, jadi browser jatuh ke font sistem buat
+                                    // glyph ini doang, ukurannya jadi beda-beda tiap komputer. Ikon FA
+                                    // ukurannya tetep konsisten di mana aja.
+                                    $text = str_replace('♡', '<i class="fa-regular fa-heart" style="color: #e83e8c; font-size: 0.8em; vertical-align: -0.02em;"></i>', $text);
+
                                     echo $text;
                                 } else {
-                                    echo 'Exclusively designed for <span style="color: #e83e8c; font-style: italic;">you</span>'; 
+                                    echo 'Preloved by<span style="color: #e83e8c; font-style: italic;">Meii</span><i class="fa-regular fa-heart" style="color: #e83e8c; font-size: 0.8em; vertical-align: -0.02em;"></i> feels like new';
                                 }
                                 ?>
                             </h1>

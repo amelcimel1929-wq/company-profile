@@ -6,6 +6,11 @@ $navLoggedIn = isset($_SESSION['id_user']);
 $navActive = $activePage ?? '';
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Sama kayak index.php: 'Playfair Display' dipakai di navbar tapi gak pernah
+     di-load, jadi jatuh ke serif bawaan OS tiap komputer. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
     <div class="container">
         <!-- Navbar Brand -->

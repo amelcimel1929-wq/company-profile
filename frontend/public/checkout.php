@@ -2,7 +2,14 @@
 session_start();
 require "../../backend/connection.php";
 
+// Pesanan butuh id_user, jadi wajib login dulu sebelum masuk halaman ini.
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit;
+}
+
 $idProduct = isset($_GET['id_product']) ? (int) $_GET['id_product'] : 0;
+$idFlashSale = isset($_GET['id_flash_sale']) ? (int) $_GET['id_flash_sale'] : 0;
 if ($idProduct <= 0) {
     header('Location: produk.php');
     exit;
@@ -17,6 +24,32 @@ mysqli_stmt_close($stmt);
 if (!$product) {
     exit('Produk tidak ditemukan.');
 }
+
+// Kalau datang dari kartu flash sale, harga yang dipakai adalah harga_akhir.
+// Baris flash sale harus benar-benar menunjuk produk ini, biar harga promo
+// tidak bisa ditempelkan ke produk lain lewat URL.
+$flash = null;
+if ($idFlashSale > 0) {
+    $flashStmt = mysqli_prepare($koneksi, "SELECT * FROM flash_sale WHERE id_flash_sale = ? AND id_product = ?");
+    mysqli_stmt_bind_param($flashStmt, "ii", $idFlashSale, $idProduct);
+    mysqli_stmt_execute($flashStmt);
+    $flash = mysqli_fetch_assoc(mysqli_stmt_get_result($flashStmt));
+    mysqli_stmt_close($flashStmt);
+}
+if (!$flash) {
+    $idFlashSale = 0;
+}
+
+$hargaAsli = (float) $product['price'];
+$hargaBayar = $flash ? (float) $flash['harga_akhir'] : $hargaAsli;
+$fotoTampil = $flash && !empty($flash['foto']) ? $flash['foto'] : $product['image'];
+
+$errorMessages = [
+    'stok'    => 'Stok produk tidak mencukupi. Kurangi jumlah pesanan.',
+    'telepon' => 'Nomor telepon wajib diisi.',
+    'invalid' => 'Data pesanan tidak valid. Coba ulangi.',
+];
+$error = $errorMessages[$_GET['error'] ?? ''] ?? '';
 ?>
 <!doctype html>
 <html lang="id">
@@ -26,11 +59,11 @@ if (!$product) {
     <title>Detail Pesanan - <?= htmlspecialchars($product['name_product']) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+
     <style>
         body {
             /* Latar belakang bungga.jpeg pudar */
-            background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), 
+            background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
                         url('../../backend/foto/bungga.jpeg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
@@ -47,7 +80,7 @@ if (!$product) {
             letter-spacing: 0.5px;
             text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
         }
-        
+
         .brand-pink {
             color: #d63384;
         }
@@ -113,39 +146,58 @@ if (!$product) {
     <div class="mx-auto" style="max-width: 820px;">
         <!-- Link Kembali Langsung ke Halaman Sebelumnya -->
         <a href="javascript:history.back()" class="text-decoration-none back-link mb-3 shadow-sm">&larr; Kembali</a>
-        
+
         <!-- Card Utama -->
         <div class="card card-checkout border-0 p-3 p-md-4 mt-2">
             <div class="row g-4 align-items-center">
-                
+
                 <!-- Gambar Produk -->
                 <div class="col-md-6 text-center">
-                    <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" 
-                         class="w-100 product-img shadow-sm" 
+                    <img src="../../backend/foto/<?= rawurlencode($fotoTampil) ?>"
+                         class="w-100 product-img shadow-sm"
                          alt="<?= htmlspecialchars($product['name_product']) ?>">
                 </div>
 
                 <!-- Detail Produk & Form -->
                 <div class="col-md-6">
-                    <span class="badge rounded-pill bg-white text-muted border px-3 py-2 text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">Detail Pesanan</span>
-                    
+                    <?php if ($flash): ?>
+                        <span class="badge rounded-pill px-3 py-2 text-uppercase fw-semibold mb-2 text-white" style="font-size: 0.75rem; letter-spacing: 1px; background-color: #e83e8c;">⚡ Flash Sale</span>
+                    <?php else: ?>
+                        <span class="badge rounded-pill bg-white text-muted border px-3 py-2 text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">Detail Pesanan</span>
+                    <?php endif; ?>
+
                     <h2 class="h3 fw-bold mb-1" style="color: #2c2c2c;"><?= htmlspecialchars($product['name_product']) ?></h2>
                     <p class="text-muted small mb-3"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                    
+
                     <div class="mb-3">
-                        <span class="fs-3 fw-bold" style="color: #d63384;">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></span>
+                        <?php if ($flash): ?>
+                            <span class="text-muted text-decoration-line-through d-block small">Rp<?= number_format($hargaAsli, 0, ',', '.') ?></span>
+                        <?php endif; ?>
+                        <span class="fs-3 fw-bold" style="color: #d63384;">Rp<?= number_format($hargaBayar, 0, ',', '.') ?></span>
                         <span class="small text-muted d-block">Stok tersedia: <?= (int) $product['stock'] ?> pcs</span>
                     </div>
 
+                    <?php if ($error): ?>
+                        <div class="alert alert-danger py-2 small rounded-3"><?= htmlspecialchars($error) ?></div>
+                    <?php endif; ?>
+
                     <?php if ((int) $product['stock'] > 0): ?>
-                        <!-- Form mengarah langsung ke payment.php -->
-                        <form action="payment.php" method="get" class="mt-4">
-                            <!-- Mengirim id_order sesuai ID produk -->
-                            <input type="hidden" name="id_order" value="<?= (int) $product['id_product'] ?>">
-                            
-                            <div class="mb-4" style="max-width: 140px;">
+                        <!-- Pesanan dibuat dulu di server, baru diarahkan ke halaman pembayaran -->
+                        <form action="../../backend/action_insert_order.php" method="post" class="mt-4">
+                            <input type="hidden" name="id_product" value="<?= (int) $product['id_product'] ?>">
+                            <?php if ($flash): ?>
+                                <input type="hidden" name="id_flash_sale" value="<?= (int) $flash['id_flash_sale'] ?>">
+                            <?php endif; ?>
+
+                            <div class="mb-3" style="max-width: 140px;">
                                 <label for="quantity" class="form-label small fw-semibold text-muted">Jumlah</label>
                                 <input id="quantity" type="number" name="quantity" class="form-control text-center border-0 bg-white shadow-sm" value="1" min="1" max="<?= (int) $product['stock'] ?>" style="border-radius: 10px;" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="no_telepon" class="form-label small fw-semibold text-muted">Nomor Telepon (WhatsApp)</label>
+                                <input id="no_telepon" type="tel" name="no_telepon" class="form-control border-0 bg-white shadow-sm" placeholder="08xxxxxxxxxx" pattern="[0-9+\- ]{8,20}" style="border-radius: 10px;" required>
+                                <div class="form-text small">Dipakai admin untuk menghubungi kamu soal pesanan ini.</div>
                             </div>
 
                             <button type="submit" class="btn btn-soft-pink btn-lg w-100 py-2.5 shadow-sm">Lanjut ke Pembayaran</button>

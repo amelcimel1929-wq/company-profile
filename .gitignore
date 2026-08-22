@@ -1,0 +1,9 @@
+# Docker setup — local only, not committed
+docker-compose.yml
+docker/
+.dockerignore
+.env
+.env.*
+
+# Dokumentasi kerja — local only
+docs/

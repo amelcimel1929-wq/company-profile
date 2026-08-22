@@ -1,4 +1,8 @@
-
+<?php
+session_start();
+// Dipakai navbar untuk memilih menu Login/Register atau Status Pesanan/Logout.
+$isLoggedIn = isset($_SESSION['id_user']);
+?>
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 
@@ -30,11 +34,13 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="assets/css/theme.css" rel="stylesheet" />
+    <!-- Dulu <link> Font Awesome ini nyasar KE DALAM <style> di bawah, jadi
+         gak pernah kemuat -> ikon tas belanja di brand navbar gak pernah nongol. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         html { scroll-behavior: smooth; }
         section[id] { scroll-margin-top: 92px; }
         .navbar .nav-link.is-active { color: #d94f76 !important; font-weight: 700 !important; border-bottom: 2px solid #d94f76; }
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
        .img-container {
             position: relative;
             overflow: hidden;
@@ -268,7 +274,13 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+        <!-- Bar putih statis, SAMA persis kayak _navbar.php di halaman lain.
+             Dulu fixed-top + transparan-ngambang -- posisinya dilepas biar
+             gak beda paradigma sama halaman lain. Atribut data-navbar-on-scroll
+             SENGAJA dibiarin (bukan efeknya yang dipakai) -- assets/js/theme.js
+             manggil .addEventListener ke elemen ini tanpa cek null dulu, kalau
+             atributnya dicabut sekalian, script itu error di semua halaman. -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3" data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container">
                 <!-- Navbar Brand -->
                 <a class="navbar-brand d-inline-flex align-items-center" href="#home" style="text-decoration: none;">
@@ -296,30 +308,44 @@
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#flash-sale" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Flash Sale</a>
                                 </li>
                                 <li class="nav-item px-2">
-                                    <a class="nav-link fw-semibold js-scroll-nav" href="#categoryWomen" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
+                                    <!-- "Produk" selalu ke halaman katalog, bukan scroll -- biar konsisten
+                                         sama navbar di halaman lain (produk.php dst) yang emang halaman terpisah -->
+                                    <a class="nav-link fw-semibold" href="produk.php" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
                                 </li>
                                  <li class="nav-item px-2">
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#owner" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Owner</a>
                                 </li>
                             </ul>
-                    <form class="d-flex align-items-center">
-                        <!-- Link Status Pesanan (Ikon User) -->
-                        <a class="text-1000" href="status_pesanan.php" title="Status Pesanan">
-                            <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </a>
+                    <div class="d-flex align-items-center">
+                        <?php if ($isLoggedIn): ?>
+                            <!-- Link Status Pesanan (Ikon User) -->
+                            <a class="text-1000" href="status_pesanan.php" title="Status Pesanan">
+                                <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </a>
 
-                        <!-- Link Logout (Ikon Log Out) -->
-                        <a class="text-1000" href="logout.php" title="Logout" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
-                            <svg class="feather feather-log-out me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                        </a>
-                    </form>
+                            <!-- Link Logout (Ikon Log Out) -->
+                            <a class="text-1000" href="logout.php" title="Logout" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
+                                <svg class="feather feather-log-out me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                            </a>
+                        <?php else: ?>
+                            <!-- Belum login: tampilkan Login & Register -->
+                            <a class="btn btn-sm fw-semibold me-2 px-3" href="login.php"
+                               style="font-family: 'Playfair Display', serif; color: #2b2b2b; border: 1px solid #e83e8c; border-radius: 20px;">
+                                Login
+                            </a>
+                            <a class="btn btn-sm fw-semibold px-3" href="register.php"
+                               style="font-family: 'Playfair Display', serif; color: #ffffff; background-color: #e83e8c; border-radius: 20px;">
+                                Register
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -768,8 +794,12 @@
                     <?php
                         include "../../backend/connection.php";
 
+                        // Join ke products supaya kartu flash sale tahu id_product & stok,
+                        // yang dipakai tombol "Pesan Sekarang" menuju checkout.php.
                         $query_flash_sale = mysqli_query(
-                        $koneksi, "SELECT * FROM flash_sale");
+                        $koneksi, "SELECT flash_sale.*, products.stock
+                                   FROM flash_sale
+                                   LEFT JOIN products ON products.id_product = flash_sale.id_product");
                         if (!$query_flash_sale) {
                             die("Query gagal: " . mysqli_error($koneksi));
                         }
@@ -822,8 +852,8 @@
 
                                             <!-- Informasi Produk -->
                                             <div class="card-body p-3 d-flex flex-column justify-content-between">
-                                                <h6 class="card-title text-truncate mb-2" 
-                                                    style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem;" 
+                                                <h6 class="card-title text-truncate mb-2"
+                                                    style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem;"
                                                     title="<?php echo htmlspecialchars($flash->nama_produk); ?>">
                                                     <?php echo $flash->nama_produk; ?>
                                                 </h6>
@@ -834,6 +864,27 @@
                                                     </div>
                                                     <div class="fw-bold" style="color: #e83e8c; font-size: 1.05rem;">
                                                         Rp <?php echo number_format($flash->harga_akhir, 0, ',', '.'); ?>
+                                                    </div>
+
+                                                    <!-- Tombol Pesan Sekarang: alurnya sama persis dgn Shop By Category -->
+                                                    <div class="mt-2">
+                                                        <?php if (empty($flash->id_product)): ?>
+                                                            <button class="btn btn-sm w-100 py-2" disabled
+                                                                    style="border-radius: 8px; background-color: #e9ecef; color: #6c757d; border: none;">
+                                                                Belum Tersedia
+                                                            </button>
+                                                        <?php elseif ((int) $flash->stock <= 0): ?>
+                                                            <button class="btn btn-sm w-100 py-2" disabled
+                                                                    style="border-radius: 8px; background-color: #e9ecef; color: #6c757d; border: none;">
+                                                                Stok Habis
+                                                            </button>
+                                                        <?php else: ?>
+                                                            <a href="checkout.php?id_product=<?= urlencode($flash->id_product) ?>&id_flash_sale=<?= urlencode($flash->id_flash_sale) ?>"
+                                                               class="btn btn-sm w-100 py-2 d-block text-center text-decoration-none text-white"
+                                                               style="border-radius: 8px; background-color: #e83e8c;">
+                                                                Pesan Sekarang
+                                                            </a>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </div>

@@ -23,10 +23,9 @@ $error = isset($_GET['error']) ? 'Email atau password tidak sesuai.' : '';
         <form action="../../backend/action_login_user.php" method="post">
             <div class="mb-3"><label for="email" class="form-label">Email</label><input id="email" type="email" name="email" class="form-control" required autofocus></div>
             <div class="mb-4"><label for="password" class="form-label">Password</label><input id="password" type="password" name="password" class="form-control" required></div>
-            <div class="mb-4"><label for="no_telepon" class="form-label">Nomor Telepon</label><input id="no_telepon" type="text" name="no_telepon" class="form-control" required></div>
-
             <button class="btn btn-dark w-100" type="submit">Login</button>
         </form>
+        <p class="text-center text-muted small mt-4 mb-0">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
     </div></section>
 </main>
 </body>

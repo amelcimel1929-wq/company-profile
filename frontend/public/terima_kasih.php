@@ -24,6 +24,10 @@ mysqli_stmt_execute($detailStmt);
 $details = mysqli_stmt_get_result($detailStmt);
 
 $statusClass = str_contains(strtolower($order['status']), 'verifikasi') || str_contains(strtolower($order['status']), 'menunggu') ? 'warning' : 'success';
+
+// Belum ada bukti bayar = pembayaran belum diselesaikan, tawarkan tombol lanjut bayar.
+$belumBayar = empty($order['proof_image']);
+$sudahLunas = strtolower((string) $order['payment_status']) === 'lunas';
 ?>
 <!doctype html>
 <html lang="id">
@@ -37,17 +41,32 @@ $statusClass = str_contains(strtolower($order['status']), 'verifikasi') || str_c
 <main class="container py-5" style="max-width: 780px;">
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4 p-lg-5">
-            <div class="text-center mb-4">
-                <div class="text-success fs-1">✓</div>
-                <h1 class="h3">Bukti pembayaran sudah dikirim</h1>
-                <p class="text-muted mb-0">Simpan halaman ini sebagai struk dan cek perkembangan pesananmu di sini.</p>
-            </div>
+            <?php if ($belumBayar): ?>
+                <div class="text-center mb-4">
+                    <div class="fs-1" style="color: #ffc107;">!</div>
+                    <h1 class="h3">Pembayaran belum diselesaikan</h1>
+                    <p class="text-muted mb-0">Pesanan sudah tercatat, tinggal bayar lewat QRIS dan unggah bukti bayarnya.</p>
+                </div>
+                <div class="alert alert-warning d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <span>Pesanan ini menunggu pembayaran kamu.</span>
+                    <a class="btn btn-dark" href="payment.php?id_order=<?= (int) $order['id_order'] ?>">Selesaikan Pembayaran</a>
+                </div>
+            <?php else: ?>
+                <div class="text-center mb-4">
+                    <div class="text-success fs-1">✓</div>
+                    <h1 class="h3">Bukti pembayaran sudah dikirim</h1>
+                    <p class="text-muted mb-0">Simpan halaman ini sebagai struk dan cek perkembangan pesananmu di sini.</p>
+                </div>
+            <?php endif; ?>
 
             <div class="row g-3 mb-4">
                 <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Kode pesanan</small><strong><?= htmlspecialchars($order['order_code']) ?></strong></div></div>
                 <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Status pesanan</small><span class="badge text-bg-<?= $statusClass ?>"><?= htmlspecialchars($order['status']) ?></span></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Nomor telepon</small><strong><?= htmlspecialchars($order['no_telepon'] ?: '-') ?></strong></div></div>
                 <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Metode pembayaran</small><strong><?= htmlspecialchars($order['payment_method'] ?: 'QRIS') ?></strong></div></div>
-                <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Status pembayaran</small><strong><?= htmlspecialchars($order['payment_status'] ?: 'Menunggu Verifikasi') ?></strong></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><small class="text-muted d-block">Status pembayaran</small>
+                    <strong><?= $sudahLunas ? 'Lunas' : ($belumBayar ? 'Belum Bayar' : 'Menunggu Verifikasi') ?></strong>
+                </div></div>
             </div>
 
             <?php if (!empty($order['proof_image'])): ?>
@@ -72,7 +91,10 @@ $statusClass = str_contains(strtolower($order['status']), 'verifikasi') || str_c
                 </table>
             </div>
             <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
-                <a class="btn btn-dark" href="terima_kasih.php?order=<?= (int) $order['id_order'] ?>">Muat Ulang Status</a>
+                <?php if ($belumBayar): ?>
+                    <a class="btn btn-dark" href="payment.php?id_order=<?= (int) $order['id_order'] ?>">Selesaikan Pembayaran</a>
+                <?php endif; ?>
+                <a class="btn btn-outline-dark" href="terima_kasih.php?order=<?= (int) $order['id_order'] ?>">Muat Ulang Status</a>
                 <a class="btn btn-outline-dark" href="status_pesanan.php">Semua Pesanan</a>
                 <a class="btn btn-outline-dark" href="produk.php">Belanja Lagi</a>
                 <button class="btn btn-outline-secondary" onclick="window.print()">Cetak Struk</button>

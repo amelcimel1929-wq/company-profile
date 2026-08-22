@@ -7,13 +7,21 @@ function redirectTo($path) {
     exit;
 }
 
+// Balik ke halaman checkout dengan pesan error, bukan halaman putih.
+function backToCheckout($idProduct, $idFlashSale, $errorCode) {
+    $url = '/company-profile/frontend/public/checkout.php?id_product=' . $idProduct;
+    if ($idFlashSale > 0) {
+        $url .= '&id_flash_sale=' . $idFlashSale;
+    }
+    redirectTo($url . '&error=' . $errorCode);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirectTo('/company-profile/frontend/public/produk.php');
 }
 
 if (!isset($_SESSION['id_user'])) {
-    http_response_code(401);
-    exit('Silakan login terlebih dahulu sebelum membuat pesanan.');
+    redirectTo('/company-profile/frontend/public/login.php');
 }
 
 $idUser = (int) $_SESSION['id_user'];
@@ -21,9 +29,14 @@ $idProduct = isset($_POST['id_product']) ? (int) $_POST['id_product'] : 0;
 $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 0;
 // Ambil input nomor telepon dari POST request
 $noTelepon = isset($_POST['no_telepon']) ? trim($_POST['no_telepon']) : '';
+// Diisi kalau pesanan datang dari kartu Flash Sale.
+$idFlashSale = isset($_POST['id_flash_sale']) ? (int) $_POST['id_flash_sale'] : 0;
 
-if ($idProduct <= 0 || $quantity <= 0 || empty($noTelepon)) {
-    exit('Data pesanan tidak valid atau nomor telepon belum diisi.');
+if ($idProduct <= 0 || $quantity <= 0) {
+    backToCheckout($idProduct, $idFlashSale, 'invalid');
+}
+if ($noTelepon === '') {
+    backToCheckout($idProduct, $idFlashSale, 'telepon');
 }
 
 mysqli_begin_transaction($koneksi);
@@ -34,11 +47,30 @@ try {
     $product = mysqli_fetch_assoc(mysqli_stmt_get_result($productStmt));
     mysqli_stmt_close($productStmt);
 
-    if (!$product || (int) $product['stock'] < $quantity) {
-        throw new Exception('Produk tidak tersedia atau stok tidak mencukupi.');
+    if (!$product) {
+        throw new Exception('Produk tidak tersedia.');
+    }
+    if ((int) $product['stock'] < $quantity) {
+        mysqli_rollback($koneksi);
+        backToCheckout($idProduct, $idFlashSale, 'stok');
     }
 
     $price = (float) $product['price'];
+
+    // Harga flash sale hanya dipakai kalau baris flash_sale-nya memang
+    // menunjuk produk ini, supaya harga promo tidak bisa dipindah lewat POST.
+    if ($idFlashSale > 0) {
+        $flashStmt = mysqli_prepare($koneksi, "SELECT harga_akhir FROM flash_sale WHERE id_flash_sale = ? AND id_product = ?");
+        mysqli_stmt_bind_param($flashStmt, 'ii', $idFlashSale, $idProduct);
+        mysqli_stmt_execute($flashStmt);
+        $flash = mysqli_fetch_assoc(mysqli_stmt_get_result($flashStmt));
+        mysqli_stmt_close($flashStmt);
+
+        if ($flash) {
+            $price = (float) $flash['harga_akhir'];
+        }
+    }
+
     $subtotal = $price * $quantity;
     $orderCode = 'ORD' . date('YmdHis') . random_int(10, 99);
     $orderDate = date('Y-m-d H:i:s');

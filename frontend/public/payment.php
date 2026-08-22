@@ -3,7 +3,11 @@ session_start();
 require "../../backend/connection.php";
 
 $idOrder = isset($_GET['id_order']) ? (int) $_GET['id_order'] : 0;
-if ($idOrder <= 0 || !isset($_SESSION['id_user'])) {
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit;
+}
+if ($idOrder <= 0) {
     header('Location: produk.php');
     exit;
 }

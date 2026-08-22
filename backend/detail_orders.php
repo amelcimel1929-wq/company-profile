@@ -56,6 +56,15 @@ $query_details = mysqli_query($koneksi, "SELECT order_details.*, products.name_p
                                     <h5 class="card-title font-weight-bold" style="color: #7d5260;">Pemesan</h5>
                                     <p class="mb-1"><strong>Nama:</strong> <?php echo $order->customer_name; ?></p>
                                     <p class="mb-1"><strong>Email:</strong> <?php echo $order->email; ?></p>
+                                    <p class="mb-1"><strong>No. Telepon:</strong>
+                                        <?php if (!empty($order->no_telepon)): ?>
+                                            <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $order->no_telepon); ?>" target="_blank">
+                                                <?php echo htmlspecialchars($order->no_telepon); ?>
+                                            </a>
+                                        <?php else: ?>
+                                            -
+                                        <?php endif; ?>
+                                    </p>
                                     <p class="mb-1"><strong>Tanggal Pesan:</strong> <?php echo date('d-m-Y H:i', strtotime($order->order_date)); ?></p>
                                 </div>
                             </div>

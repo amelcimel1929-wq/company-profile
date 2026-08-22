@@ -25,7 +25,10 @@ $products = mysqli_stmt_get_result($stmt);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Produk</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- assets/css/theme.css SUDAH termasuk Bootstrap sendiri (dikompile ulang,
+         variable warnanya beda dari Bootstrap CDN generik) -- ini yang dipakai
+         index.php, makanya navbar & tombol harus ikut sini, bukan CDN bootstrap. -->
+    <link href="assets/css/theme.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <?php include '_navbar.php'; ?>
@@ -57,7 +60,7 @@ $products = mysqli_stmt_get_result($stmt);
                 <article class="card h-100 shadow-sm border-0">
                     <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" class="card-img-top" style="height: 340px; object-fit: cover;" alt="<?= htmlspecialchars($product['name_product']) ?>">
                     <div class="card-body d-flex flex-column">
-                        <span class="badge text-bg-secondary align-self-start mb-2"><?= htmlspecialchars($product['name_kategori']) ?></span>
+                        <span class="badge bg-secondary text-white align-self-start mb-2"><?= htmlspecialchars($product['name_kategori']) ?></span>
                         <h2 class="h5"><?= htmlspecialchars($product['name_product']) ?></h2>
                         <p class="text-muted small flex-grow-1"><?= htmlspecialchars($product['description']) ?></p>
                         <p class="fw-bold mb-1">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></p>

@@ -2,12 +2,23 @@
 session_start();
 require "../../backend/connection.php";
 
-// Ambil ID user dari session login
-$idUser = $_SESSION['id_user'] ?? $_SESSION['user_id'] ?? 0;
+// Halaman ini hanya untuk user yang sudah login.
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit;
+}
+$idUser = (int) $_SESSION['id_user'];
 
-// Query disaring khusus untuk user yang sedang login saja
-$query = "SELECT * FROM orders WHERE id_user = '$idUser' ORDER BY id_order DESC";
-$result = mysqli_query($koneksi, $query);
+// Status bayar ada di tabel payments, jadi harus di-join.
+// LEFT JOIN supaya pesanan yang belum pernah bayar tetap muncul.
+$stmt = mysqli_prepare($koneksi, "SELECT o.*, p.payment_status, p.proof_image
+                                  FROM orders o
+                                  LEFT JOIN payments p ON p.id_order = o.id_order
+                                  WHERE o.id_user = ?
+                                  ORDER BY o.id_order DESC");
+mysqli_stmt_bind_param($stmt, 'i', $idUser);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 ?>
 <!doctype html>
 <html lang="id">
@@ -157,24 +168,41 @@ $result = mysqli_query($koneksi, $query);
                     <tbody>
                         <?php if ($result && mysqli_num_rows($result) > 0): ?>
                             <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                <?php
+                                    // Dianggap lunas hanya kalau admin sudah konfirmasi di backend.
+                                    $sudahLunas = strtolower((string) ($row['payment_status'] ?? '')) === 'lunas';
+                                    // Belum ada bukti bayar = pembayaran belum diselesaikan.
+                                    $belumBayar = empty($row['proof_image']);
+                                ?>
                                 <tr>
-                                    <td class="fw-bold" style="color: #4a2e35;"><?= htmlspecialchars($row['code_order'] ?? $row['id_order']) ?></td>
-                                    <td class="text-muted small"><?= date('d-m-Y H:i', strtotime($row['created_at'] ?? 'now')) ?></td>
-                                    <td class="fw-semibold" style="color: #d63384;">Rp<?= number_format((float) ($row['total_price'] ?? $row['price'] ?? 0), 0, ',', '.') ?></td>
+                                    <td class="fw-bold" style="color: #4a2e35;"><?= htmlspecialchars($row['order_code']) ?></td>
+                                    <td class="text-muted small"><?= date('d-m-Y H:i', strtotime($row['order_date'])) ?></td>
+                                    <td class="fw-semibold" style="color: #d63384;">Rp<?= number_format((float) $row['total_price'], 0, ',', '.') ?></td>
                                     <td class="text-center">
                                         <span class="badge bg-secondary badge-status">
-                                            <?= htmlspecialchars($row['status_order'] ?? 'Menunggu') ?>
+                                            <?= htmlspecialchars($row['status']) ?>
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge bg-light text-dark border badge-status">
-                                            <?= htmlspecialchars($row['status_payment'] ?? 'belum_bayar') ?>
-                                        </span>
+                                        <?php if ($sudahLunas): ?>
+                                            <span class="badge bg-success badge-status">Lunas</span>
+                                        <?php elseif ($belumBayar): ?>
+                                            <span class="badge bg-warning text-dark badge-status">Belum Bayar</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-info text-dark badge-status">Menunggu Verifikasi</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="text-end">
-                                        <a href="terima_kasih.php?order=<?= $row['id_order'] ?>" class="btn btn-soft-pink btn-sm px-3 shadow-sm">
-                                            Lihat
-                                        </a>
+                                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                                            <?php if ($belumBayar): ?>
+                                                <a href="payment.php?id_order=<?= (int) $row['id_order'] ?>" class="btn btn-outline-pink btn-sm px-3 shadow-sm">
+                                                    Selesaikan Pembayaran
+                                                </a>
+                                            <?php endif; ?>
+                                            <a href="terima_kasih.php?order=<?= (int) $row['id_order'] ?>" class="btn btn-soft-pink btn-sm px-3 shadow-sm">
+                                                Lihat
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

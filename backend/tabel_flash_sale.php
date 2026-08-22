@@ -1,6 +1,9 @@
 <?php
 include "connection.php";
-$select_flash_sale = mysqli_query($koneksi, "SELECT * FROM flash_sale ORDER BY id_flash_sale DESC");
+$select_flash_sale = mysqli_query($koneksi, "SELECT flash_sale.*, products.name_product, products.stock
+                                             FROM flash_sale
+                                             LEFT JOIN products ON products.id_product = flash_sale.id_product
+                                             ORDER BY flash_sale.id_flash_sale DESC");
 ?>
 
 <?php include "components/header.php"; ?>
@@ -44,6 +47,7 @@ $select_flash_sale = mysqli_query($koneksi, "SELECT * FROM flash_sale ORDER BY i
                             <thead>
                                 <tr>
                                     <th scope="col">nama_produk</th>
+                                    <th scope="col">Produk Terhubung</th>
                                     <th scope="col">jenis</th>
                                     <th scope="col">Harga_awal</th>
                                     <th scope="col">Harga_akhir</th>
@@ -55,6 +59,14 @@ $select_flash_sale = mysqli_query($koneksi, "SELECT * FROM flash_sale ORDER BY i
                                 <?php while ($tampil = mysqli_fetch_object($select_flash_sale)) : ?>
                                     <tr>
                                         <td><?php echo $tampil->nama_produk; ?></td>
+                                        <td>
+                                            <?php if (!empty($tampil->id_product)): ?>
+                                                <?php echo htmlspecialchars($tampil->name_product); ?>
+                                                <small class="d-block text-muted">stok: <?php echo (int) $tampil->stock; ?></small>
+                                            <?php else: ?>
+                                                <span class="badge badge-warning p-2">Belum terhubung</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><?php echo $tampil->jenis; ?></td>
                                         <td><?php echo $tampil->harga_awal; ?></td>
                                         <td><?php echo $tampil->harga_akhir; ?></td>

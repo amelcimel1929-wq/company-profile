@@ -11,7 +11,7 @@ $navActive = $activePage ?? '';
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3 fixed-top">
     <div class="container">
         <!-- Navbar Brand -->
         <a class="navbar-brand d-inline-flex align-items-center" href="index.php" style="text-decoration: none;">
@@ -62,15 +62,19 @@ $navActive = $activePage ?? '';
                         </svg>
                     </a>
                 <?php else: ?>
-                    <!-- Belum login: tampilkan Login & Register -->
-                    <a class="btn btn-sm fw-semibold me-2 px-3" href="login.php"
-                       style="font-family: 'Playfair Display', serif; color: #2b2b2b; border: 1px solid #e83e8c; border-radius: 20px;">
-                        Login
-                    </a>
-                    <a class="btn btn-sm fw-semibold px-3" href="register.php"
-                       style="font-family: 'Playfair Display', serif; color: #ffffff; background-color: #e83e8c; border-radius: 20px;">
-                        Register
-                    </a>
+                    <!-- Belum login: ikon profil, Login & Register muncul lewat dropdown pas diklik -->
+                    <div class="dropdown">
+                        <button class="btn text-1000 p-0 border-0 bg-transparent" type="button" id="navAccountDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Akun">
+                            <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="navAccountDropdown" style="font-family: 'Playfair Display', serif;">
+                            <li><a class="dropdown-item" href="login.php">Login</a></li>
+                            <li><a class="dropdown-item" href="register.php">Register</a></li>
+                        </ul>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

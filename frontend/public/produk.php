@@ -1,9 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['id_user'])) {
-    header('Location: login.php');
-    exit;
-}
+// Katalog boleh dibuka tanpa login -- yang wajib login itu pas checkout
+// (sudah dicek sendiri di checkout.php).
+$isLoggedIn = isset($_SESSION['id_user']);
 require "../../backend/connection.php";
 
 $selectedCategory = isset($_GET['id_category']) ? (int) $_GET['id_category'] : 0;
@@ -32,7 +31,8 @@ $products = mysqli_stmt_get_result($stmt);
 </head>
 <body class="bg-light">
 <?php include '_navbar.php'; ?>
-<main class="container py-5">
+<!-- margin-top nyamain tinggi navbar yang sekarang fixed-top, biar konten gak ketutupan -->
+<main class="container py-5" style="margin-top: 92px;">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
             <h1 class="h3 mb-1">Koleksi Produk</h1>
@@ -66,7 +66,13 @@ $products = mysqli_stmt_get_result($stmt);
                         <p class="fw-bold mb-1">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></p>
                         <p class="small text-muted">Stok: <?= (int) $product['stock'] ?></p>
                         <?php if ((int) $product['stock'] > 0): ?>
-                            <a class="btn btn-dark w-100" href="checkout.php?id_product=<?= (int) $product['id_product'] ?>">Pesan Sekarang</a>
+                            <?php $checkoutUrl = 'checkout.php?id_product=' . (int) $product['id_product']; ?>
+                            <?php if ($isLoggedIn): ?>
+                                <a class="btn btn-dark w-100" href="<?= $checkoutUrl ?>">Pesan Sekarang</a>
+                            <?php else: ?>
+                                <!-- Belum login: buka modal pilih Login/Register dulu, bukan langsung pindah halaman -->
+                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#authPromptModal" data-redirect="<?= htmlspecialchars($checkoutUrl) ?>">Pesan Sekarang</button>
+                            <?php endif; ?>
                         <?php else: ?>
                             <button class="btn btn-secondary w-100" disabled>Stok Habis</button>
                         <?php endif; ?>
@@ -76,6 +82,36 @@ $products = mysqli_stmt_get_result($stmt);
         <?php endwhile; ?>
     </div>
 </main>
+
+<!-- Modal: muncul pas guest klik "Pesan Sekarang" -- nawarin Login atau Register,
+     dua-duanya bawa balik ke checkout produk yang tadi diklik lewat ?redirect=. -->
+<div class="modal fade" id="authPromptModal" tabindex="-1" aria-labelledby="authPromptModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authPromptModalLabel">Masuk dulu yuk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Untuk memesan produk ini, silakan login kalau sudah punya akun, atau daftar dulu kalau belum.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="authPromptLoginLink" href="login.php" class="btn btn-outline-dark">Login</a>
+                <a id="authPromptRegisterLink" href="register.php" class="btn btn-dark">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Isi tujuan redirect di 2 tombol modal sesuai produk yang diklik.
+    document.getElementById('authPromptModal').addEventListener('show.bs.modal', function (event) {
+        var redirect = event.relatedTarget.getAttribute('data-redirect') || '';
+        var qs = redirect ? '?redirect=' + encodeURIComponent(redirect) : '';
+        document.getElementById('authPromptLoginLink').href = 'login.php' + qs;
+        document.getElementById('authPromptRegisterLink').href = 'register.php' + qs;
+    });
+</script>
 </body>
 </html>

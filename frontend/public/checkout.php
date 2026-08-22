@@ -3,8 +3,12 @@ session_start();
 require "../../backend/connection.php";
 
 // Pesanan butuh id_user, jadi wajib login dulu sebelum masuk halaman ini.
+// Produk & querystring-nya (id_product, id_flash_sale) dibawa lewat ?redirect=
+// biar abis login/register, user balik lagi ke sini buat lanjut checkout,
+// bukan malah nyasar ke index.php.
 if (!isset($_SESSION['id_user'])) {
-    header('Location: login.php');
+    $back = 'checkout.php' . (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] !== '' ? '?' . $_SERVER['QUERY_STRING'] : '');
+    header('Location: login.php?redirect=' . rawurlencode($back));
     exit;
 }
 

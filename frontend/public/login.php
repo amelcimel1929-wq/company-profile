@@ -1,7 +1,14 @@
 <?php
 session_start();
+// Kalau datang dari checkout.php (belum login), ini bawa balik ke situ lagi
+// abis login sukses -- lihat action_login_user.php. Divalidasi ketat (cuma
+// boleh "sesuatu.php" + query di dalam situs sendiri) biar gak jadi open redirect.
+$redirect = $_GET['redirect'] ?? '';
+if (!preg_match('#^[a-zA-Z0-9_\-]+\.php(\?[^\s]*)?$#', $redirect)) {
+    $redirect = '';
+}
 if (isset($_SESSION['id_user'])) {
-    header('Location: index.php');
+    header('Location: ' . ($redirect !== '' ? $redirect : 'index.php'));
     exit;
 }
 $error = isset($_GET['error']) ? 'Email atau password tidak sesuai.' : '';
@@ -21,11 +28,12 @@ $error = isset($_GET['error']) ? 'Email atau password tidak sesuai.' : '';
         <p class="text-muted text-center mb-4">Login untuk melihat produk dan membuat pesanan.</p>
         <?php if ($error): ?><div class="alert alert-danger"><?= $error ?></div><?php endif; ?>
         <form action="../../backend/action_login_user.php" method="post">
+            <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
             <div class="mb-3"><label for="email" class="form-label">Email</label><input id="email" type="email" name="email" class="form-control" required autofocus></div>
             <div class="mb-4"><label for="password" class="form-label">Password</label><input id="password" type="password" name="password" class="form-control" required></div>
             <button class="btn btn-dark w-100" type="submit">Login</button>
         </form>
-        <p class="text-center text-muted small mt-4 mb-0">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+        <p class="text-center text-muted small mt-4 mb-0">Belum punya akun? <a href="register.php<?= $redirect !== '' ? '?redirect=' . urlencode($redirect) : '' ?>">Daftar di sini</a></p>
     </div></section>
 </main>
 </body>

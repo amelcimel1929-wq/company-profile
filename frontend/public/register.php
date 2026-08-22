@@ -1,7 +1,13 @@
 <?php
 session_start();
+// Sama kayak login.php: bawa balik ke checkout.php abis daftar sukses, kalau
+// datangnya dari sana. Divalidasi ketat biar gak jadi open redirect.
+$redirect = $_GET['redirect'] ?? '';
+if (!preg_match('#^[a-zA-Z0-9_\-]+\.php(\?[^\s]*)?$#', $redirect)) {
+    $redirect = '';
+}
 if (isset($_SESSION['id_user'])) {
-    header('Location: index.php');
+    header('Location: ' . ($redirect !== '' ? $redirect : 'index.php'));
     exit;
 }
 
@@ -34,13 +40,14 @@ $oldEmail = $_GET['email'] ?? '';
         <p class="text-muted text-center mb-4">Buat akun untuk mulai belanja di preloved bymeii ♡</p>
         <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
         <form action="../../backend/action_register_user.php" method="post">
+            <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
             <div class="mb-3"><label for="name" class="form-label">Nama Lengkap</label><input id="name" type="text" name="name" class="form-control" value="<?= htmlspecialchars($oldName) ?>" required autofocus></div>
             <div class="mb-3"><label for="email" class="form-label">Email</label><input id="email" type="email" name="email" class="form-control" value="<?= htmlspecialchars($oldEmail) ?>" required></div>
             <div class="mb-3"><label for="password" class="form-label">Password</label><input id="password" type="password" name="password" class="form-control" minlength="6" required><div class="form-text">Minimal 6 karakter.</div></div>
             <div class="mb-4"><label for="password_confirm" class="form-label">Konfirmasi Password</label><input id="password_confirm" type="password" name="password_confirm" class="form-control" minlength="6" required></div>
             <button class="btn btn-dark w-100" type="submit">Daftar</button>
         </form>
-        <p class="text-center text-muted small mt-4 mb-0">Sudah punya akun? <a href="login.php">Login di sini</a></p>
+        <p class="text-center text-muted small mt-4 mb-0">Sudah punya akun? <a href="login.php<?= $redirect !== '' ? '?redirect=' . urlencode($redirect) : '' ?>">Login di sini</a></p>
     </div></section>
 </main>
 </body>

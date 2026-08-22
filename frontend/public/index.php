@@ -286,7 +286,7 @@ $isLoggedIn = isset($_SESSION['id_user']);
              SENGAJA dibiarin (bukan efeknya yang dipakai) -- assets/js/theme.js
              manggil .addEventListener ke elemen ini tanpa cek null dulu, kalau
              atributnya dicabut sekalian, script itu error di semua halaman. -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3" data-navbar-on-scroll="data-navbar-on-scroll">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3 fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container">
                 <!-- Navbar Brand -->
                 <a class="navbar-brand d-inline-flex align-items-center" href="#home" style="text-decoration: none;">
@@ -341,15 +341,19 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                 </svg>
                             </a>
                         <?php else: ?>
-                            <!-- Belum login: tampilkan Login & Register -->
-                            <a class="btn btn-sm fw-semibold me-2 px-3" href="login.php"
-                               style="font-family: 'Playfair Display', serif; color: #2b2b2b; border: 1px solid #e83e8c; border-radius: 20px;">
-                                Login
-                            </a>
-                            <a class="btn btn-sm fw-semibold px-3" href="register.php"
-                               style="font-family: 'Playfair Display', serif; color: #ffffff; background-color: #e83e8c; border-radius: 20px;">
-                                Register
-                            </a>
+                            <!-- Belum login: ikon profil, Login & Register muncul lewat dropdown pas diklik -->
+                            <div class="dropdown">
+                                <button class="btn text-1000 p-0 border-0 bg-transparent" type="button" id="navAccountDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Akun">
+                                    <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="navAccountDropdown" style="font-family: 'Playfair Display', serif;">
+                                    <li><a class="dropdown-item" href="login.php">Login</a></li>
+                                    <li><a class="dropdown-item" href="register.php">Register</a></li>
+                                </ul>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -388,7 +392,9 @@ $isLoggedIn = isset($_SESSION['id_user']);
         ?>
 
         <!-- SECTION HEADER / PROFILE FRONTEND -->
-        <section id="home" class="py-11 bg-light-gradient border-bottom border-white border-5">
+        <!-- margin-top nyamain tinggi navbar yang sekarang fixed-top, biar hero
+             gak ketutupan -- angkanya disamain sama scroll-margin-top di atas. -->
+        <section id="home" class="py-11 bg-light-gradient border-bottom border-white border-5" style="margin-top: 92px;">
             <div class="bg-holder overlay overlay-light" style="background-image:url(<?php echo $bg_image; ?>);background-size:cover;"></div>
             <!--/.bg-holder-->
             <div class="container">
@@ -887,11 +893,20 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                                                 Stok Habis
                                                             </button>
                                                         <?php else: ?>
-                                                            <a href="checkout.php?id_product=<?= urlencode($flash->id_product) ?>&id_flash_sale=<?= urlencode($flash->id_flash_sale) ?>"
-                                                               class="btn btn-sm w-100 py-2 d-block text-center text-decoration-none text-white"
-                                                               style="border-radius: 8px; background-color: #e83e8c;">
-                                                                Pesan Sekarang
-                                                            </a>
+                                                            <?php $flashCheckoutUrl = 'checkout.php?id_product=' . urlencode($flash->id_product) . '&id_flash_sale=' . urlencode($flash->id_flash_sale); ?>
+                                                            <?php if ($isLoggedIn): ?>
+                                                                <a href="<?= $flashCheckoutUrl ?>"
+                                                                   class="btn btn-sm w-100 py-2 d-block text-center text-decoration-none text-white"
+                                                                   style="border-radius: 8px; background-color: #e83e8c;">
+                                                                    Pesan Sekarang
+                                                                </a>
+                                                            <?php else: ?>
+                                                                <button type="button" data-bs-toggle="modal" data-bs-target="#authPromptModal" data-redirect="<?= htmlspecialchars($flashCheckoutUrl) ?>"
+                                                                   class="btn btn-sm w-100 py-2 d-block text-center text-decoration-none text-white border-0"
+                                                                   style="border-radius: 8px; background-color: #e83e8c;">
+                                                                    Pesan Sekarang
+                                                                </button>
+                                                            <?php endif; ?>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -3543,10 +3558,18 @@ $isLoggedIn = isset($_SESSION['id_user']);
 
                                                     <!-- Tombol Beli -->
                                                     <div>
-                                                        <a href="checkout.php?id_product=<?= urlencode($produk['id_product']) ?>" 
-                                                           class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none">
-                                                            Pesan Sekarang
-                                                        </a>
+                                                        <?php $catCheckoutUrl = 'checkout.php?id_product=' . urlencode($produk['id_product']); ?>
+                                                        <?php if ($isLoggedIn): ?>
+                                                            <a href="<?= $catCheckoutUrl ?>"
+                                                               class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none">
+                                                                Pesan Sekarang
+                                                            </a>
+                                                        <?php else: ?>
+                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#authPromptModal" data-redirect="<?= htmlspecialchars($catCheckoutUrl) ?>"
+                                                               class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none border-0">
+                                                                Pesan Sekarang
+                                                            </button>
+                                                        <?php endif; ?>
                                                     </div>
 
                                                 </div>
@@ -4228,6 +4251,35 @@ $isLoggedIn = isset($_SESSION['id_user']);
     <script src="assets/js/theme.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <!-- Modal: muncul pas guest klik "Pesan Sekarang" -- nawarin Login atau Register,
+         dua-duanya bawa balik ke checkout produk yang tadi diklik lewat ?redirect=. -->
+    <div class="modal fade" id="authPromptModal" tabindex="-1" aria-labelledby="authPromptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authPromptModalLabel" style="font-family: 'Playfair Display', serif;">Masuk dulu yuk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Untuk memesan produk ini, silakan login kalau sudah punya akun, atau daftar dulu kalau belum.</p>
+                </div>
+                <div class="modal-footer">
+                    <a id="authPromptLoginLink" href="login.php" class="btn btn-outline-dark">Login</a>
+                    <a id="authPromptRegisterLink" href="register.php" class="btn" style="background-color: #e83e8c; color: #fff;">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Isi tujuan redirect di 2 tombol modal sesuai produk yang diklik.
+        document.getElementById('authPromptModal').addEventListener('show.bs.modal', function (event) {
+            var redirect = event.relatedTarget.getAttribute('data-redirect') || '';
+            var qs = redirect ? '?redirect=' + encodeURIComponent(redirect) : '';
+            document.getElementById('authPromptLoginLink').href = 'login.php' + qs;
+            document.getElementById('authPromptRegisterLink').href = 'register.php' + qs;
+        });
+    </script>
 </body>
 
 </html>

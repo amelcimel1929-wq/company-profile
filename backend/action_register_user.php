@@ -4,15 +4,24 @@ require 'connection.php';
 
 $registerPage = '/company-profile/frontend/public/register.php';
 
+// ?redirect= (mis. balik ke checkout.php) divalidasi ulang di sini juga --
+// cuma boleh file .php relatif di situs sendiri, biar gak jadi open redirect.
+$redirect = $_POST['redirect'] ?? '';
+if (!preg_match('#^[a-zA-Z0-9_\-]+\.php(\?[^\s]*)?$#', $redirect)) {
+    $redirect = '';
+}
+$successTarget = $redirect !== '' ? $redirect : 'index.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ' . $registerPage);
+    header('Location: ' . $registerPage . ($redirect !== '' ? '?redirect=' . rawurlencode($redirect) : ''));
     exit;
 }
 
 function backToRegister($errorCode, $name = '', $email = '') {
-    global $registerPage;
+    global $registerPage, $redirect;
     header('Location: ' . $registerPage . '?error=' . $errorCode
-        . '&name=' . urlencode($name) . '&email=' . urlencode($email));
+        . '&name=' . urlencode($name) . '&email=' . urlencode($email)
+        . ($redirect !== '' ? '&redirect=' . rawurlencode($redirect) : ''));
     exit;
 }
 
@@ -60,6 +69,6 @@ $_SESSION['user_name'] = $name;
 $_SESSION['user_email'] = $email;
 $_SESSION['user_role'] = $role;
 
-header('Location: /company-profile/frontend/public/index.php');
+header('Location: /company-profile/frontend/public/' . $successTarget);
 exit;
 ?>

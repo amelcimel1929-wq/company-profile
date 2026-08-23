@@ -883,11 +883,37 @@ if ($isLoggedIn) {
 
                                             <!-- Informasi Produk -->
                                             <div class="card-body p-3 d-flex flex-column justify-content-between">
-                                                <h6 class="card-title text-truncate mb-2"
-                                                    style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem;"
-                                                    title="<?php echo htmlspecialchars($flash->nama_produk); ?>">
-                                                    <?php echo $flash->nama_produk; ?>
-                                                </h6>
+                                                <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                                    <h6 class="card-title text-truncate mb-0"
+                                                        style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.95rem;"
+                                                        title="<?php echo htmlspecialchars($flash->nama_produk); ?>">
+                                                        <?php echo $flash->nama_produk; ?>
+                                                    </h6>
+
+                                                    <?php if (!empty($flash->id_product) && (int) $flash->stock > 0): ?>
+                                                        <!-- Tambah ke Keranjang, harga promo ikutan kebawa lewat id_flash_sale -->
+                                                        <?php if ($isLoggedIn): ?>
+                                                            <form action="../../backend/action_add_to_cart.php" method="post" class="m-0 p-0 flex-shrink-0">
+                                                                <input type="hidden" name="id_product" value="<?= (int) $flash->id_product ?>">
+                                                                <input type="hidden" name="id_flash_sale" value="<?= (int) $flash->id_flash_sale ?>">
+                                                                <input type="hidden" name="quantity" value="1">
+                                                                <button type="submit" class="btn p-0 border-0 d-flex align-items-center" style="color: #e83e8c;" title="Tambah ke Keranjang">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
+                                                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </form>
+                                                        <?php else: ?>
+                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#authPromptModal"
+                                                                    data-redirect="<?= htmlspecialchars('checkout.php?id_product=' . urlencode($flash->id_product) . '&id_flash_sale=' . urlencode($flash->id_flash_sale)) ?>"
+                                                                    class="btn p-0 border-0 d-flex align-items-center flex-shrink-0" style="color: #e83e8c;" title="Tambah ke Keranjang">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
+                                                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0"/>
+                                                                </svg>
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </div>
 
                                                 <div>
                                                     <div class="text-muted small text-decoration-line-through mb-1" style="font-size: 0.8rem;">

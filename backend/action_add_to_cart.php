@@ -14,14 +14,28 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $idProduct = (int) ($_POST['id_product'] ?? 0);
 $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
+$idFlashSale = (int) ($_POST['id_flash_sale'] ?? 0);
 if ($idProduct <= 0) {
     cartRedirect('index.php');
 }
 
 // Guest tetap bisa menekan ikon: setelah login, produk ini langsung dimasukkan.
 if (!isset($_SESSION['id_user'])) {
-    $_SESSION['pending_cart_item'] = ['id_product' => $idProduct, 'quantity' => $quantity];
+    $_SESSION['pending_cart_item'] = ['id_product' => $idProduct, 'quantity' => $quantity, 'id_flash_sale' => $idFlashSale];
     cartRedirect('login.php?redirect=' . rawurlencode('keranjang.php?add_pending=1'));
+}
+
+// Baris flash sale harus beneran nunjuk produk ini, biar harga promo gak
+// bisa ditempelin ke produk lain lewat POST (sama kayak checkout.php).
+if ($idFlashSale > 0) {
+    $flashCheckStmt = mysqli_prepare($koneksi, 'SELECT id_flash_sale FROM flash_sale WHERE id_flash_sale = ? AND id_product = ?');
+    mysqli_stmt_bind_param($flashCheckStmt, 'ii', $idFlashSale, $idProduct);
+    mysqli_stmt_execute($flashCheckStmt);
+    $flashValid = mysqli_fetch_assoc(mysqli_stmt_get_result($flashCheckStmt));
+    mysqli_stmt_close($flashCheckStmt);
+    if (!$flashValid) {
+        $idFlashSale = 0;
+    }
 }
 
 ensureCartTables($koneksi);
@@ -56,12 +70,14 @@ mysqli_stmt_close($itemStmt);
 
 $newQuantity = min((int) $product['stock'], $quantity + (int) ($existing['quantity'] ?? 0));
 if ($existing) {
+    // Udah ada barisnya -- cuma nambah quantity, link flash sale-nya (kalau ada) dibiarin apa adanya.
     $itemStmt = mysqli_prepare($koneksi, 'UPDATE cart_items SET quantity = ? WHERE id_cart_item = ?');
     $idItem = (int) $existing['id_cart_item'];
     mysqli_stmt_bind_param($itemStmt, 'ii', $newQuantity, $idItem);
 } else {
-    $itemStmt = mysqli_prepare($koneksi, 'INSERT INTO cart_items (id_cart, id_product, quantity) VALUES (?, ?, ?)');
-    mysqli_stmt_bind_param($itemStmt, 'iii', $idCart, $idProduct, $newQuantity);
+    $flashParam = $idFlashSale > 0 ? $idFlashSale : null;
+    $itemStmt = mysqli_prepare($koneksi, 'INSERT INTO cart_items (id_cart, id_product, id_flash_sale, quantity) VALUES (?, ?, ?, ?)');
+    mysqli_stmt_bind_param($itemStmt, 'iiii', $idCart, $idProduct, $flashParam, $newQuantity);
 }
 mysqli_stmt_execute($itemStmt);
 mysqli_stmt_close($itemStmt);

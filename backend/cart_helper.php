@@ -19,6 +19,14 @@ function ensureCartTables($koneksi) {
         UNIQUE KEY uq_cart_product (id_cart, id_product),
         KEY idx_cart_items_product (id_product)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Kolom ini nyusul belakangan (produk flash sale bisa masuk keranjang) --
+    // CREATE TABLE IF NOT EXISTS di atas gak nambahin kolom baru ke tabel yang
+    // udah ada duluan, jadi di-ALTER manual di sini, aman dipanggil berkali-kali.
+    $hasColumn = mysqli_query($koneksi, "SHOW COLUMNS FROM cart_items LIKE 'id_flash_sale'");
+    if ($hasColumn && mysqli_num_rows($hasColumn) === 0) {
+        mysqli_query($koneksi, "ALTER TABLE cart_items ADD COLUMN id_flash_sale INT UNSIGNED NULL AFTER id_product");
+    }
 }
 
 function removeOutOfStockCartItems($koneksi, $idUser) {

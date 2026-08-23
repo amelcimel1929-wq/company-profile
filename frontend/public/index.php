@@ -3690,6 +3690,53 @@ if ($isLoggedIn) {
     </div>
 </section>
 
+<?php
+    // Ulasan terbaru dari semua produk, ditampilin di homepage biar calon
+    // pembeli yang belum pernah buka produk tertentu tetap keliatan testimoninya.
+    require "../../backend/connection.php";
+    $query_ulasan = mysqli_query($koneksi, "SELECT r.rating, r.review, r.photo, r.create_at,
+                                              u.name AS reviewer_name, p.name_product, p.image AS product_image
+                                              FROM product_reviews r
+                                              JOIN users u ON u.id_user = r.id_user
+                                              JOIN products p ON p.id_product = r.id_product
+                                              ORDER BY r.id_review DESC
+                                              LIMIT 6");
+?>
+<?php if ($query_ulasan && mysqli_num_rows($query_ulasan) > 0): ?>
+<section id="ulasan-pelanggan" class="py-5" style="background-color: #fdf3f7;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 mx-auto text-center mb-4">
+                <h3 class="fw-bold" style="font-family: 'Playfair Display', serif; color: #2b2b2b;">Kata Pelanggan</h3>
+                <p class="text-muted small mb-0">Ulasan asli dari pembeli yang udah nerima produknya.</p>
+            </div>
+        </div>
+        <div class="row g-3">
+            <?php while ($ulasan = mysqli_fetch_assoc($query_ulasan)): ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm p-3" style="border-radius: 12px;">
+                        <!-- Produk yang direview -->
+                        <div class="d-flex gap-2 align-items-center mb-2 pb-2 border-bottom">
+                            <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" width="56" height="56" class="rounded" style="object-fit:cover;border:1px solid #f9a8d4;">
+                            <div class="fw-semibold small" style="font-family: 'Playfair Display', serif; color: #2b2b2b;"><?= htmlspecialchars($ulasan['name_product']) ?></div>
+                        </div>
+                        <!-- Reviewer & isi ulasan -->
+                        <div class="fw-semibold small mb-1"><?= htmlspecialchars($ulasan['reviewer_name']) ?></div>
+                        <div style="color:#f8b400;" class="small mb-1"><?= str_repeat('★', (int) $ulasan['rating']) . str_repeat('☆', 5 - (int) $ulasan['rating']) ?></div>
+                        <p class="small text-muted mb-2" style="font-family: 'Poppins', sans-serif;"><?= nl2br(htmlspecialchars($ulasan['review'])) ?></p>
+                        <?php if (!empty($ulasan['photo'])): ?>
+                            <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover">
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+        <div class="text-center mt-3">
+            <a href="produk.php" class="btn btn-sm" style="border:1px solid #e83e8c; color:#e83e8c; border-radius:20px;">Lihat Semua Produk</a>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 
         <!-- ============================================-->

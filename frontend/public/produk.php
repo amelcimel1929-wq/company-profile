@@ -14,11 +14,14 @@ $categories = mysqli_query($koneksi, "SELECT id_category, name_kategori FROM cat
 // Produk yang lagi flash sale juga disembunyiin dari sini, samain kayak di
 // index.php > Shop By Category, biar gak dobel muncul di 2 tempat beda harga.
 $noFlashSale = "p.id_product NOT IN (SELECT id_product FROM flash_sale WHERE id_product IS NOT NULL)";
+// Subquery rating biar gak query 1x per kartu produk (N+1).
+$ratingCols = "(SELECT AVG(rating) FROM product_reviews WHERE id_product = p.id_product) AS avg_rating,
+               (SELECT COUNT(*) FROM product_reviews WHERE id_product = p.id_product) AS review_count";
 if ($selectedCategory > 0) {
-    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? AND p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori, $ratingCols FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? AND p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
     mysqli_stmt_bind_param($stmt, "i", $selectedCategory);
 } else {
-    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori, $ratingCols FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
 }
 mysqli_stmt_execute($stmt);
 $products = mysqli_stmt_get_result($stmt);
@@ -67,6 +70,13 @@ $products = mysqli_stmt_get_result($stmt);
                     <div class="card-body d-flex flex-column">
                         <span class="badge bg-secondary text-white align-self-start mb-2"><?= htmlspecialchars($product['name_kategori']) ?></span>
                         <h2 class="h5"><?= htmlspecialchars($product['name_product']) ?></h2>
+                        <div class="small mb-1">
+                            <?php if ((int) $product['review_count'] > 0): ?>
+                                <span style="color:#f8b400;">★</span> <?= round((float) $product['avg_rating'], 1) ?> <span class="text-muted">(<?= (int) $product['review_count'] ?>)</span>
+                            <?php else: ?>
+                                <span class="text-muted">Belum ada ulasan</span>
+                            <?php endif; ?>
+                        </div>
                         <p class="text-muted small flex-grow-1"><?= htmlspecialchars($product['description']) ?></p>
                         <p class="fw-bold mb-1">Rp<?= number_format((float) $product['price'], 0, ',', '.') ?></p>
                         <p class="small text-muted">Stok: <?= (int) $product['stock'] ?></p>

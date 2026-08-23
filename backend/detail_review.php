@@ -17,7 +17,7 @@ $result = mysqli_query($koneksi, $query);
 $review = mysqli_fetch_object($result);
 
 if (!$review) {
-    echo "<script>alert('Data review tidak ditemukan!'); window.location='tabel_reviews.php';</script>";
+    echo "<script>alert('Data review tidak ditemukan!'); window.location='tabel_review.php';</script>";
     exit;
 }
 ?>
@@ -36,7 +36,7 @@ if (!$review) {
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-3">
                         <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">📋 Detail Review #<?php echo $review->id_review; ?></h1>
-                        <a href="tabel_reviews.php" class="btn btn-sm btn-secondary">
+                        <a href="tabel_review.php" class="btn btn-sm btn-secondary">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>

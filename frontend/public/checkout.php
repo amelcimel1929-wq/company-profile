@@ -56,6 +56,24 @@ $errorMessages = [
     'invalid' => 'Data pesanan tidak valid. Coba ulangi.',
 ];
 $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
+
+// Rata-rata rating + daftar ulasan produk ini, buat ditampilin ke calon pembeli.
+$ratingStmt = mysqli_prepare($koneksi, "SELECT COUNT(*) AS jumlah, AVG(rating) AS rata FROM product_reviews WHERE id_product = ?");
+mysqli_stmt_bind_param($ratingStmt, "i", $idProduct);
+mysqli_stmt_execute($ratingStmt);
+$ratingSummary = mysqli_fetch_assoc(mysqli_stmt_get_result($ratingStmt));
+mysqli_stmt_close($ratingStmt);
+$jumlahReview = (int) ($ratingSummary['jumlah'] ?? 0);
+$rataRating = $jumlahReview > 0 ? round((float) $ratingSummary['rata'], 1) : 0;
+
+$reviewStmt = mysqli_prepare($koneksi, "SELECT r.rating, r.review, r.photo, r.create_at, u.name AS reviewer_name
+                                         FROM product_reviews r
+                                         JOIN users u ON u.id_user = r.id_user
+                                         WHERE r.id_product = ?
+                                         ORDER BY r.id_review DESC");
+mysqli_stmt_bind_param($reviewStmt, "i", $idProduct);
+mysqli_stmt_execute($reviewStmt);
+$reviews = mysqli_stmt_get_result($reviewStmt);
 ?>
 <!doctype html>
 <html lang="id">
@@ -175,6 +193,14 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
                     <?php endif; ?>
 
                     <h2 class="h3 fw-bold mb-1" style="color: #2c2c2c;"><?= htmlspecialchars($product['name_product']) ?></h2>
+                    <div class="small mb-2">
+                        <?php if ($jumlahReview > 0): ?>
+                            <span style="color:#f8b400;"><?= str_repeat('★', round($rataRating)) . str_repeat('☆', 5 - round($rataRating)) ?></span>
+                            <span class="text-muted"><?= $rataRating ?>/5 (<?= $jumlahReview ?> ulasan)</span>
+                        <?php else: ?>
+                            <span class="text-muted">Belum ada ulasan</span>
+                        <?php endif; ?>
+                    </div>
                     <p class="text-muted small mb-3"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
 
                     <div class="mb-3">
@@ -216,6 +242,28 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
                 </div>
 
             </div>
+        </div>
+
+        <!-- Ulasan Produk -->
+        <div class="card card-checkout border-0 p-3 p-md-4 mt-3">
+            <h3 class="h6 fw-bold mb-3">Ulasan Produk (<?= $jumlahReview ?>)</h3>
+            <?php if ($jumlahReview === 0): ?>
+                <p class="text-muted small mb-0">Belum ada ulasan untuk produk ini.</p>
+            <?php else: ?>
+                <?php while ($rv = mysqli_fetch_assoc($reviews)): ?>
+                    <div class="py-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold small"><?= htmlspecialchars($rv['reviewer_name']) ?></span>
+                            <span class="text-muted small"><?= date('d-m-Y', strtotime($rv['create_at'])) ?></span>
+                        </div>
+                        <div style="color:#f8b400;" class="small"><?= str_repeat('★', (int) $rv['rating']) . str_repeat('☆', 5 - (int) $rv['rating']) ?></div>
+                        <p class="small mb-1"><?= nl2br(htmlspecialchars($rv['review'])) ?></p>
+                        <?php if (!empty($rv['photo'])): ?>
+                            <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover">
+                        <?php endif; ?>
+                    </div>
+                <?php endwhile; ?>
+            <?php endif; ?>
         </div>
     </div>
 </main>

@@ -202,6 +202,11 @@ $result = mysqli_stmt_get_result($stmt);
                                             <a href="terima_kasih.php?order=<?= (int) $row['id_order'] ?>" class="btn btn-soft-pink btn-sm px-3 shadow-sm">
                                                 Lihat
                                             </a>
+                                            <?php if ($row['status'] === 'Sudah Diambil'): ?>
+                                                <a href="review.php?id_order=<?= (int) $row['id_order'] ?>" class="btn btn-outline-pink btn-sm px-3 shadow-sm">
+                                                    Beri Ulasan
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

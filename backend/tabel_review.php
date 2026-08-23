@@ -3,33 +3,49 @@ include "connection.php";
 
 // 1. Tangkap parameter filter tanggal & pagination
 $filter_tanggal = isset($_GET['tanggal']) ? $_GET['tanggal'] : '';
-$halaman_aktif   = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
-$limit           = 10;
-$offset          = ($halaman_aktif - 1) * $limit;
-
-// 2. Query dasar & filter tanggal (menggunakan kolom create_at)
-$where_clause = "";
-if (!empty($filter_tanggal)) {
-    $where_clause = " WHERE DATE(product_reviews.create_at) = '$filter_tanggal' ";
+// Input-nya type="date" (selalu YYYY-MM-DD) -- validasi ketat di server juga,
+// jangan percaya begitu aja isi $_GET buat langsung disambung ke query.
+if ($filter_tanggal !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $filter_tanggal)) {
+    $filter_tanggal = '';
 }
+$halaman_aktif = isset($_GET['halaman']) ? (int) $_GET['halaman'] : 1;
+if ($halaman_aktif < 1) {
+    $halaman_aktif = 1;
+}
+$limit  = 10;
+$offset = ($halaman_aktif - 1) * $limit;
+
+// 2. Query dasar & filter tanggal (menggunakan kolom create_at) -- prepared statement,
+// bukan nyambung langsung ke SQL kayak sebelumnya.
+$where_clause = $filter_tanggal !== '' ? " WHERE DATE(product_reviews.create_at) = ? " : "";
 
 // 3. Hitung total data untuk pagination
-$query_total = "SELECT COUNT(*) as total FROM product_reviews $where_clause";
-$res_total   = mysqli_query($koneksi, $query_total);
-$data_total  = mysqli_fetch_assoc($res_total);
-$total_data  = $data_total['total'];
-$total_halaman = ceil($total_data / $limit);
+$countStmt = mysqli_prepare($koneksi, "SELECT COUNT(*) as total FROM product_reviews $where_clause");
+if ($filter_tanggal !== '') {
+    mysqli_stmt_bind_param($countStmt, 's', $filter_tanggal);
+}
+mysqli_stmt_execute($countStmt);
+$data_total = mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt));
+mysqli_stmt_close($countStmt);
+$total_data = (int) $data_total['total'];
+$total_halaman = max(1, (int) ceil($total_data / $limit));
 
 // 4. Query utama dengan JOIN tabel users & products
-$query = "SELECT product_reviews.*, users.name AS customer_name, products.name_product 
-          FROM product_reviews 
-          JOIN users ON product_reviews.id_user = users.id_user 
-          JOIN products ON product_reviews.id_product = products.id_product 
+$query = "SELECT product_reviews.*, users.name AS customer_name, products.name_product
+          FROM product_reviews
+          JOIN users ON product_reviews.id_user = users.id_user
+          JOIN products ON product_reviews.id_product = products.id_product
           $where_clause
-          ORDER BY product_reviews.id_review DESC 
-          LIMIT $limit OFFSET $offset";
-
-$select_reviews = mysqli_query($koneksi, $query);
+          ORDER BY product_reviews.id_review DESC
+          LIMIT ? OFFSET ?";
+$stmt = mysqli_prepare($koneksi, $query);
+if ($filter_tanggal !== '') {
+    mysqli_stmt_bind_param($stmt, 'sii', $filter_tanggal, $limit, $offset);
+} else {
+    mysqli_stmt_bind_param($stmt, 'ii', $limit, $offset);
+}
+mysqli_stmt_execute($stmt);
+$select_reviews = mysqli_stmt_get_result($stmt);
 
 // Cek jika terjadi error pada query
 if (!$select_reviews) {
@@ -61,7 +77,7 @@ if (!$select_reviews) {
                                 <input type="date" id="tanggal" name="tanggal" class="form-control form-control-sm mr-2" value="<?php echo $filter_tanggal; ?>">
                                 <button type="submit" class="btn btn-sm btn-pink-add">Cari</button>
                                 <?php if (!empty($filter_tanggal)) : ?>
-                                    <a href="tabel_reviews.php" class="btn btn-sm btn-secondary ml-2">Reset</a>
+                                    <a href="tabel_review.php" class="btn btn-sm btn-secondary ml-2">Reset</a>
                                 <?php endif; ?>
                             </form>
                         </div>

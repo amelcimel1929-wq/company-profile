@@ -839,9 +839,14 @@ $isLoggedIn = isset($_SESSION['id_user']);
                         <div class="carousel-item active">
                             <div class="row g-3 justify-content-center">
                                 
-                                <?php 
+                                <?php if (mysqli_num_rows($query_flash_sale) === 0): ?>
+                                    <div class="col-12 text-center py-5">
+                                        <p class="text-muted fs-6 mb-0">Produk tidak ada.</p>
+                                    </div>
+                                <?php else: ?>
+                                <?php
                                 $no = 1;
-                                while ($flash = mysqli_fetch_object($query_flash_sale)) { 
+                                while ($flash = mysqli_fetch_object($query_flash_sale)) {
                                     $modal_id = "modalFoto" . $no; // ID unik untuk tiap modal
                                 ?>
                                     <div class="col-6 col-sm-4 col-md-3">
@@ -940,9 +945,10 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                         </div>
                                     </div>
 
-                                <?php 
+                                <?php
                                     $no++;
-                                } 
+                                }
+                                endif;
                                 ?>
 
                             </div>

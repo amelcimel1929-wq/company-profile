@@ -132,10 +132,12 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
             color: #d63384;
         }
 
+        /* Foto Produk - Menampilkan foto utuh proporsional */
         .product-img {
             border-radius: 18px;
-            object-fit: cover;
-            max-height: 420px;
+            object-fit: contain;
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -158,7 +160,7 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
                 <!-- Gambar Produk -->
                 <div class="col-md-6 text-center">
                     <img src="../../backend/foto/<?= rawurlencode($fotoTampil) ?>"
-                         class="w-100 product-img shadow-sm"
+                         class="product-img shadow-sm"
                          alt="<?= htmlspecialchars($product['name_product']) ?>">
                 </div>
 

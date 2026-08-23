@@ -11,11 +11,14 @@ $categories = mysqli_query($koneksi, "SELECT id_category, name_kategori FROM cat
 
 // Stok habis disembunyiin dari user (bukan cuma tombolnya di-disable) --
 // admin tetap liat semua produk apa adanya di backoffice (tabel_produk.php dst).
+// Produk yang lagi flash sale juga disembunyiin dari sini, samain kayak di
+// index.php > Shop By Category, biar gak dobel muncul di 2 tempat beda harga.
+$noFlashSale = "p.id_product NOT IN (SELECT id_product FROM flash_sale WHERE id_product IS NOT NULL)";
 if ($selectedCategory > 0) {
-    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? AND p.stock > 0 ORDER BY p.id_product DESC");
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.id_category = ? AND p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
     mysqli_stmt_bind_param($stmt, "i", $selectedCategory);
 } else {
-    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.stock > 0 ORDER BY p.id_product DESC");
+    $stmt = mysqli_prepare($koneksi, "SELECT p.*, c.name_kategori FROM products p JOIN categories c ON c.id_category = p.id_category WHERE p.stock > 0 AND $noFlashSale ORDER BY p.id_product DESC");
 }
 mysqli_stmt_execute($stmt);
 $products = mysqli_stmt_get_result($stmt);

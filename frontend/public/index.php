@@ -3524,8 +3524,12 @@ $isLoggedIn = isset($_SESSION['id_user']);
                             <div class="row g-3">
                                 <?php
                                 // Stok habis disembunyiin dari user (admin tetap liat semua produk di backoffice).
+                                // Produk yang lagi ada flash sale-nya juga disembunyiin dari sini biar gak
+                                // dobel muncul (di Flash Sale dia udah tampil duluan, pake harga promo).
                                 $query_produk = mysqli_query($koneksi,
-                                    "SELECT * FROM products WHERE id_category = '$id_kat' AND stock > 0 ORDER BY id_product DESC"
+                                    "SELECT * FROM products WHERE id_category = '$id_kat' AND stock > 0
+                                     AND id_product NOT IN (SELECT id_product FROM flash_sale WHERE id_product IS NOT NULL)
+                                     ORDER BY id_product DESC"
                                 );
 
                                 if (mysqli_num_rows($query_produk) > 0):

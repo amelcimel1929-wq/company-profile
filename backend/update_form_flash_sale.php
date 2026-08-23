@@ -59,10 +59,6 @@ $select_produk = mysqli_query($koneksi, "SELECT id_product, name_product, price,
                             <input type="text" class="form-control" id="harga_awal_preview" value="<?php echo $flash_sale->harga_awal; ?>" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="jenis" class="form-label">Jenis Produk</label>
-                            <input type="text" class="form-control" id="jenis" name="jenis" value="<?php echo htmlspecialchars($flash_sale->jenis); ?>">
-                        </div>
-                        <div class="mb-3">
                             <label for="harga_akhir" class="form-label">Harga Akhir (harga flash sale)</label>
                             <input type="number" min="0" step="1" class="form-control" id="harga_akhir" name="harga_akhir" value="<?php echo $flash_sale->harga_akhir; ?>">
                         </div>

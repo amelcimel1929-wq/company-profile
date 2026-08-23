@@ -3712,20 +3712,38 @@ if ($isLoggedIn) {
             </div>
         </div>
         <div class="row g-3">
-            <?php while ($ulasan = mysqli_fetch_assoc($query_ulasan)): ?>
+            <?php $ulasanNo = 0; while ($ulasan = mysqli_fetch_assoc($query_ulasan)): $ulasanNo++; ?>
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 border-0 shadow-sm p-3" style="border-radius: 12px;">
                         <!-- Produk yang direview -->
                         <div class="d-flex gap-2 align-items-center mb-2 pb-2 border-bottom">
-                            <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" width="56" height="56" class="rounded" style="object-fit:cover;border:1px solid #f9a8d4;">
-                            <div class="fw-semibold small" style="font-family: 'Playfair Display', serif; color: #2b2b2b;"><?= htmlspecialchars($ulasan['name_product']) ?></div>
+                            <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" width="56" height="56" class="rounded flex-shrink-0" style="object-fit:cover;border:1px solid #f9a8d4;cursor:pointer"
+                                 data-bs-toggle="modal" data-bs-target="#ulasanProductModal<?= $ulasanNo ?>">
+                            <div class="modal fade" id="ulasanProductModal<?= $ulasanNo ?>" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-transparent border-0">
+                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" class="img-fluid rounded shadow">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fw-semibold small text-break" style="font-family: 'Playfair Display', serif; color: #2b2b2b;"><?= htmlspecialchars($ulasan['name_product']) ?></div>
                         </div>
                         <!-- Reviewer & isi ulasan -->
                         <div class="fw-semibold small mb-1"><?= htmlspecialchars($ulasan['reviewer_name']) ?></div>
                         <div style="color:#f8b400;" class="small mb-1"><?= str_repeat('★', (int) $ulasan['rating']) . str_repeat('☆', 5 - (int) $ulasan['rating']) ?></div>
                         <p class="small text-muted mb-2" style="font-family: 'Poppins', sans-serif;"><?= nl2br(htmlspecialchars($ulasan['review'])) ?></p>
                         <?php if (!empty($ulasan['photo'])): ?>
-                            <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover">
+                            <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover;cursor:pointer"
+                                 data-bs-toggle="modal" data-bs-target="#ulasanPhotoModal<?= $ulasanNo ?>">
+                            <div class="modal fade" id="ulasanPhotoModal<?= $ulasanNo ?>" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-transparent border-0">
+                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
+                                    </div>
+                                </div>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>

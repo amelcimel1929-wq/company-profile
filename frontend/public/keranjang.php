@@ -52,7 +52,7 @@ $activePage = 'cart';
 </head><body class="bg-light">
 <?php include '_navbar.php'; ?>
 <main class="container py-5" style="margin-top:92px; max-width:960px;">
-    <div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h3 mb-1">Keranjang Belanja</h1><p class="text-muted mb-0">Produk yang stoknya habis otomatis dihapus dari keranjang.</p></div><a class="btn btn-outline-dark" href="index.php#categoryWomen">Lanjut Belanja</a></div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4"><div><h1 class="h3 mb-1">Keranjang Belanja</h1><p class="text-muted mb-0">Produk yang stoknya habis otomatis dihapus dari keranjang.</p></div><a class="btn btn-outline-dark" href="index.php#categoryWomen">Lanjut Belanja</a></div>
     <?php if (isset($_GET['success'])): ?><div class="alert alert-success"><?= $_GET['success'] === 'removed' ? 'Produk dihapus dari keranjang.' : 'Produk berhasil ditambahkan ke keranjang.' ?></div><?php endif; ?>
     <?php if (isset($_GET['error'])): ?><div class="alert alert-warning">Produk sudah habis dan tidak bisa dimasukkan ke keranjang.</div><?php endif; ?>
     <?php if (empty($cartRows)): ?>
@@ -62,15 +62,18 @@ $activePage = 'cart';
         <form action="checkout_cart.php" method="post" id="cartCheckoutForm">
         <div class="card border-0 shadow-sm"><div class="card-body p-0">
         <?php foreach ($cartRows as $item): ?>
-            <div class="d-flex gap-3 p-3 border-bottom align-items-center">
+            <div class="d-flex flex-wrap gap-3 p-3 border-bottom align-items-center">
                 <input type="checkbox" name="selected[]" value="<?= (int)$item['id_cart_item'] ?>" class="form-check-input flex-shrink-0 js-cart-select" data-subtotal="<?= (float)$item['price'] * $item['quantity'] ?>" checked style="width:1.2em;height:1.2em;">
-                <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="82" height="82" class="rounded" style="object-fit:cover">
-                <div class="flex-grow-1"><h2 class="h6 mb-1"><?= htmlspecialchars($item['name_product']) ?><?php if ($item['is_flash_sale']): ?> <span class="badge rounded-pill text-white" style="background:#e83e8c;font-size:.65rem;">⚡ Flash Sale</span><?php endif; ?></h2><div class="small text-muted">Jumlah: <?= (int) $item['quantity'] ?> · Stok tersedia: <?= (int) $item['stock'] ?></div><div class="fw-bold mt-1">Rp<?= number_format((float)$item['price'] * $item['quantity'], 0, ',', '.') ?></div></div>
+                <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="82" height="82" class="rounded flex-shrink-0" style="object-fit:cover">
+                <div class="flex-grow-1" style="min-width:160px;"><h2 class="h6 mb-1 text-break"><?= htmlspecialchars($item['name_product']) ?><?php if ($item['is_flash_sale']): ?> <span class="badge rounded-pill text-white" style="background:#e83e8c;font-size:.65rem;">⚡ Flash Sale</span><?php endif; ?></h2><div class="small text-muted">Jumlah: <?= (int) $item['quantity'] ?> · Stok tersedia: <?= (int) $item['stock'] ?></div><div class="fw-bold mt-1">Rp<?= number_format((float)$item['price'] * $item['quantity'], 0, ',', '.') ?></div></div>
                 <?php $beliUrl = 'checkout.php?id_product=' . (int)$item['id_product'] . '&quantity=' . (int)$item['quantity']; ?>
                 <?php if ($item['is_flash_sale']): ?>
                     <?php $beliUrl .= '&id_flash_sale=' . (int) $item['id_flash_sale']; ?>
                 <?php endif; ?>
-                <div class="d-flex flex-column gap-2"><a class="btn btn-dark btn-sm" href="<?= htmlspecialchars($beliUrl) ?>">Beli</a><button type="submit" form="removeForm<?= (int)$item['id_cart_item'] ?>" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Hapus produk ini dari keranjang?')">Hapus</button></div>
+                <div class="d-flex flex-row flex-sm-column gap-2 ms-auto">
+                    <a class="btn btn-dark btn-sm" href="<?= htmlspecialchars($beliUrl) ?>">Beli</a>
+                    <button type="submit" form="removeForm<?= (int)$item['id_cart_item'] ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Hapus produk ini dari keranjang?')">Hapus</button>
+                </div>
             </div>
         <?php endforeach; ?>
         </div><div class="card-footer bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">

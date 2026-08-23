@@ -250,7 +250,7 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
             <?php if ($jumlahReview === 0): ?>
                 <p class="text-muted small mb-0">Belum ada ulasan untuk produk ini.</p>
             <?php else: ?>
-                <?php while ($rv = mysqli_fetch_assoc($reviews)): ?>
+                <?php $rvNo = 0; while ($rv = mysqli_fetch_assoc($reviews)): $rvNo++; ?>
                     <div class="py-2 border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-semibold small"><?= htmlspecialchars($rv['reviewer_name']) ?></span>
@@ -259,7 +259,16 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
                         <div style="color:#f8b400;" class="small"><?= str_repeat('★', (int) $rv['rating']) . str_repeat('☆', 5 - (int) $rv['rating']) ?></div>
                         <p class="small mb-1"><?= nl2br(htmlspecialchars($rv['review'])) ?></p>
                         <?php if (!empty($rv['photo'])): ?>
-                            <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover">
+                            <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover;cursor:pointer"
+                                 data-bs-toggle="modal" data-bs-target="#reviewPhotoModal<?= $rvNo ?>">
+                            <div class="modal fade" id="reviewPhotoModal<?= $rvNo ?>" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-transparent border-0">
+                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
+                                    </div>
+                                </div>
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php endwhile; ?>
@@ -268,5 +277,6 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
     </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -96,12 +96,12 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
 
             <?php foreach ($items as $item): ?>
                 <div class="d-flex gap-3 py-2 border-bottom align-items-center">
-                    <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="64" height="64" class="rounded" style="object-fit:cover">
-                    <div class="flex-grow-1">
-                        <div class="fw-semibold small"><?= htmlspecialchars($item['name_product']) ?><?php if ($item['is_flash_sale']): ?> <span class="badge rounded-pill text-white" style="background:#e83e8c;font-size:.6rem;">⚡</span><?php endif; ?></div>
+                    <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="64" height="64" class="rounded flex-shrink-0" style="object-fit:cover">
+                    <div class="flex-grow-1" style="min-width:0;">
+                        <div class="fw-semibold small text-break"><?= htmlspecialchars($item['name_product']) ?><?php if ($item['is_flash_sale']): ?> <span class="badge rounded-pill text-white" style="background:#e83e8c;font-size:.6rem;">⚡</span><?php endif; ?></div>
                         <div class="text-muted small"><?= (int) $item['quantity'] ?> x Rp<?= number_format((float) $item['price'], 0, ',', '.') ?></div>
                     </div>
-                    <div class="fw-bold small">Rp<?= number_format($item['subtotal'], 0, ',', '.') ?></div>
+                    <div class="fw-bold small flex-shrink-0">Rp<?= number_format($item['subtotal'], 0, ',', '.') ?></div>
                 </div>
             <?php endforeach; ?>
 

@@ -88,8 +88,8 @@ $error = isset($_GET['error']) ? 'Rating dan ulasan wajib diisi.' : '';
         <?php foreach ($rows as $item): ?>
             <div class="card card-review border-0 p-3 p-md-4 mb-3">
                 <div class="d-flex gap-3 align-items-center mb-3">
-                    <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="60" height="60" class="rounded" style="object-fit:cover">
-                    <h3 class="h6 mb-0 fw-bold"><?= htmlspecialchars($item['name_product']) ?></h3>
+                    <img src="../../backend/foto/<?= rawurlencode($item['image']) ?>" alt="<?= htmlspecialchars($item['name_product']) ?>" width="60" height="60" class="rounded flex-shrink-0" style="object-fit:cover">
+                    <h3 class="h6 mb-0 fw-bold text-break"><?= htmlspecialchars($item['name_product']) ?></h3>
                 </div>
 
                 <?php if ($item['id_review']): ?>
@@ -97,7 +97,16 @@ $error = isset($_GET['error']) ? 'Rating dan ulasan wajib diisi.' : '';
                         <div class="mb-1">Ulasanmu: <span style="color:#f8b400;"><?= str_repeat('★', (int) $item['rating']) . str_repeat('☆', 5 - (int) $item['rating']) ?></span></div>
                         <div><?= nl2br(htmlspecialchars($item['review'])) ?></div>
                         <?php if (!empty($item['photo'])): ?>
-                            <img src="../../backend/foto/<?= rawurlencode($item['photo']) ?>" alt="Foto ulasan" class="rounded mt-2" width="80" height="80" style="object-fit:cover">
+                            <img src="../../backend/foto/<?= rawurlencode($item['photo']) ?>" alt="Foto ulasan" class="rounded mt-2" width="80" height="80" style="object-fit:cover;cursor:pointer"
+                                 data-bs-toggle="modal" data-bs-target="#reviewPhotoModal<?= (int) $item['id_product'] ?>">
+                            <div class="modal fade" id="reviewPhotoModal<?= (int) $item['id_product'] ?>" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-transparent border-0">
+                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <img src="../../backend/foto/<?= rawurlencode($item['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
+                                    </div>
+                                </div>
+                            </div>
                         <?php endif; ?>
                     </div>
                     <p class="text-muted small mt-2 mb-0">Kirim form di bawah lagi kalau mau ganti ulasan ini.</p>
@@ -131,5 +140,6 @@ $error = isset($_GET['error']) ? 'Rating dan ulasan wajib diisi.' : '';
         <?php endforeach; ?>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

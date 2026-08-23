@@ -314,9 +314,9 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#flash-sale" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Flash Sale</a>
                                 </li>
                                 <li class="nav-item px-2">
-                                    <!-- "Produk" selalu ke halaman katalog, bukan scroll -- biar konsisten
-                                         sama navbar di halaman lain (produk.php dst) yang emang halaman terpisah -->
-                                    <a class="nav-link fw-semibold" href="produk.php" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
+                                    <!-- "Produk" scroll ke section Shop By Category (id="categoryWomen") di halaman ini,
+                                         sama kayak Home/About/Flash Sale/Owner -- bukan pindah ke produk.php lagi. -->
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#categoryWomen" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
                                 </li>
                                  <li class="nav-item px-2">
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#owner" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Owner</a>
@@ -810,10 +810,13 @@ $isLoggedIn = isset($_SESSION['id_user']);
 
                         // Join ke products supaya kartu flash sale tahu id_product & stok,
                         // yang dipakai tombol "Pesan Sekarang" menuju checkout.php.
+                        // Yang stok-nya abis disembunyiin dari user (admin tetap liat semua
+                        // baris flash sale apa adanya di backoffice, tabel_flash_sale.php).
                         $query_flash_sale = mysqli_query(
                         $koneksi, "SELECT flash_sale.*, products.stock
                                    FROM flash_sale
-                                   LEFT JOIN products ON products.id_product = flash_sale.id_product");
+                                   LEFT JOIN products ON products.id_product = flash_sale.id_product
+                                   WHERE flash_sale.id_product IS NULL OR products.stock > 0");
                         if (!$query_flash_sale) {
                             die("Query gagal: " . mysqli_error($koneksi));
                         }
@@ -3514,8 +3517,9 @@ $isLoggedIn = isset($_SESSION['id_user']);
                             <!-- Grid Layout Produk -->
                             <div class="row g-3">
                                 <?php
+                                // Stok habis disembunyiin dari user (admin tetap liat semua produk di backoffice).
                                 $query_produk = mysqli_query($koneksi,
-                                    "SELECT * FROM products WHERE id_category = '$id_kat' ORDER BY id_product DESC"
+                                    "SELECT * FROM products WHERE id_category = '$id_kat' AND stock > 0 ORDER BY id_product DESC"
                                 );
 
                                 if (mysqli_num_rows($query_produk) > 0):

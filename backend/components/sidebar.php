@@ -152,6 +152,12 @@
                 <span>owner</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="tabel_review.php">
+                <i class="fas fa-crown"></i>
+                <span>Review Customer</span>
+            </a>
+        </li>
 
         <!-- Nav Item - Contact -->
       

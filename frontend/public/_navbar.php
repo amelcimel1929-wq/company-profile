@@ -4,6 +4,11 @@
 // Halaman pemanggil sudah menjalankan session_start().
 $navLoggedIn = isset($_SESSION['id_user']);
 $navActive = $activePage ?? '';
+if ($navLoggedIn) {
+    require_once '../../backend/connection.php';
+    require_once '../../backend/cart_helper.php';
+    $navCartCount = getCartItemCount($koneksi, (int) $_SESSION['id_user']);
+}
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Sama kayak index.php: 'Playfair Display' dipakai di navbar tapi gak pernah
@@ -45,6 +50,10 @@ $navActive = $activePage ?? '';
             </ul>
             <div class="d-flex align-items-center">
                 <?php if ($navLoggedIn): ?>
+                    <a class="text-1000 position-relative me-3" href="keranjang.php" title="Keranjang Belanja" aria-label="Keranjang Belanja">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <?php if ($navCartCount > 0): ?><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem"><?= $navCartCount ?></span><?php endif; ?>
+                    </a>
                     <!-- Link Status Pesanan (Ikon User) -->
                     <a class="text-1000" href="status_pesanan.php" title="Status Pesanan">
                         <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

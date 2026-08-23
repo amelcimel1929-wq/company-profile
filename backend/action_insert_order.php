@@ -1,6 +1,7 @@
 <?php
 session_start();
 require "connection.php";
+require "cart_helper.php";
 
 function redirectTo($path) {
     header("Location: " . $path);
@@ -94,6 +95,13 @@ try {
     mysqli_stmt_bind_param($stockStmt, 'ii', $quantity, $idProduct);
     mysqli_stmt_execute($stockStmt);
     mysqli_stmt_close($stockStmt);
+
+    // Barang yang berhasil dibuat menjadi pesanan tidak boleh tersisa di keranjang user.
+    ensureCartTables($koneksi);
+    $cartDeleteStmt = mysqli_prepare($koneksi, "DELETE ci FROM cart_items ci INNER JOIN carts c ON c.id_cart = ci.id_cart WHERE c.id_user = ? AND ci.id_product = ?");
+    mysqli_stmt_bind_param($cartDeleteStmt, 'ii', $idUser, $idProduct);
+    mysqli_stmt_execute($cartDeleteStmt);
+    mysqli_stmt_close($cartDeleteStmt);
 
     mysqli_commit($koneksi);
     redirectTo('/company-profile/frontend/public/payment.php?id_order=' . $idOrder);

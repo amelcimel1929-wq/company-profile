@@ -2,6 +2,11 @@
 session_start();
 // Dipakai navbar untuk memilih menu Login/Register atau Status Pesanan/Logout.
 $isLoggedIn = isset($_SESSION['id_user']);
+if ($isLoggedIn) {
+    require_once '../../backend/connection.php';
+    require_once '../../backend/cart_helper.php';
+    $navCartCount = getCartItemCount($koneksi, (int) $_SESSION['id_user']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -324,6 +329,10 @@ $isLoggedIn = isset($_SESSION['id_user']);
                             </ul>
                     <div class="d-flex align-items-center">
                         <?php if ($isLoggedIn): ?>
+                            <a class="text-1000 position-relative me-3" href="keranjang.php" title="Keranjang Belanja" aria-label="Keranjang Belanja">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <?php if ($navCartCount > 0): ?><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem"><?= $navCartCount ?></span><?php endif; ?>
+                            </a>
                             <!-- Link Status Pesanan (Ikon User) -->
                             <a class="text-1000" href="status_pesanan.php" title="Status Pesanan">
                                 <svg class="feather feather-user me-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3523,9 +3532,6 @@ $isLoggedIn = isset($_SESSION['id_user']);
                             <!-- Grid Layout Produk -->
                             <div class="row g-3">
                                 <?php
-                                // Stok habis disembunyiin dari user (admin tetap liat semua produk di backoffice).
-                                // Produk yang lagi ada flash sale-nya juga disembunyiin dari sini biar gak
-                                // dobel muncul (di Flash Sale dia udah tampil duluan, pake harga promo).
                                 $query_produk = mysqli_query($koneksi,
                                     "SELECT * FROM products WHERE id_category = '$id_kat' AND stock > 0
                                      AND id_product NOT IN (SELECT id_product FROM flash_sale WHERE id_product IS NOT NULL)
@@ -3536,10 +3542,10 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                     while ($produk = mysqli_fetch_assoc($query_produk)):
                                 ?>
                                         <div class="col-6 col-md-4 col-lg-3 d-flex align-items-stretch">
-                                            <div class="shopee-card w-100 d-flex flex-column">
+                                            <div class="shopee-card w-100 d-flex flex-column rounded-3 border overflow-hidden shadow-sm">
                                                 
-                                                <!-- Container Gambar dengan Hover "Lihat Detail" -->
-                                                <div class="img-container ratio ratio-1x1 bg-light">
+                                                <!-- Container Gambar -->
+                                                <div class="img-container ratio ratio-1x1 bg-light position-relative">
                                                     <img src="../../backend/foto/<?= rawurlencode($produk['image']) ?>"
                                                          class="card-img-top object-fit-cover"
                                                          alt="<?= htmlspecialchars($produk['name_product']) ?>"
@@ -3557,30 +3563,60 @@ $isLoggedIn = isset($_SESSION['id_user']);
                                                 <!-- Body Produk -->
                                                 <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between bg-white">
                                                     <div>
-                                                        <!-- Nama Produk -->
-                                                        <h6 class="fw-bold mb-2 product-title">
-                                                            <?= htmlspecialchars($produk['name_product']) ?>
-                                                        </h6>
+                                                        <!-- Nama Produk (Agak Gede) & Icon Keranjang (Sejajar) -->
+                                                        <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                                            <h5 class="fw-bold mb-0 text-truncate text-dark" style="font-size: 1.2rem;" title="<?= htmlspecialchars($produk['name_product']) ?>">
+                                                                <?= htmlspecialchars($produk['name_product']) ?>
+                                                            </h5>
 
-                                                        <!-- Harga Produk -->
+                                                            <!-- FORM SUBMIT KERANJANG (TANPA JS / TANPA 404) -->
+                                                            <?php $catCheckoutUrl = 'checkout.php?id_product=' . urlencode($produk['id_product']); ?>
+                                                            <?php if (isset($isLoggedIn) && $isLoggedIn): ?>
+                                                                <form action="../../backend/action_add_to_cart.php" method="post" class="m-0 p-0">
+                                                                    <input type="hidden" name="id_product" value="<?= (int) $produk['id_product'] ?>">
+                                                                    <input type="hidden" name="quantity" value="1">
+                                                                    <button type="submit" 
+                                                                            class="btn p-0 border-0 text-decoration-none d-flex align-items-center"
+                                                                            style="color: #e83e8c;"
+                                                                            title="Tambah ke Keranjang">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
+                                                                            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0"/>
+                                                                        </svg>
+                                                                    </button>
+                                                                </form>
+                                                            <?php else: ?>
+                                                                <button type="button" 
+                                                                        data-bs-toggle="modal" 
+                                                                        data-bs-target="#authPromptModal" 
+                                                                        data-redirect="<?= htmlspecialchars($catCheckoutUrl) ?>"
+                                                                        class="btn p-0 border-0 text-decoration-none d-flex align-items-center"
+                                                                        style="color: #e83e8c;"
+                                                                        title="Tambah ke Keranjang">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
+                                                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0"/>
+                                                                    </svg>
+                                                                </button>
+                                                            <?php endif; ?>
+                                                        </div>
+
+                                                        <!-- Harga Produk (Kecil Proporsional) -->
                                                         <div class="d-flex align-items-baseline mb-3">
-                                                            <span class="fw-bold fs-6 product-price">
+                                                            <span class="fw-bold" style="font-size: 1.1rem; color: #d6587c;">
                                                                 Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?>
                                                             </span>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Tombol Beli -->
+                                                    <!-- Tombol Pesan Sekarang -->
                                                     <div>
-                                                        <?php $catCheckoutUrl = 'checkout.php?id_product=' . urlencode($produk['id_product']); ?>
-                                                        <?php if ($isLoggedIn): ?>
+                                                        <?php if (isset($isLoggedIn) && $isLoggedIn): ?>
                                                             <a href="<?= $catCheckoutUrl ?>"
-                                                               class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none">
+                                                               class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none fw-semibold">
                                                                 Pesan Sekarang
                                                             </a>
                                                         <?php else: ?>
                                                             <button type="button" data-bs-toggle="modal" data-bs-target="#authPromptModal" data-redirect="<?= htmlspecialchars($catCheckoutUrl) ?>"
-                                                               class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none border-0">
+                                                                    class="btn btn-soft-pink btn-sm w-100 py-2 d-block text-center text-decoration-none border-0 fw-semibold">
                                                                 Pesan Sekarang
                                                             </button>
                                                         <?php endif; ?>

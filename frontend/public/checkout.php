@@ -13,6 +13,7 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $idProduct = isset($_GET['id_product']) ? (int) $_GET['id_product'] : 0;
+$requestedQuantity = max(1, (int) ($_GET['quantity'] ?? 1));
 $idFlashSale = isset($_GET['id_flash_sale']) ? (int) $_GET['id_flash_sale'] : 0;
 if ($idProduct <= 0) {
     header('Location: produk.php');
@@ -45,6 +46,7 @@ if (!$flash) {
 }
 
 $hargaAsli = (float) $product['price'];
+$requestedQuantity = min($requestedQuantity, max(1, (int) $product['stock']));
 $hargaBayar = $flash ? (float) $flash['harga_akhir'] : $hargaAsli;
 $fotoTampil = $flash && !empty($flash['foto']) ? $flash['foto'] : $product['image'];
 
@@ -197,7 +199,7 @@ $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
 
                             <div class="mb-3" style="max-width: 140px;">
                                 <label for="quantity" class="form-label small fw-semibold text-muted">Jumlah</label>
-                                <input id="quantity" type="number" name="quantity" class="form-control text-center border-0 bg-white shadow-sm" value="1" min="1" max="<?= (int) $product['stock'] ?>" style="border-radius: 10px;" required>
+                                <input id="quantity" type="number" name="quantity" class="form-control text-center border-0 bg-white shadow-sm" value="<?= $requestedQuantity ?>" min="1" max="<?= (int) $product['stock'] ?>" style="border-radius: 10px;" required>
                             </div>
 
                             <div class="mb-4">

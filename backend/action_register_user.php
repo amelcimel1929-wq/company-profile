@@ -61,6 +61,7 @@ mysqli_stmt_bind_param($insertStmt, 'ssss', $name, $email, $hash, $role);
 try {
     $executeOk = mysqli_stmt_execute($insertStmt);
 } catch (mysqli_sql_exception $e) {
+    error_log('register_user insert failed: ' . $e->getMessage());
     $executeOk = false;
 }
 if (!$executeOk) {

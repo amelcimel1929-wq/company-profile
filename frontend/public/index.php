@@ -3998,6 +3998,93 @@ if ($isLoggedIn) {
 
             </div>
         </section>
+        <!-- Section Alamat Toko & Jam Operasional -->
+<!-- Section Alamat Toko & Jam Operasional -->
+<!-- Section Alamat Toko & Jam Operasional -->
+<!-- Section Alamat Toko & Jam Operasional -->
+<!-- Section Alamat Toko & Jam Operasional -->
+<section id="lokasi-toko" class="py-5" style="background-color: #fff0f5;">
+    <div class="container">
+        <!-- Judul Section -->
+        <div class="text-center mb-5">
+            <h3 class="fw-bold" style="font-family: 'Playfair Display', serif; color: #7d5260;">Kunjungi Toko Kami</h3>
+            <p class="text-muted small">Datang langsung ke outlet kami untuk pengalaman belanja yang lebih seru!</p>
+        </div>
+
+        <div class="row g-4 align-items-center">
+            <!-- Kartu Info Alamat & Jam Operasional -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px; background-color: #ffffff;">
+                    
+                    <!-- Informasi Alamat -->
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="badge-icon me-3 d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" 
+                             style="width: 48px; height: 48px; background-color: #fde8ef; color: #d63384;">
+                            <i class="fas fa-map-marker-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: #2b2b2b;">Alamat Outlet</h6>
+                            <p class="text-muted small mb-0" style="line-height: 1.6;">
+                                <strong>Bymaii Preloved Boutique</strong><br>
+                                PT Lauwba Techno Indonesia<br>
+                                Lembayung Residence No. 8, Mejing Kidul, Ambarketawang, Kec. Gamping, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55294
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25 my-2">
+
+                    <!-- Informasi Jam Operasional -->
+                    <div class="d-flex align-items-start my-3">
+                        <div class="badge-icon me-3 d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" 
+                             style="width: 48px; height: 48px; background-color: #fde8ef; color: #d63384;">
+                            <i class="far fa-clock fa-lg"></i>
+                        </div>
+                        <div class="w-100">
+                            <h6 class="fw-bold mb-2" style="color: #2b2b2b;">Jam Operasional</h6>
+                            <div class="d-flex justify-content-between text-muted small mb-1">
+                                <span>Senin - Jumat</span>
+                                <span class="fw-semibold" style="color: #d63384;">08.00 - 17.00 WIB</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>Sabtu - Minggu</span>
+                                <span class="fw-semibold" style="color: #d63384;">09.00 - 15.00 WIB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25 my-2">
+
+                    <!-- Tombol Petunjuk Arah Langsung ke Google Maps -->
+                    <div class="mt-3">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Lembayung+Residence+No.8,+Mejing+Kidul,+Ambarketawang,+Gamping,+Sleman" 
+                           target="_blank" 
+                           class="btn w-100 text-white fw-semibold py-2" 
+                           style="background-color: #d63384; border-radius: 8px;">
+                            <i class="fas fa-directions me-2"></i> Buka Rute di Google Maps
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Embed Google Maps Presisi Mejing Kidul Ambarketawang -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm overflow-hidden position-relative" style="border-radius: 16px;">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=Lembayung+Residence+No.8,+Mejing+Kidul,+Ambarketawang,+Gamping,+Sleman&hl=id&z=17&output=embed" 
+                        width="100%" 
+                        height="360" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
         <!-- <section> close ============================-->
         <!-- ============================================-->
 

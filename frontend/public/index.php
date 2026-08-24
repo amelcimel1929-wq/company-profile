@@ -323,9 +323,13 @@ if ($isLoggedIn) {
                                          sama kayak Home/About/Flash Sale/Owner -- bukan pindah ke produk.php lagi. -->
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#categoryWomen" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Produk</a>
                                 </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link fw-semibold js-scroll-nav" href="#kata-pelanggan" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Review Pelanggan</a>
+                                </li>
                                  <li class="nav-item px-2">
                                     <a class="nav-link fw-semibold js-scroll-nav" href="#owner" style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #2b2b2b; letter-spacing: 0.5px;">Owner</a>
                                 </li>
+                               
                             </ul>
                     <div class="d-flex align-items-center">
                         <?php if ($isLoggedIn): ?>
@@ -3703,57 +3707,210 @@ if ($isLoggedIn) {
                                               LIMIT 6");
 ?>
 <?php if ($query_ulasan && mysqli_num_rows($query_ulasan) > 0): ?>
-<section id="ulasan-pelanggan" class="py-5" style="background-color: #fdf3f7;">
+<section id="kata-pelanggan" class="py-5" style="background-color: #fdf3f7;">
     <div class="container">
+        <!-- Header Section -->
         <div class="row">
             <div class="col-lg-7 mx-auto text-center mb-4">
                 <h3 class="fw-bold" style="font-family: 'Playfair Display', serif; color: #2b2b2b;">Kata Pelanggan</h3>
                 <p class="text-muted small mb-0">Ulasan asli dari pembeli yang udah nerima produknya.</p>
             </div>
         </div>
-        <div class="row g-3">
-            <?php $ulasanNo = 0; while ($ulasan = mysqli_fetch_assoc($query_ulasan)): $ulasanNo++; ?>
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm p-3" style="border-radius: 12px;">
-                        <!-- Produk yang direview -->
+
+        <!-- Row Kartu Rapat -->
+        <div class="row g-2">
+            <?php 
+            $ulasanNo = 0; 
+            $hasMoreThan4 = false;
+            while ($ulasan = mysqli_fetch_assoc($query_ulasan)): 
+                $ulasanNo++; 
+                
+                // Ulasan ke-5 dst disembunyikan di collapse
+                if ($ulasanNo == 5): 
+                    $hasMoreThan4 = true;
+            ?>
+                </div> <!-- Tutup row 4 ulasan awal -->
+                
+                <!-- Container Collapse Ulasan Tambahan -->
+                <div class="collapse" id="ulasanTambahan">
+                    <div class="row g-2 mt-0">
+            <?php endif; ?>
+
+                <!-- Kolom Presisi 4 Kartu Sejajar (tanpa jarak berlebih) -->
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm p-3 d-flex flex-column" style="border-radius: 12px;">
+                        
+                        <!-- Header Produk -->
                         <div class="d-flex gap-2 align-items-center mb-2 pb-2 border-bottom">
-                            <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" width="56" height="56" class="rounded flex-shrink-0" style="object-fit:cover;border:1px solid #f9a8d4;cursor:pointer"
-                                 data-bs-toggle="modal" data-bs-target="#ulasanProductModal<?= $ulasanNo ?>">
-                            <div class="modal fade" id="ulasanProductModal<?= $ulasanNo ?>" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content bg-transparent border-0">
-                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" class="img-fluid rounded shadow">
+                            <?php 
+                            $imgProductPath = "../../backend/foto/" . $ulasan['product_image'];
+                            if (!empty($ulasan['product_image']) && file_exists($imgProductPath)): 
+                            ?>
+                                <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" 
+                                     alt="<?= htmlspecialchars($ulasan['name_product']) ?>" 
+                                     width="44" height="44" class="rounded flex-shrink-0" 
+                                     style="object-fit:cover; border:1px solid #f9a8d4; cursor:pointer;"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#ulasanProductModal<?= $ulasanNo ?>">
+
+                                <!-- Modal Foto Produk -->
+                                <div class="modal fade" id="ulasanProductModal<?= $ulasanNo ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content bg-transparent border-0 position-relative">
+                                            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <div class="text-center p-2" data-bs-dismiss="modal" style="cursor:pointer;">
+                                                <img src="../../backend/foto/<?= rawurlencode($ulasan['product_image']) ?>" alt="<?= htmlspecialchars($ulasan['name_product']) ?>" class="img-fluid rounded shadow">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                            <?php endif; ?>
+
+                            <div class="fw-semibold small text-break" style="font-family: 'Playfair Display', serif; color: #2b2b2b; font-size: 0.8rem;">
+                                <?= htmlspecialchars($ulasan['name_product']) ?>
                             </div>
-                            <div class="fw-semibold small text-break" style="font-family: 'Playfair Display', serif; color: #2b2b2b;"><?= htmlspecialchars($ulasan['name_product']) ?></div>
                         </div>
-                        <!-- Reviewer & isi ulasan -->
-                        <div class="fw-semibold small mb-1"><?= htmlspecialchars($ulasan['reviewer_name']) ?></div>
-                        <div style="color:#f8b400;" class="small mb-1"><?= str_repeat('★', (int) $ulasan['rating']) . str_repeat('☆', 5 - (int) $ulasan['rating']) ?></div>
-                        <p class="small text-muted mb-2" style="font-family: 'Poppins', sans-serif;"><?= nl2br(htmlspecialchars($ulasan['review'])) ?></p>
-                        <?php if (!empty($ulasan['photo'])): ?>
-                            <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover;cursor:pointer"
-                                 data-bs-toggle="modal" data-bs-target="#ulasanPhotoModal<?= $ulasanNo ?>">
+
+                        <!-- Reviewer & Isi Ulasan -->
+                        <div class="fw-semibold small mb-1" style="font-size: 0.8rem;"><?= htmlspecialchars($ulasan['reviewer_name']) ?></div>
+                        <div style="color:#f8b400; font-size: 0.75rem;" class="mb-1">
+                            <?= str_repeat('★', (int) $ulasan['rating']) . str_repeat('☆', 5 - (int) $ulasan['rating']) ?>
+                        </div>
+                        <p class="small text-muted mb-2 flex-grow-1" style="font-family: 'Poppins', sans-serif; font-size: 0.75rem;">
+                            <?= nl2br(htmlspecialchars($ulasan['review'])) ?>
+                        </p>
+
+                        <!-- Foto Ulasan Pelanggan -->
+                        <?php 
+                        $imgPhotoPath = "../../backend/foto/" . $ulasan['photo'];
+                        if (!empty($ulasan['photo']) && file_exists($imgPhotoPath)): 
+                        ?>
+                            <div class="mt-auto">
+                                <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" 
+                                     alt="Foto ulasan" class="rounded" width="55" height="55" 
+                                     style="object-fit:cover; cursor:pointer;"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#ulasanPhotoModal<?= $ulasanNo ?>">
+                            </div>
+
+                            <!-- Modal Foto Ulasan -->
                             <div class="modal fade" id="ulasanPhotoModal<?= $ulasanNo ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content bg-transparent border-0">
-                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
+                                    <div class="modal-content bg-transparent border-0 position-relative">
+                                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="text-center p-2" data-bs-dismiss="modal" style="cursor:pointer;">
+                                            <img src="../../backend/foto/<?= rawurlencode($ulasan['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <?php endif; ?>
+
                     </div>
                 </div>
+
             <?php endwhile; ?>
-        </div>
-        <div class="text-center mt-3">
-            <a href="produk.php" class="btn btn-sm" style="border:1px solid #e83e8c; color:#e83e8c; border-radius:20px;">Lihat Semua Produk</a>
-        </div>
+
+            <!-- Penutup Tag -->
+            <?php if ($hasMoreThan4): ?>
+                    </div> <!-- Tutup row collapse -->
+                </div> <!-- Tutup collapse -->
+            <?php else: ?>
+                </div> <!-- Tutup row utama -->
+            <?php endif; ?>
+
+        <!-- Tombol Buka / Tutup -->
+        <?php if ($hasMoreThan4): ?>
+            <div class="text-center mt-4">
+                <button class="btn btn-sm" 
+                        id="btnToggleUlasan"
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#ulasanTambahan" 
+                        aria-expanded="false" 
+                        aria-controls="ulasanTambahan"
+                        style="border:1px solid #e83e8c; color:#e83e8c; border-radius:20px; padding: 6px 24px; font-weight: 500;">
+                    Lihat Semua Ulasan
+                </button>
+            </div>
+        <?php endif; ?>
+
     </div>
 </section>
+
+<!-- Script Otomatis Ganti Teks Tombol -->
+<script>
+    const ulasanTambahan = document.getElementById('ulasanTambahan');
+    const btnToggle = document.getElementById('btnToggleUlasan');
+
+    if (ulasanTambahan && btnToggle) {
+        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
+            btnToggle.textContent = 'Tutup Sebagian Ulasan';
+        });
+        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
+            btnToggle.textContent = 'Lihat Semua Ulasan';
+        });
+    }
+</script>
+
+<!-- Script Otomatis Ganti Teks Tombol -->
+<script>
+    const ulasanTambahan = document.getElementById('ulasanTambahan');
+    const btnToggle = document.getElementById('btnToggleUlasan');
+
+    if (ulasanTambahan && btnToggle) {
+        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
+            btnToggle.textContent = 'Tutup Sebagian Ulasan';
+        });
+        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
+            btnToggle.textContent = 'Lihat Semua Ulasan';
+        });
+    }
+</script>
+
+<!-- Script Ganti Teks Tombol -->
+<script>
+    const ulasanTambahan = document.getElementById('ulasanTambahan');
+    const btnToggle = document.getElementById('btnToggleUlasan');
+
+    if (ulasanTambahan && btnToggle) {
+        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
+            btnToggle.textContent = 'Tutup Sebagian Ulasan';
+        });
+        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
+            btnToggle.textContent = 'Lihat Semua Ulasan';
+        });
+    }
+</script>
+
+<!-- Script Otomatis Ganti Teks Tombol -->
+<script>
+    const ulasanTambahan = document.getElementById('ulasanTambahan');
+    const btnToggle = document.getElementById('btnToggleUlasan');
+
+    if (ulasanTambahan && btnToggle) {
+        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
+            btnToggle.textContent = 'Tutup Sebagian Ulasan';
+        });
+        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
+            btnToggle.textContent = 'Lihat Semua Ulasan';
+        });
+    }
+</script>
+<!-- Script Otomatis Ganti Teks Tombol -->
+<script>
+    const ulasanTambahan = document.getElementById('ulasanTambahan');
+    const btnToggle = document.getElementById('btnToggleUlasan');
+
+    if (ulasanTambahan && btnToggle) {
+        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
+            btnToggle.textContent = 'Tutup Sebagian Ulasan';
+        });
+        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
+            btnToggle.textContent = 'Lihat Semua Ulasan';
+        });
+    }
+</script>
 <?php endif; ?>
 
 

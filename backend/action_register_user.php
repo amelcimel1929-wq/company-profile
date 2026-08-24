@@ -55,7 +55,15 @@ $role = 'user';
 
 $insertStmt = mysqli_prepare($koneksi, 'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)');
 mysqli_stmt_bind_param($insertStmt, 'ssss', $name, $email, $hash, $role);
-if (!mysqli_stmt_execute($insertStmt)) {
+// mysqli default (PHP 8.1+) itu exception mode, jadi execute() gagal = throw,
+// bukan return false -- makanya query gagal harus ditangkap di sini juga,
+// biar user balik ke form dengan pesan error, bukan nabrak fatal error page.
+try {
+    $executeOk = mysqli_stmt_execute($insertStmt);
+} catch (mysqli_sql_exception $e) {
+    $executeOk = false;
+}
+if (!$executeOk) {
     mysqli_stmt_close($insertStmt);
     backToRegister('failed', $name, $email);
 }

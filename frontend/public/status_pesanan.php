@@ -9,14 +9,29 @@ if (!isset($_SESSION['id_user'])) {
 }
 $idUser = (int) $_SESSION['id_user'];
 
-// Status bayar ada di tabel payments, jadi harus di-join.
-// LEFT JOIN supaya pesanan yang belum pernah bayar tetap muncul.
-$stmt = mysqli_prepare($koneksi, "SELECT o.*, p.payment_status, p.proof_image
-                                  FROM orders o
-                                  LEFT JOIN payments p ON p.id_order = o.id_order
-                                  WHERE o.id_user = ?
-                                  ORDER BY o.id_order DESC");
-mysqli_stmt_bind_param($stmt, 'i', $idUser);
+// Tangkap nilai filter 1 tanggal dari GET
+$tanggal = $_GET['tanggal'] ?? '';
+
+// Menyusun query dasar
+$sql = "SELECT o.*, p.payment_status, p.proof_image
+        FROM orders o
+        LEFT JOIN payments p ON p.id_order = o.id_order
+        WHERE o.id_user = ?";
+
+$params = [$idUser];
+$types = "i";
+
+// Tambahkan filter tanggal jika ada yang dipilih
+if (!empty($tanggal)) {
+    $sql .= " AND DATE(o.order_date) = ?";
+    $params[] = $tanggal;
+    $types .= "s";
+}
+
+$sql .= " ORDER BY o.id_order DESC";
+
+$stmt = mysqli_prepare($koneksi, $sql);
+mysqli_stmt_bind_param($stmt, $types, ...$params);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 ?>
@@ -135,15 +150,15 @@ $result = mysqli_stmt_get_result($stmt);
     <div class="mx-auto" style="max-width: 900px;">
         <div class="card card-status border-0 p-3 p-md-4 mt-2">
             
-            <!-- Baris Judul & Tombol Navigasi (Kembali & Belanja) -->
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+            <!-- Baris Judul & Tombol Navigasi (Kembali ke Beranda & Belanja) -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3 pb-3 border-bottom">
                 <div>
                     <h2 class="h4 fw-bold mb-1" style="color: #2c2c2c;">Status Pesanan Saya</h2>
                     <p class="text-muted small mb-0">Pilih pesanan untuk melihat struk dan status terbarunya.</p>
                 </div>
-                <!-- Tombol Kembali & Belanja -->
+                <!-- Tombol Kembali langsung mengarah ke beranda (#home) -->
                 <div class="d-flex gap-2">
-                    <a href="javascript:history.back()" class="btn btn-secondary-custom px-3 py-2 shadow-sm">
+                    <a href="index.php#home" class="btn btn-secondary-custom px-3 py-2 shadow-sm">
                         &larr; Kembali
                     </a>
                     <a href="produk.php" class="btn btn-outline-pink px-3 py-2 shadow-sm">
@@ -151,6 +166,20 @@ $result = mysqli_stmt_get_result($stmt);
                     </a>
                 </div>
             </div>
+
+            <!-- Form Filter 1 Tanggal -->
+            <form method="GET" action="" class="row g-2 align-items-end mb-4 bg-light p-3 rounded-3 shadow-sm">
+                <div class="col-12 col-md-6">
+                    <label for="tanggal" class="form-label small fw-semibold text-muted mb-1">Filter Tanggal Pesanan</label>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control form-control-sm" value="<?= htmlspecialchars($tanggal) ?>">
+                </div>
+                <div class="col-12 col-md-6 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-pink btn-sm flex-fill">Cari</button>
+                    <?php if (!empty($tanggal)): ?>
+                        <a href="status_pesanan.php" class="btn btn-secondary-custom btn-sm flex-fill text-center">Reset</a>
+                    <?php endif; ?>
+                </div>
+            </form>
 
             <!-- Tabel Status Pesanan -->
             <div class="table-responsive">
@@ -213,7 +242,7 @@ $result = mysqli_stmt_get_result($stmt);
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Belum ada pesanan untuk akun ini.</td>
+                                <td colspan="6" class="text-center py-4 text-muted">Tidak ada pesanan pada tanggal ini.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

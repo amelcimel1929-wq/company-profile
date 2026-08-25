@@ -3559,7 +3559,7 @@ if ($isLoggedIn) {
                              id="pills-kat<?= $id_kat ?>" 
                              role="tabpanel">
 
-                            <!-- Grid Layout Produk -->
+                            <!-- Grid Layout Produk (Maksimal 8) -->
                             <div class="row g-3">
                                 <?php
                                 $query_produk = mysqli_query($koneksi,
@@ -3568,7 +3568,7 @@ if ($isLoggedIn) {
                                      (SELECT COUNT(*) FROM product_reviews WHERE id_product = products.id_product) AS review_count
                                      FROM products WHERE id_category = '$id_kat' AND stock > 0
                                      AND id_product NOT IN (SELECT id_product FROM flash_sale WHERE id_product IS NOT NULL)
-                                     ORDER BY id_product DESC"
+                                     ORDER BY id_product DESC LIMIT 8"
                                 );
 
                                 if (mysqli_num_rows($query_produk) > 0):
@@ -3596,13 +3596,13 @@ if ($isLoggedIn) {
                                                 <!-- Body Produk -->
                                                 <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between bg-white">
                                                     <div>
-                                                        <!-- Nama Produk (Agak Gede) & Icon Keranjang (Sejajar) -->
+                                                        <!-- Nama Produk & Icon Keranjang -->
                                                         <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
                                                             <h5 class="fw-bold mb-0 text-truncate text-dark" style="font-size: 1.2rem;" title="<?= htmlspecialchars($produk['name_product']) ?>">
                                                                 <?= htmlspecialchars($produk['name_product']) ?>
                                                             </h5>
 
-                                                            <!-- FORM SUBMIT KERANJANG (TANPA JS / TANPA 404) -->
+                                                            <!-- FORM SUBMIT KERANJANG -->
                                                             <?php $catCheckoutUrl = 'checkout.php?id_product=' . urlencode($produk['id_product']); ?>
                                                             <?php if (isset($isLoggedIn) && $isLoggedIn): ?>
                                                                 <form action="../../backend/action_add_to_cart.php" method="post" class="m-0 p-0">
@@ -3641,7 +3641,7 @@ if ($isLoggedIn) {
                                                             <?php endif; ?>
                                                         </div>
 
-                                                        <!-- Harga Produk (Kecil Proporsional) -->
+                                                        <!-- Harga Produk -->
                                                         <div class="d-flex align-items-baseline mb-3">
                                                             <span class="fw-bold" style="font-size: 1.1rem; color: #d6587c;">
                                                                 Rp<?= number_format((float)$produk['price'], 0, ',', '.') ?>
@@ -3695,17 +3695,17 @@ if ($isLoggedIn) {
 </section>
 
 <?php
-    // Ulasan terbaru dari semua produk, ditampilin di homepage biar calon
-    // pembeli yang belum pernah buka produk tertentu tetap keliatan testimoninya.
+    // Ambil 4 ulasan terbaru untuk ditampilkan di homepage
     require "../../backend/connection.php";
     $query_ulasan = mysqli_query($koneksi, "SELECT r.rating, r.review, r.photo, r.create_at,
-                                              u.name AS reviewer_name, p.name_product, p.image AS product_image
-                                              FROM product_reviews r
-                                              JOIN users u ON u.id_user = r.id_user
-                                              JOIN products p ON p.id_product = r.id_product
-                                              ORDER BY r.id_review DESC
-                                              LIMIT 6");
+                                                   u.name AS reviewer_name, p.name_product, p.image AS product_image
+                                            FROM product_reviews r
+                                            JOIN users u ON u.id_user = r.id_user
+                                            JOIN products p ON p.id_product = r.id_product
+                                            ORDER BY r.id_review DESC
+                                            LIMIT 4");
 ?>
+
 <?php if ($query_ulasan && mysqli_num_rows($query_ulasan) > 0): ?>
 <section id="kata-pelanggan" class="py-5" style="background-color: #fdf3f7;">
     <div class="container">
@@ -3717,26 +3717,13 @@ if ($isLoggedIn) {
             </div>
         </div>
 
-        <!-- Row Kartu Rapat -->
+        <!-- Row 4 Kartu Ulasan -->
         <div class="row g-2">
             <?php 
             $ulasanNo = 0; 
-            $hasMoreThan4 = false;
             while ($ulasan = mysqli_fetch_assoc($query_ulasan)): 
                 $ulasanNo++; 
-                
-                // Ulasan ke-5 dst disembunyikan di collapse
-                if ($ulasanNo == 5): 
-                    $hasMoreThan4 = true;
             ?>
-                </div> <!-- Tutup row 4 ulasan awal -->
-                
-                <!-- Container Collapse Ulasan Tambahan -->
-                <div class="collapse" id="ulasanTambahan">
-                    <div class="row g-2 mt-0">
-            <?php endif; ?>
-
-                <!-- Kolom Presisi 4 Kartu Sejajar (tanpa jarak berlebih) -->
                 <div class="col-6 col-md-3">
                     <div class="card h-100 border-0 shadow-sm p-3 d-flex flex-column" style="border-radius: 12px;">
                         
@@ -3808,109 +3795,20 @@ if ($isLoggedIn) {
 
                     </div>
                 </div>
-
             <?php endwhile; ?>
+        </div>
 
-            <!-- Penutup Tag -->
-            <?php if ($hasMoreThan4): ?>
-                    </div> <!-- Tutup row collapse -->
-                </div> <!-- Tutup collapse -->
-            <?php else: ?>
-                </div> <!-- Tutup row utama -->
-            <?php endif; ?>
-
-        <!-- Tombol Buka / Tutup -->
-        <?php if ($hasMoreThan4): ?>
-            <div class="text-center mt-4">
-                <button class="btn btn-sm" 
-                        id="btnToggleUlasan"
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#ulasanTambahan" 
-                        aria-expanded="false" 
-                        aria-controls="ulasanTambahan"
-                        style="border:1px solid #e83e8c; color:#e83e8c; border-radius:20px; padding: 6px 24px; font-weight: 500;">
-                    Lihat Semua Ulasan
-                </button>
-            </div>
-        <?php endif; ?>
+        <!-- Tombol Pindah ke Halaman ulasan.php -->
+        <div class="text-center mt-4">
+            <a href="ulasan.php" 
+               class="btn btn-sm d-inline-block" 
+               style="border:1px solid #e83e8c; color:#e83e8c; border-radius:20px; padding: 6px 24px; font-weight: 500; text-decoration: none;">
+                Lihat Semua Ulasan
+            </a>
+        </div>
 
     </div>
 </section>
-
-<!-- Script Otomatis Ganti Teks Tombol -->
-<script>
-    const ulasanTambahan = document.getElementById('ulasanTambahan');
-    const btnToggle = document.getElementById('btnToggleUlasan');
-
-    if (ulasanTambahan && btnToggle) {
-        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
-            btnToggle.textContent = 'Tutup Sebagian Ulasan';
-        });
-        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
-            btnToggle.textContent = 'Lihat Semua Ulasan';
-        });
-    }
-</script>
-
-<!-- Script Otomatis Ganti Teks Tombol -->
-<script>
-    const ulasanTambahan = document.getElementById('ulasanTambahan');
-    const btnToggle = document.getElementById('btnToggleUlasan');
-
-    if (ulasanTambahan && btnToggle) {
-        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
-            btnToggle.textContent = 'Tutup Sebagian Ulasan';
-        });
-        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
-            btnToggle.textContent = 'Lihat Semua Ulasan';
-        });
-    }
-</script>
-
-<!-- Script Ganti Teks Tombol -->
-<script>
-    const ulasanTambahan = document.getElementById('ulasanTambahan');
-    const btnToggle = document.getElementById('btnToggleUlasan');
-
-    if (ulasanTambahan && btnToggle) {
-        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
-            btnToggle.textContent = 'Tutup Sebagian Ulasan';
-        });
-        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
-            btnToggle.textContent = 'Lihat Semua Ulasan';
-        });
-    }
-</script>
-
-<!-- Script Otomatis Ganti Teks Tombol -->
-<script>
-    const ulasanTambahan = document.getElementById('ulasanTambahan');
-    const btnToggle = document.getElementById('btnToggleUlasan');
-
-    if (ulasanTambahan && btnToggle) {
-        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
-            btnToggle.textContent = 'Tutup Sebagian Ulasan';
-        });
-        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
-            btnToggle.textContent = 'Lihat Semua Ulasan';
-        });
-    }
-</script>
-<!-- Script Otomatis Ganti Teks Tombol -->
-<script>
-    const ulasanTambahan = document.getElementById('ulasanTambahan');
-    const btnToggle = document.getElementById('btnToggleUlasan');
-
-    if (ulasanTambahan && btnToggle) {
-        ulasanTambahan.addEventListener('shown.bs.collapse', function () {
-            btnToggle.textContent = 'Tutup Sebagian Ulasan';
-        });
-        ulasanTambahan.addEventListener('hidden.bs.collapse', function () {
-            btnToggle.textContent = 'Lihat Semua Ulasan';
-        });
-    }
-</script>
 <?php endif; ?>
 
 

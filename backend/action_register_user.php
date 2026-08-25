@@ -17,11 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-function backToRegister($errorCode, $name = '', $email = '') {
+function backToRegister($errorCode, $name = '', $email = '', $detail = '') {
     global $registerPage, $redirect;
     header('Location: ' . $registerPage . '?error=' . $errorCode
         . '&name=' . urlencode($name) . '&email=' . urlencode($email)
-        . ($redirect !== '' ? '&redirect=' . rawurlencode($redirect) : ''));
+        . ($redirect !== '' ? '&redirect=' . rawurlencode($redirect) : '')
+        // TEMPORARY debug aid buat lacak error "Pendaftaran gagal" -- hapus
+        // param & blok tampilnya di register.php begitu penyebabnya ketemu.
+        . ($detail !== '' ? '&detail=' . urlencode($detail) : ''));
     exit;
 }
 
@@ -63,10 +66,11 @@ try {
 } catch (mysqli_sql_exception $e) {
     error_log('register_user insert failed: ' . $e->getMessage());
     $executeOk = false;
+    $insertError = $e->getMessage();
 }
 if (!$executeOk) {
     mysqli_stmt_close($insertStmt);
-    backToRegister('failed', $name, $email);
+    backToRegister('failed', $name, $email, $insertError ?? '');
 }
 $idUser = mysqli_insert_id($koneksi);
 mysqli_stmt_close($insertStmt);

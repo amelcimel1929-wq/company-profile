@@ -20,6 +20,9 @@ $errors = [
 ];
 $errorCode = $_GET['error'] ?? '';
 $error = $errors[$errorCode] ?? '';
+// TEMPORARY debug aid, lihat action_register_user.php -- hapus ini juga
+// begitu penyebab "Pendaftaran gagal" ketemu & kefix.
+$errorDetail = $_GET['detail'] ?? '';
 
 // Isi ulang form supaya user tidak mengetik dari nol setelah gagal.
 $oldName = $_GET['name'] ?? '';
@@ -38,7 +41,7 @@ $oldEmail = $_GET['email'] ?? '';
     <section class="card border-0 shadow-sm"><div class="card-body p-4 p-lg-5">
         <h1 class="h3 text-center mb-2">Daftar</h1>
         <p class="text-muted text-center mb-4">Buat akun untuk mulai belanja di preloved bymeii ♡</p>
-        <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+        <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?><?php if ($errorDetail): ?><br><small class="text-muted"><?= htmlspecialchars($errorDetail) ?></small><?php endif; ?></div><?php endif; ?>
         <form action="../../backend/action_register_user.php" method="post">
             <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
             <div class="mb-3"><label for="name" class="form-label">Nama Lengkap</label><input id="name" type="text" name="name" class="form-control" value="<?= htmlspecialchars($oldName) ?>" required autofocus></div>

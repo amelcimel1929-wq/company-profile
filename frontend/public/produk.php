@@ -64,12 +64,15 @@ $products = mysqli_stmt_get_result($stmt);
             <div class="col-12"><div class="alert alert-info">Belum ada produk pada kategori ini.</div></div>
         <?php endif; ?>
         <?php while ($product = mysqli_fetch_assoc($products)): ?>
+            <?php $detailUrl = 'detail_produk.php?id_product=' . (int) $product['id_product']; ?>
             <div class="col-sm-6 col-lg-4">
                 <article class="card h-100 shadow-sm border-0">
-                    <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" class="card-img-top" style="height: 340px; object-fit: cover;" alt="<?= htmlspecialchars($product['name_product']) ?>">
+                    <a href="<?= htmlspecialchars($detailUrl) ?>">
+                        <img src="../../backend/foto/<?= rawurlencode($product['image']) ?>" class="card-img-top" style="height: 340px; object-fit: cover;" alt="<?= htmlspecialchars($product['name_product']) ?>">
+                    </a>
                     <div class="card-body d-flex flex-column">
                         <span class="badge bg-secondary text-white align-self-start mb-2"><?= htmlspecialchars($product['name_kategori']) ?></span>
-                        <h2 class="h5"><?= htmlspecialchars($product['name_product']) ?></h2>
+                        <h2 class="h5"><a href="<?= htmlspecialchars($detailUrl) ?>" class="text-decoration-none text-dark"><?= htmlspecialchars($product['name_product']) ?></a></h2>
                         <div class="small mb-1">
                             <?php if ((int) $product['review_count'] > 0): ?>
                                 <span style="color:#f8b400;">★</span> <?= round((float) $product['avg_rating'], 1) ?> <span class="text-muted">(<?= (int) $product['review_count'] ?>)</span>

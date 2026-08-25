@@ -45,6 +45,14 @@ $select_orders = mysqli_query($koneksi, $query);
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-3">
                         <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">📋 Daftar Pesanan</h1>
+                        <div>
+                            <a href="export_orders_pdf.php?tanggal=<?php echo urlencode($filter_tanggal); ?>" class="btn btn-sm btn-pink-add">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </a>
+                            <a href="export_orders_excel.php?tanggal=<?php echo urlencode($filter_tanggal); ?>" class="btn btn-sm btn-pink-add">
+                                <i class="fas fa-file-excel"></i> Export Excel
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Filter Tanggal Pembelian -->

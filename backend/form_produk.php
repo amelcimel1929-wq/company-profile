@@ -46,13 +46,29 @@ $categories = mysqli_query($koneksi, "SELECT * FROM categories");
                             <input type="number" class="form-control" id="stock" name="stock" required>
                         </div>
                         <div class="mb-3">
-                            <label for="image" class="form-label">Foto</label>
-                            <input type="file" class="form-control" id="image" name="image" required>
+                            <label for="images" class="form-label">Foto (min 1, maks 5)</label>
+                            <input type="file" class="form-control" id="images" name="images[]" accept="image/*" multiple required>
+                            <div class="form-text">Pilih 1 sampai 5 foto sekaligus (Ctrl/Cmd+klik buat pilih banyak). Foto pertama jadi foto utama.</div>
+                            <div id="images-warning" class="text-danger small mt-1" style="display:none;">Maksimal 5 foto ya, kamu pilih <span id="images-count"></span>.</div>
                         </div>
 
                         <button type="submit" class="btn btn-pink-add">Submit</button>
                         <a href="tabel_produk.php" class="btn btn-secondary">Batal</a>
-                    </form> 
+                    </form>
+                    <!-- Validasi jumlah foto di sisi browser -- cuma buat UX cepat,
+                         validasi yang beneran/wajib tetap di action_insert_produk.php -->
+                    <script>
+                        document.getElementById('images').addEventListener('change', function () {
+                            var warning = document.getElementById('images-warning');
+                            var countSpan = document.getElementById('images-count');
+                            if (this.files.length > 5) {
+                                countSpan.textContent = this.files.length;
+                                warning.style.display = 'block';
+                            } else {
+                                warning.style.display = 'none';
+                            }
+                        });
+                    </script>
                     <!-- TAG PENUTUP FORM HARUS DI SINI -->
                 </div>
             </div>

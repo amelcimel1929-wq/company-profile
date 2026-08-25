@@ -1,7 +1,7 @@
 <?php
     require "../../backend/connection.php";
     // Tanpa LIMIT agar menampilkan SEMUA ulasan
-    $query_semua_ulasan = mysqli_query($koneksi, "SELECT r.rating, r.review, r.photo, r.create_at,
+    $query_semua_ulasan = mysqli_query($koneksi, "SELECT r.rating, r.review, r.photo, r.admin_reply, r.replied_at, r.create_at,
                                                        u.name AS reviewer_name, p.name_product, p.image AS product_image
                                                 FROM product_reviews r
                                                 JOIN users u ON u.id_user = r.id_user
@@ -112,9 +112,17 @@
                         </div>
                     <?php endif; ?>
 
+                    <!-- Balasan Admin -->
+                    <?php if (!empty($ulasan['admin_reply'])): ?>
+                        <div class="mt-2 pt-2 border-top ps-2 border-start border-2" style="border-color:#e83e8c !important;">
+                            <span class="fw-semibold" style="font-size: 0.7rem; color:#e83e8c;">Balasan Penjual</span>
+                            <p class="small text-muted mb-0" style="font-size: 0.72rem;"><?= nl2br(htmlspecialchars($ulasan['admin_reply'])) ?></p>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
             </div>
-        <?php 
+        <?php
             endwhile;
         else:
         ?>

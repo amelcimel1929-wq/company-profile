@@ -94,6 +94,32 @@ if (!$review) {
                         </div>
                     </div>
 
+                    <!-- Balasan Admin -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h2 class="h6 mb-3" style="color: #7d5260;">💬 Balasan Admin</h2>
+                            <?php if (!empty($review->admin_reply)) : ?>
+                                <div class="p-3 bg-light rounded border mb-3">
+                                    <?php echo nl2br(htmlspecialchars($review->admin_reply)); ?>
+                                    <div class="text-muted small mt-2">Dibalas <?php echo date('d-m-Y H:i', strtotime($review->replied_at)); ?></div>
+                                </div>
+                            <?php endif; ?>
+                            <form action="action_reply_review.php" method="POST">
+                                <input type="hidden" name="id_review" value="<?php echo $review->id_review; ?>">
+                                <div class="form-group">
+                                    <label for="admin_reply" style="color: #7d5260;">
+                                        <?php echo !empty($review->admin_reply) ? 'Edit balasan' : 'Tulis balasan'; ?>
+                                    </label>
+                                    <textarea id="admin_reply" name="admin_reply" class="form-control" rows="3" placeholder="Balas ulasan customer di sini..."><?php echo htmlspecialchars($review->admin_reply ?? ''); ?></textarea>
+                                    <small class="form-text text-muted">Balasan ini bakal muncul di halaman detail produk buat semua orang. Kosongin lalu simpan buat menghapus balasan.</small>
+                                </div>
+                                <button type="submit" class="btn btn-pink-add">
+                                    <i class="fas fa-reply"></i> <?php echo !empty($review->admin_reply) ? 'Simpan Balasan' : 'Kirim Balasan'; ?>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <?php include "components/footer.php"; ?>

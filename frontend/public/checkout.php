@@ -50,6 +50,25 @@ $requestedQuantity = min($requestedQuantity, max(1, (int) $product['stock']));
 $hargaBayar = $flash ? (float) $flash['harga_akhir'] : $hargaAsli;
 $fotoTampil = $flash && !empty($flash['foto']) ? $flash['foto'] : $product['image'];
 
+// Galeri foto -- kalau lagi flash sale, foto flash sale-nya sendiri aja yg
+// dipakai (belum ada galeri terpisah buat flash sale), gak dicampur sama
+// galeri produk biasa. Di luar flash sale, ambil semua foto dari
+// product_images; produk lama yg belum punya baris galeri fallback ke
+// products.image tunggal (lihat komentar di 01-schema.sql).
+if ($flash && !empty($flash['foto'])) {
+    $galeriFoto = [$flash['foto']];
+} else {
+    $galStmt = mysqli_prepare($koneksi, "SELECT image FROM product_images WHERE id_product = ? ORDER BY sort_order ASC, id_image ASC");
+    mysqli_stmt_bind_param($galStmt, "i", $idProduct);
+    mysqli_stmt_execute($galStmt);
+    $galRes = mysqli_stmt_get_result($galStmt);
+    $galeriFoto = array_column(mysqli_fetch_all($galRes, MYSQLI_ASSOC), 'image');
+    mysqli_stmt_close($galStmt);
+    if (empty($galeriFoto) && !empty($product['image'])) {
+        $galeriFoto = [$product['image']];
+    }
+}
+
 $errorMessages = [
     'stok'    => 'Stok produk tidak mencukupi. Kurangi jumlah pesanan.',
     'telepon' => 'Nomor telepon wajib diisi.',
@@ -57,7 +76,9 @@ $errorMessages = [
 ];
 $error = $errorMessages[$_GET['error'] ?? ''] ?? '';
 
-// Rata-rata rating + daftar ulasan produk ini, buat ditampilin ke calon pembeli.
+// Rata-rata rating (dipakai di badge atas kartu produk). Daftar ulasan gak
+// ditampilin di halaman checkout ini -- itu cuma muncul di section
+// "Kata Pelanggan" (index.php) & ulasan.php.
 $ratingStmt = mysqli_prepare($koneksi, "SELECT COUNT(*) AS jumlah, AVG(rating) AS rata FROM product_reviews WHERE id_product = ?");
 mysqli_stmt_bind_param($ratingStmt, "i", $idProduct);
 mysqli_stmt_execute($ratingStmt);
@@ -65,15 +86,6 @@ $ratingSummary = mysqli_fetch_assoc(mysqli_stmt_get_result($ratingStmt));
 mysqli_stmt_close($ratingStmt);
 $jumlahReview = (int) ($ratingSummary['jumlah'] ?? 0);
 $rataRating = $jumlahReview > 0 ? round((float) $ratingSummary['rata'], 1) : 0;
-
-$reviewStmt = mysqli_prepare($koneksi, "SELECT r.rating, r.review, r.photo, r.create_at, u.name AS reviewer_name
-                                         FROM product_reviews r
-                                         JOIN users u ON u.id_user = r.id_user
-                                         WHERE r.id_product = ?
-                                         ORDER BY r.id_review DESC");
-mysqli_stmt_bind_param($reviewStmt, "i", $idProduct);
-mysqli_stmt_execute($reviewStmt);
-$reviews = mysqli_stmt_get_result($reviewStmt);
 ?>
 <!doctype html>
 <html lang="id">
@@ -157,7 +169,32 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
             border-radius: 18px;
             object-fit: contain;
             width: 100%;
-            height: auto;
+            height: 420px;
+            background-color: #f8f8f8;
+        }
+
+        .thumb-nav {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            cursor: pointer;
+            opacity: 0.55;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .thumb-nav:hover {
+            opacity: 0.85;
+        }
+
+        .thumb-nav.active {
+            opacity: 1;
+            border-color: #d63384;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 12%;
         }
     </style>
 </head>
@@ -179,9 +216,57 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
 
                 <!-- Gambar Produk -->
                 <div class="col-md-6 text-center">
-                    <img src="../../backend/foto/<?= rawurlencode($fotoTampil) ?>"
-                         class="product-img shadow-sm"
-                         alt="<?= htmlspecialchars($product['name_product']) ?>">
+                    <?php if (count($galeriFoto) <= 1): ?>
+                        <img src="../../backend/foto/<?= rawurlencode($galeriFoto[0] ?? $fotoTampil) ?>"
+                             class="product-img shadow-sm"
+                             alt="<?= htmlspecialchars($product['name_product']) ?>">
+                    <?php else: ?>
+                        <div id="productCarousel" class="carousel slide">
+                            <div class="carousel-inner rounded-4 shadow-sm">
+                                <?php foreach ($galeriFoto as $i => $foto): ?>
+                                    <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                                        <img src="../../backend/foto/<?= rawurlencode($foto) ?>"
+                                             class="product-img"
+                                             alt="<?= htmlspecialchars($product['name_product']) ?> - foto <?= $i + 1 ?>">
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1) grayscale(1);"></span>
+                                <span class="visually-hidden">Sebelumnya</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1) grayscale(1);"></span>
+                                <span class="visually-hidden">Berikutnya</span>
+                            </button>
+                        </div>
+                        <!-- Thumbnail strip -- klik buat lompat langsung ke foto itu -->
+                        <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
+                            <?php foreach ($galeriFoto as $i => $foto): ?>
+                                <img src="../../backend/foto/<?= rawurlencode($foto) ?>"
+                                     class="thumb-nav rounded <?= $i === 0 ? 'active' : '' ?>"
+                                     data-bs-target="#productCarousel" data-bs-slide-to="<?= $i ?>"
+                                     alt="Thumbnail <?= $i + 1 ?>">
+                            <?php endforeach; ?>
+                        </div>
+                        <script>
+                            // Thumbnail ikut nyala/redup sesuai slide carousel yg lagi aktif.
+                            (function () {
+                                var carouselEl = document.getElementById('productCarousel');
+                                var thumbs = carouselEl.parentElement.querySelectorAll('.thumb-nav');
+                                thumbs.forEach(function (thumb) {
+                                    thumb.addEventListener('click', function () {
+                                        thumbs.forEach(function (t) { t.classList.remove('active'); });
+                                        thumb.classList.add('active');
+                                    });
+                                });
+                                carouselEl.addEventListener('slid.bs.carousel', function (e) {
+                                    thumbs.forEach(function (t) { t.classList.remove('active'); });
+                                    thumbs[e.to].classList.add('active');
+                                });
+                            })();
+                        </script>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Detail Produk & Form -->
@@ -244,36 +329,6 @@ $reviews = mysqli_stmt_get_result($reviewStmt);
             </div>
         </div>
 
-        <!-- Ulasan Produk -->
-        <div class="card card-checkout border-0 p-3 p-md-4 mt-3">
-            <h3 class="h6 fw-bold mb-3">Ulasan Produk (<?= $jumlahReview ?>)</h3>
-            <?php if ($jumlahReview === 0): ?>
-                <p class="text-muted small mb-0">Belum ada ulasan untuk produk ini.</p>
-            <?php else: ?>
-                <?php $rvNo = 0; while ($rv = mysqli_fetch_assoc($reviews)): $rvNo++; ?>
-                    <div class="py-2 border-bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold small"><?= htmlspecialchars($rv['reviewer_name']) ?></span>
-                            <span class="text-muted small"><?= date('d-m-Y', strtotime($rv['create_at'])) ?></span>
-                        </div>
-                        <div style="color:#f8b400;" class="small"><?= str_repeat('★', (int) $rv['rating']) . str_repeat('☆', 5 - (int) $rv['rating']) ?></div>
-                        <p class="small mb-1"><?= nl2br(htmlspecialchars($rv['review'])) ?></p>
-                        <?php if (!empty($rv['photo'])): ?>
-                            <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="rounded" width="70" height="70" style="object-fit:cover;cursor:pointer"
-                                 data-bs-toggle="modal" data-bs-target="#reviewPhotoModal<?= $rvNo ?>">
-                            <div class="modal fade" id="reviewPhotoModal<?= $rvNo ?>" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content bg-transparent border-0">
-                                        <button type="button" class="btn-close btn-close-white align-self-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        <img src="../../backend/foto/<?= rawurlencode($rv['photo']) ?>" alt="Foto ulasan" class="img-fluid rounded shadow">
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endwhile; ?>
-            <?php endif; ?>
-        </div>
     </div>
 </main>
 

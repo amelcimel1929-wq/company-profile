@@ -1,84 +1,176 @@
 <?php
+
 include "connection.php";
-$select_login = mysqli_query($koneksi, "SELECT * FROM login ORDER BY id_login DESC");
+
+session_start();
+
+if (!isset($_SESSION['status'])) {
+
+    header("Location:login.php");
+    exit;
+}
+
+if (!isset($_SESSION['role'])) {
+
+    header("Location:login.php");
+    exit;
+}
+
+$select_login = mysqli_query(
+    $koneksi,
+    "SELECT * FROM login ORDER BY id_login DESC"
+);
+
 ?>
+
 <?php include "components/header.php"; ?>
 
-<!-- 1. PEMANGGILAN CSS KUSTOM DIPASANG DI SINI -->
 <link href="css/custom-style.css" rel="stylesheet">
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+<div id="wrapper">
 
-        <!-- Sidebar -->
-        <?php include "components/sidebar.php"; ?>
-        <!-- End of Sidebar -->
+    <?php include "components/sidebar.php"; ?>
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
-            <div id="content">
+        <div id="content">
 
-                <!-- Topbar -->
-                <?php include "components/topbar.php"; ?>
-                <!-- End of Topbar -->
+            <?php include "components/topbar.php"; ?>
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
-                        <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">login</h1>
-                    </div>
+            <div class="container-fluid">
 
-                    <!-- content start -->
-                    <div class="table-responsive">
-                        <!-- 2. CLASS TABEL DIUBAH MENJADI table-pink-custom -->
-                        <table class="table table-bordered table-pink-custom">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Password</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($tampil = mysqli_fetch_object($select_login)): ?>
-                                <tr>
-                                    <td><?php echo $tampil->email; ?></td>
-                                    <td><?php echo $tampil->password; ?></td>
-                                    <td>
-                                        <!-- 3. CLASS TOMBOL DIUBAH MENJADI btn-pink-update -->
-                                        <a href="update_form_login.php?id_login=<?php echo $tampil->id_login;?>" class="btn btn-pink-update">
-                                            UPDATE <i class="fas fa-pen"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <?php endwhile; ?>
-                            </tbody> 
-                        </table>
-                    </div>
-                    <!-- content end -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-3">
+
+                    <h1 class="h3 mb-0" style="color: #7d5260; font-weight: 500;">
+                        Data User
+                    </h1>
+
+
+                    <!-- TOMBOL ADD HANYA UNTUK SUPERADMIN -->
+
+                    <?php if ($_SESSION['role'] == "superadmin"): ?>
+
+                        <a href="form_login.php" class="btn btn-primary">
+
+                            ADD
+
+                            <i class="fas fa-plus"></i>
+
+                        </a>
+
+                    <?php endif; ?>
 
                 </div>
-                <!-- /.container-fluid -->
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-pink-custom">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>No</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <?php
+
+                            $no = 1;
+
+                            while ($tampil = mysqli_fetch_object($select_login)):
+
+                            ?>
+
+                            <tr>
+
+                                <td>
+                                    <?php echo $no++; ?>
+                                </td>
+
+
+                                <td>
+                                    <?php echo $tampil->email; ?>
+                                </td>
+
+
+                                <td>
+                                    <?php echo $tampil->role; ?>
+                                </td>
+
+
+                                <td>
+
+
+                                    <!-- ===================== -->
+                                    <!-- SUPERADMIN -->
+                                    <!-- ===================== -->
+<?php if ($_SESSION['role'] == "superadmin"): ?>
+
+    <a href="update_form_login.php?id_login=<?php echo $tampil->id_login; ?>"
+       class="btn btn-pink-update">
+
+        EDIT <i class="fas fa-pen"></i>
+
+    </a>
+
+    <a href="action_delete_login.php?id_login=<?php echo $tampil->id_login; ?>"
+       class="btn btn-danger">
+
+        DELETE <i class="fas fa-trash"></i>
+
+    </a>
+
+<?php elseif ($_SESSION['role'] == "admin"): ?>
+
+    <?php if ($_SESSION['id_login'] == $tampil->id_login): ?>
+
+        <a href="update_form_login.php?id_login=<?php echo $tampil->id_login; ?>"
+           class="btn btn-pink-update">
+
+            GANTI PASSWORD
+
+        </a>
+
+    <?php endif; ?>
+
+<?php endif; ?>
+
+
+                                </td>
+
+                            </tr>
+
+                            <?php endwhile; ?>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <?php include "components/footer.php"; ?>
-            <!-- End of Footer -->
 
         </div>
-        <!-- End of Content Wrapper -->
+
+        <?php include "components/footer.php"; ?>
 
     </div>
-    <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <?php include "partials/bottom.php"; ?>
+</div>
+
+<?php include "partials/bottom.php"; ?>
 
 </body>
+
 </html>

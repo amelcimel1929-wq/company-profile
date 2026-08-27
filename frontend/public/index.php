@@ -18,20 +18,17 @@ if ($isLoggedIn) {
 
 
     <!-- ===============================================-->
-    <!--    Document Title-->
+    <!--    Document Title -->
     <!-- ===============================================-->
-    <title>majestic | Landing, Ecommerce &amp; Business Templatee</title>
+    <title>Preloved by Meii</title>
 
 
     <!-- ===============================================-->
-    <!--    Favicons-->
+    <!--    Favicons (Path: ../../backend/foto/bungga.jpeg) -->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
-    <link rel="manifest" href="assets/img/favicons/manifest.json">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
+    <link rel="icon" type="image/jpeg" href="../../backend/foto/logo.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="../../backend/foto/logo.jpeg">
+    <link rel="apple-touch-icon" href="../../backend/foto/logo.jpeg">
     <meta name="theme-color" content="#ffffff">
 
 
@@ -39,23 +36,20 @@ if ($isLoggedIn) {
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="assets/css/theme.css" rel="stylesheet" />
-    <!-- Dulu <link> Font Awesome ini nyasar KE DALAM <style> di bawah, jadi
-         gak pernah kemuat -> ikon tas belanja di brand navbar gak pernah nongol. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 'Playfair Display' dipakai di mana-mana lewat inline style (hero, navbar,
-         tombol, dst) tapi gak pernah di-load -> browser jatuh ke serif bawaan OS,
-         makanya tampilannya beda-beda tiap komputer (termasuk bentuk simbol ♡). -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
     <style>
         html { scroll-behavior: smooth; }
         section[id] { scroll-margin-top: 92px; }
         .navbar .nav-link.is-active { color: #d94f76 !important; font-weight: 700 !important; border-bottom: 2px solid #d94f76; }
-       .img-container {
+        
+        .img-container {
             position: relative;
             overflow: hidden;
-            cursor: pointer; /* Mengubah kursor jadi telunjuk */
+            cursor: pointer;
         }
 
         .img-overlay {
@@ -77,205 +71,193 @@ if ($isLoggedIn) {
         .img-container:hover .img-overlay {
             opacity: 1;
         }
+        
         /* Section Category Style */
-    #categoryWomen {
-        background-color: #faf5f7;
-    }
+        #categoryWomen {
+            background-color: #faf5f7;
+        }
 
-    .category-title-line {
-        width: 50px;
-        height: 2px;
-        background-color: #d87093;
-        margin: 8px auto 0;
-    }
+        .category-title-line {
+            width: 50px;
+            height: 2px;
+            background-color: #d87093;
+            margin: 8px auto 0;
+        }
 
-    /* Style Tab Pills Filter Kategori */
-    #pills-tab-kategori .nav-link {
-        color: #4a4a4a;
-        background-color: #ffffff;
-        border: 1px solid #f0c4d4;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
+        /* Style Tab Pills Filter Kategori */
+        #pills-tab-kategori .nav-link {
+            color: #4a4a4a;
+            background-color: #ffffff;
+            border: 1px solid #f0c4d4;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
 
-    #pills-tab-kategori .nav-link.active, 
-    #pills-tab-kategori .nav-link:hover {
-        background-color: #d87093 !important;
-        color: #ffffff !important;
-        border-color: #d87093 !important;
-        box-shadow: 0 4px 10px rgba(216, 112, 147, 0.2);
-    }
+        #pills-tab-kategori .nav-link.active, 
+        #pills-tab-kategori .nav-link:hover {
+            background-color: #d87093 !important;
+            color: #ffffff !important;
+            border-color: #d87093 !important;
+            box-shadow: 0 4px 10px rgba(216, 112, 147, 0.2);
+        }
 
-    /* Style Card Produk Shopee */
-    .shopee-card {
-        background: #ffffff;
-        border-radius: 12px;
-        border: 1px solid #f3dbe3;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        overflow: hidden;
-    }
+        /* Style Card Produk */
+        .shopee-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #f3dbe3;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
 
-    .shopee-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-        border-color: #e8b8ca;
-    }
+        .shopee-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            border-color: #e8b8ca;
+        }
 
-    /* Container Gambar & Overlay Detail */
-    .img-container {
-        position: relative;
-        overflow: hidden;
-    }
+        /* Container Gambar & Overlay Detail */
+        .img-container {
+            position: relative;
+            overflow: hidden;
+        }
 
-    .img-overlay-detail {
-        position: absolute;
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%;
-        background: rgba(0, 0, 0, 0.35);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 3;
-    }
+        .img-overlay-detail {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+        }
 
-    .img-container:hover .img-overlay-detail {
-        opacity: 1;
-    }
+        .img-container:hover .img-overlay-detail {
+            opacity: 1;
+        }
 
-    .btn-detail-hover {
-        border-radius: 20px;
-        font-size: 0.8rem;
-    }
+        .btn-detail-hover {
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
 
-    /* Tipografi Card & Price */
-    .product-title {
-        font-size: 0.88rem;
-        color: #333333;
-        line-height: 1.3;
-        height: 2.3em;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+        .product-title {
+            font-size: 0.88rem;
+            color: #333333;
+            line-height: 1.3;
+            height: 2.3em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-    .product-price {
-        color: #c2597d;
-    }
+        .product-price {
+            color: #c2597d;
+        }
 
-    /* Tombol Pesan Soft Pink */
-    .btn-soft-pink {
-        background-color: #d87093;
-        color: #ffffff;
-        border: none;
-        font-weight: 600;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        transition: background-color 0.2s ease;
-    }
+        .btn-soft-pink {
+            background-color: #d87093;
+            color: #ffffff;
+            border: none;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease;
+        }
 
-    .btn-soft-pink:hover {
-        background-color: #c2597d;
-        color: #ffffff;
-    }
+        .btn-soft-pink:hover {
+            background-color: #c2597d;
+            color: #ffffff;
+        }
 
-    /* Tombol Lihat Semua */
-    .btn-view-all {
-        background-color: #ffffff;
-        color: #c2597d;
-        border: 1.5px solid #d87093;
-        border-radius: 20px;
-        font-size: 0.88rem;
-    }
-    
+        .btn-view-all {
+            background-color: #ffffff;
+            color: #c2597d;
+            border: 1.5px solid #d87093;
+            border-radius: 20px;
+            font-size: 0.88rem;
+        }
+        
+        /* Section Owner Wrapper */
+        .owner-box-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+            border: 1px solid #f3dbe3;
+            box-shadow: 0 8px 25px rgba(216, 112, 147, 0.12);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
 
+        /* Background Foto Owner (Path: ../../backend/foto/bungga.jpeg) */
+        .owner-bg-cinta {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('../../backend/foto/bungga.jpeg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 1;
+        }
 
-    
-    
-   
-    /* Section Owner Wrapper */
-    .owner-box-wrapper {
-        position: relative;
-        overflow: hidden;
-        border-radius: 0; /* Corner Lancip */
-        border: 1px solid #f3dbe3;
-        box-shadow: 0 8px 25px rgba(216, 112, 147, 0.12);
-        max-width: 1100px; /* Di-presisikan agar tidak terlalu melar/gepeng */
-        margin: 0 auto;
-    }
+        .owner-img-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            overflow: hidden;
+        }
 
-    /* Background Foto cinta.jpeg (Di dalam kotak) */
-    .owner-bg-cinta {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-image: url('../../backend/foto/cinta.jpeg');
-        background-size: cover;
-        background-position: center;
-        opacity: 0.5; /* Latar belakang kelihatan jelas */
-        z-index: 1;
-    }
+        .owner-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
 
-    /* Container Foto Owner agar Foto Proporsional */
-    .owner-img-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        min-height: 400px;
-        overflow: hidden;
-    }
+        .owner-ig-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+        }
 
-    .owner-img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Mencegah foto gepeng/tertarik */
-        object-position: center top; /* Fokus ke area wajah */
-    }
+        .owner-img-container:hover .owner-ig-overlay {
+            opacity: 1;
+        }
 
-    /* Overlay Instagram saat Hover Foto Owner */
-    .owner-ig-overlay {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 3;
-    }
+        .btn-ig-hover {
+            background-color: #ffffff;
+            color: #d87093;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 0;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .owner-img-container:hover .owner-ig-overlay {
-        opacity: 1;
-    }
-
-    .btn-ig-hover {
-        background-color: #ffffff;
-        color: #d87093;
-        font-weight: 600;
-        padding: 10px 22px;
-        border-radius: 0; /* Lancip */
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-ig-hover:hover {
-        background-color: #d87093;
-        color: #ffffff;
-        transform: scale(1.05);
-    }
-
-
+        .btn-ig-hover:hover {
+            background-color: #d87093;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
     </style>
-
 </head>
 
 
